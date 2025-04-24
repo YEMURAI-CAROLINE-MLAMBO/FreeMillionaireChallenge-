@@ -104,6 +104,16 @@ const CryptoPayment: React.FC<CryptoPaymentProps> = ({ amount, adId, onSuccess, 
         <CardDescription>Complete your ad payment using MetaMask</CardDescription>
       </CardHeader>
       <CardContent className="space-y-6">
+        {active && !isNetworkSupported && (
+          <Alert variant="destructive" className="mb-4">
+            <AlertTriangle className="h-4 w-4" />
+            <AlertTitle>Network Not Supported</AlertTitle>
+            <AlertDescription>
+              You're currently on {networkName}. Please switch to a supported network to continue.
+            </AlertDescription>
+          </Alert>
+        )}
+        
         <div className="bg-black/5 p-4 rounded-lg space-y-2">
           <div className="flex justify-between items-center">
             <span className="text-foreground/70">Amount:</span>
@@ -113,6 +123,14 @@ const CryptoPayment: React.FC<CryptoPaymentProps> = ({ amount, adId, onSuccess, 
             <span className="text-foreground/70">Equivalent ETH:</span>
             <span className="font-mono text-primary">{ethAmount} ETH</span>
           </div>
+          {active && (
+            <div className="flex justify-between items-center">
+              <span className="text-foreground/70">Network:</span>
+              <span className={isNetworkSupported ? "text-green-600" : "text-red-600"}>
+                {networkName}
+              </span>
+            </div>
+          )}
         </div>
 
         {!active ? (
@@ -133,7 +151,7 @@ const CryptoPayment: React.FC<CryptoPaymentProps> = ({ amount, adId, onSuccess, 
           <Button 
             className="w-full btn-gold py-6" 
             onClick={handlePayment}
-            disabled={isProcessing}
+            disabled={isProcessing || !isNetworkSupported}
           >
             {isProcessing ? (
               <>
