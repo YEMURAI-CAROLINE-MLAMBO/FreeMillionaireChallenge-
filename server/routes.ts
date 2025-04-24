@@ -257,7 +257,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.post("/api/ads/:id/payment", isAuthenticated, async (req, res) => {
     try {
       const id = parseInt(req.params.id);
-      const { paymentMethod } = req.body;
+      const { 
+        status, 
+        paymentMethod, 
+        transactionHash,
+        amount 
+      } = req.body;
       
       if (!paymentMethod || !["bitcoin", "ethereum"].includes(paymentMethod)) {
         return res.status(400).json({ message: "Invalid payment method" });
@@ -273,16 +278,32 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(403).json({ message: "Not authorized to pay for this ad" });
       }
       
-      // Simulate payment processing
-      // In a real app, this would integrate with a crypto payment gateway
+      // In a production app, we would:
+      // 1. Verify the crypto transaction using a blockchain API
+      // 2. Confirm the payment amount matches expected amount
+      // 3. Check if the transaction is confirmed on the blockchain
+      
+      // For our simulation, we'll trust the client-side information
       
       // Update payment status
-      const updatedAd = await storage.updateAdPaymentStatus(id, "completed");
+      const updatedAd = await storage.updateAdPaymentStatus(id, status || "completed");
+      
+      // In a real app, we would store additional payment details:
+      // - Transaction hash
+      // - Payment amount
+      // - Payment date
+      // - Blockchain confirmation status
       
       res.json({
         success: true,
         message: "Payment processed successfully",
-        ad: updatedAd
+        ad: updatedAd,
+        transaction: {
+          hash: transactionHash || `tx_${Date.now()}`,
+          amount: amount || 25,
+          currency: paymentMethod === "bitcoin" ? "BTC" : "ETH",
+          date: new Date().toISOString()
+        }
       });
     } catch (error) {
       res.status(500).json({ message: "Payment processing failed" });

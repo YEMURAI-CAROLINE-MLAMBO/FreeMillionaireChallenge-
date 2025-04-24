@@ -14,6 +14,7 @@ import Admin from "@/pages/admin";
 import { Header } from "@/components/layout/header";
 import { Footer } from "@/components/layout/footer";
 import { useAuth } from "@/contexts/auth-context";
+import { Web3ContextProvider } from "@/contexts/web3-context";
 
 function Router() {
   const { user } = useAuth();
@@ -37,16 +38,18 @@ function Router() {
 function App() {
   return (
     <QueryClientProvider client={queryClient}>
-      <TooltipProvider>
-        <div className="flex flex-col min-h-screen">
-          <Header />
-          <main className="flex-grow">
-            <Router />
-          </main>
-          <Footer />
-        </div>
-        <Toaster />
-      </TooltipProvider>
+      <Web3ContextProvider>
+        <TooltipProvider>
+          <div className="flex flex-col min-h-screen">
+            <Header />
+            <main className="flex-grow">
+              <Router />
+            </main>
+            <Footer />
+          </div>
+          <Toaster />
+        </TooltipProvider>
+      </Web3ContextProvider>
     </QueryClientProvider>
   );
 }
