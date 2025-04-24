@@ -11,17 +11,17 @@ const Home: React.FC = () => {
   const { user } = useAuth();
   
   // Fetch a few ads to display
-  const { data: ads, isLoading: adsLoading } = useQuery({
+  const { data: ads = [], isLoading: adsLoading } = useQuery<any[]>({
     queryKey: ['/api/ads'],
   });
   
   // Fetch participants
-  const { data: participants, isLoading: participantsLoading } = useQuery({
+  const { data: participants = [], isLoading: participantsLoading } = useQuery<any[]>({
     queryKey: ['/api/participants'],
   });
   
   // Check if participants are full
-  const { data: settings } = useQuery({
+  const { data: settings = { maxParticipants: "9" } } = useQuery<{ maxParticipants: string }>({
     queryKey: ['/api/challenge/settings'],
   });
   
@@ -95,7 +95,7 @@ const Home: React.FC = () => {
                 <Trophy className="text-primary h-6 w-6" />
               </div>
               <h3 className="text-xl font-semibold mb-3 text-dark">Join the Challenge</h3>
-              <p className="text-dark-medium">Become one of our exclusive 9 participants for Season 1 or follow as a viewer.</p>
+              <p className="text-dark-medium">Be part of something extraordinary! Secure one of just 9 exclusive participant spots in Season 1 or witness the journey as an engaged viewer.</p>
             </div>
           </div>
         </div>
@@ -115,14 +115,16 @@ const Home: React.FC = () => {
             {adsLoading ? (
               <div className="col-span-3 text-center py-12">Loading ads...</div>
             ) : ads && ads.length > 0 ? (
-              ads.slice(0, 3).map((ad) => (
+              ads.slice(0, 3).map((ad: any) => (
                 <AdCard key={ad.id} ad={ad} />
               ))
             ) : (
               <div className="col-span-3 text-center py-12">
-                <p className="text-dark-medium mb-4">No ads available yet.</p>
+                <p className="text-dark-medium mb-4">No ads available yet. The stage is set and waiting for visionaries like you!</p>
                 <Link href="/submit-ad">
-                  <Button>Be the first to submit an ad</Button>
+                  <Button className="bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-white shadow-lg">
+                    Be the Pioneer - Submit First Ad
+                  </Button>
                 </Link>
               </div>
             )}
@@ -134,10 +136,10 @@ const Home: React.FC = () => {
       <section className="bg-gradient-to-r from-secondary/90 to-primary/90 text-white py-16">
         <div className="container mx-auto px-4">
           <div className="max-w-3xl mx-auto text-center">
-            <h2 className="text-3xl font-bold mb-6">Ready to Submit Your Ad?</h2>
-            <p className="text-lg mb-8">Join our platform today and showcase your business to a global audience through our innovative advertising system.</p>
+            <h2 className="text-3xl font-bold mb-6">Ready to Make Your Mark?</h2>
+            <p className="text-lg mb-8">Your business deserves the spotlight! Join the revolution where innovative advertising meets global reach. Launch your brand into the stratosphere with just a few clicks.</p>
             <Link href="/submit-ad">
-              <Button className="px-8 py-3 bg-white text-primary font-semibold rounded-lg hover:bg-gray-100 transition">
+              <Button className="px-8 py-3 bg-white text-primary font-semibold rounded-lg hover:bg-gray-100 transition shadow-xl hover:shadow-2xl">
                 Submit Your Ad Now
               </Button>
             </Link>
@@ -149,14 +151,14 @@ const Home: React.FC = () => {
       <section className="py-16 bg-white">
         <div className="container mx-auto px-4">
           <div className="max-w-4xl mx-auto text-center mb-12">
-            <h2 className="text-3xl font-bold mb-4 text-dark">Follow the Challenge</h2>
-            <p className="text-dark-medium text-lg">Register as a viewer to receive updates and follow the progress of our participants.</p>
+            <h2 className="text-3xl font-bold mb-4 text-dark">Witness the Journey</h2>
+            <p className="text-dark-medium text-lg">Can't join as a participant? No problem! Register as a viewer to get front-row access to this groundbreaking challenge. Receive exclusive updates and watch history unfold in real-time.</p>
           </div>
           
           <div className="text-center">
             <Link href="/join-as-viewer">
-              <Button size="lg" className="px-8 py-6">
-                Join as a Viewer
+              <Button size="lg" className="px-8 py-6 bg-gradient-to-r from-slate-600 to-slate-800 hover:from-slate-700 hover:to-slate-900 text-white shadow-lg">
+                Become an Exclusive Viewer
               </Button>
             </Link>
           </div>
