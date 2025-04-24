@@ -1,0 +1,51 @@
+Create a complete Replit web app for the FreeMillionaireChallenge — a social entrepreneurship blockchain platform that empowers township businesses and global changemakers using Web3, NFTs, and crypto ad payments.
+
+Here’s what I need:
+
+1. **Registration**:
+   - Free sign-up for Participants and Viewers.
+   - Store sign-ups in memory or JSON file.
+   - On sign-up, mint or simulate a free NFT badge (testnet is fine).
+   - Include a language toggle (starting with English, structure for more).
+
+2. **Advertising Page**:
+   - Form for advertisers to submit ads.
+   - Use ethers.js to connect to MetaMask.
+   - Process crypto payments (testnet tokens or simulation) sent to this wallet:  
+     `0xDebF00937a402ebffaF25ABeF1BdE9aA8fe2c330`
+   - After payment, auto-add ad to moderation queue.
+
+3. **Admin Panel**:
+   - Simple login for admin (hardcoded okay).
+   - List of submitted ads.
+   - Buttons to approve or reject each ad.
+   - Only approved ads appear publicly.
+   - Show logs of payments, submissions, and actions.
+
+4. **UI/UX**:
+   - Mobile-first layout using TailwindCSS.
+   - Simple and accessible design for township and rural users.
+   - Clearly show the project’s culture: freedom, empowerment, Web3 for impact.
+   - Branded theme: “Freeing the Millionaire in You.”
+
+5. **NFT Badge Logic**:
+   - Free badge on sign-up using a simple NFT contract (ERC-721 on testnet).
+   - Allow users to claim badge via MetaMask.
+
+6. **Web3 Integration**:
+   - Full MetaMask wallet support using ethers.js.
+   - Display wallet address when connected.
+   - Allow ad payments using testnet ETH or token (simulation acceptable for now).
+
+7. **Future-Ready Features**:
+   - Prepare a placeholder `/vr` route to explore future virtual reality integrations using A-Frame or Three.js.
+   - Prepare backend structure to support coupon/token airdrops in later versions.
+
+8. **Code Structure**:
+   - Replit-compatible layout.
+   - `index.html`, `style.css`, `script.js`, and `server.js` all in one project folder.
+   - Optional JSON-based data storage or in-memory if easier.
+
+Make sure it’s working, looks good, and clearly shows a complete working demo with a home page, ad submission, registration, moderation, and admin features. Build everything in one Replit project so I can easily edit and publish it. Follow best practices for file naming and UI layout.
+
+Theme: Decentralized social good through entrepreneurship. Global, fair, and uplifting.
