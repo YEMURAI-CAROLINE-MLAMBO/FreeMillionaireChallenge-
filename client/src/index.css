@@ -4,47 +4,47 @@
 
 :root {
       --background: 0 0% 100%;
---foreground: 20 14.3% 4.1%;
---muted: 60 4.8% 95.9%;
---muted-foreground: 25 5.3% 44.7%;
+--foreground: 0 0% 0%;
+--muted: 0 0% 96%;
+--muted-foreground: 0 0% 45%;
 --popover: 0 0% 100%;
---popover-foreground: 20 14.3% 4.1%;
+--popover-foreground: 0 0% 0%;
 --card: 0 0% 100%;
---card-foreground: 20 14.3% 4.1%;
---border: 20 5.9% 90%;
---input: 20 5.9% 90%;
---primary: 207 90% 54%;
---primary-foreground: 211 100% 99%;
---secondary: 60 4.8% 95.9%;
---secondary-foreground: 24 9.8% 10%;
---accent: 60 4.8% 95.9%;
---accent-foreground: 24 9.8% 10%;
+--card-foreground: 0 0% 0%;
+--border: 0 0% 90%;
+--input: 0 0% 90%;
+--primary: 45 100% 50%;  /* Gold */
+--primary-foreground: 0 0% 0%;
+--secondary: 0 0% 80%;  /* Silver */
+--secondary-foreground: 0 0% 0%;
+--accent: 0 0% 15%;  /* Darker shade close to black */
+--accent-foreground: 0 0% 100%;
 --destructive: 0 84.2% 60.2%;
---destructive-foreground: 60 9.1% 97.8%;
---ring: 20 14.3% 4.1%;
---radius: 0.5rem;
+--destructive-foreground: 0 0% 98%;
+--ring: 45 100% 50%;  /* Gold */
+--radius: 0.25rem;  /* Sharper corners for buttons */
   }
   .dark {
-      --background: 240 10% 3.9%;
---foreground: 0 0% 98%;
---muted: 240 3.7% 15.9%;
---muted-foreground: 240 5% 64.9%;
---popover: 240 10% 3.9%;
---popover-foreground: 0 0% 98%;
---card: 240 10% 3.9%;
---card-foreground: 0 0% 98%;
---border: 240 3.7% 15.9%;
---input: 240 3.7% 15.9%;
---primary: 207 90% 54%;
---primary-foreground: 211 100% 99%;
---secondary: 240 3.7% 15.9%;
---secondary-foreground: 0 0% 98%;
---accent: 240 3.7% 15.9%;
---accent-foreground: 0 0% 98%;
---destructive: 0 62.8% 30.6%;
---destructive-foreground: 0 0% 98%;
---ring: 240 4.9% 83.9%;
---radius: 0.5rem;
+      --background: 0 0% 8%;  /* Nearly black background */
+--foreground: 0 0% 98%;  /* Light text */
+--muted: 0 0% 15%;  /* Dark gray */
+--muted-foreground: 0 0% 65%;  /* Light gray */
+--popover: 0 0% 10%;  /* Dark popover */
+--popover-foreground: 0 0% 98%;  /* Light text */
+--card: 0 0% 12%;  /* Dark card */
+--card-foreground: 0 0% 98%;  /* Light text */
+--border: 0 0% 20%;  /* Dark borders */
+--input: 0 0% 20%;  /* Dark input */
+--primary: 45 80% 50%;  /* Gold */
+--primary-foreground: 0 0% 10%;  /* Dark text on gold */
+--secondary: 0 0% 75%;  /* Silver */
+--secondary-foreground: 0 0% 10%;  /* Dark text on silver */
+--accent: 0 0% 25%;  /* Dark accent */
+--accent-foreground: 0 0% 98%;  /* Light text */
+--destructive: 0 62.8% 40%;  /* Brighter destructive in dark mode */
+--destructive-foreground: 0 0% 98%;  /* Light text */
+--ring: 45 80% 50%;  /* Gold ring */
+--radius: 0.25rem;  /* Sharper corners for buttons */
   }
 
 @layer base {
@@ -54,6 +54,57 @@
 
   body {
     @apply font-sans antialiased bg-background text-foreground;
+  }
+  
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-bold;
+  }
+  
+  h1 {
+    @apply text-4xl md:text-5xl lg:text-6xl;
+  }
+  
+  h2 {
+    @apply text-3xl md:text-4xl;
+  }
+  
+  button, .btn {
+    @apply font-medium shadow-md transition-all duration-200;
+  }
+}
+
+/* Custom utility classes for our theme */
+@layer utilities {
+  .text-gold {
+    @apply text-primary;
+  }
+  
+  .text-silver {
+    @apply text-secondary;
+  }
+  
+  .text-gradient-gold {
+    @apply bg-gradient-to-r from-yellow-500 via-yellow-300 to-yellow-500 text-transparent bg-clip-text;
+  }
+  
+  .text-gradient-silver {
+    @apply bg-gradient-to-r from-gray-400 via-gray-300 to-gray-400 text-transparent bg-clip-text;
+  }
+  
+  .btn-gold {
+    @apply bg-gradient-to-r from-yellow-500 via-yellow-400 to-yellow-500 text-black font-bold;
+  }
+  
+  .btn-silver {
+    @apply bg-gradient-to-r from-gray-400 via-gray-300 to-gray-400 text-black font-bold;
+  }
+  
+  .btn-black {
+    @apply bg-black text-white font-bold hover:bg-gray-900;
+  }
+  
+  .card-premium {
+    @apply border-primary/50 bg-gradient-to-b from-background to-secondary/10;
   }
 }
 

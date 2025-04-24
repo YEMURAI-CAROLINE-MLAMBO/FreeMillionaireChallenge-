@@ -24,31 +24,21 @@ export const Header: React.FC = () => {
         
         {/* Desktop Navigation */}
         <div className="hidden md:flex items-center space-x-8">
-          <Link href="/">
-            <a className={`${isActive('/') ? 'text-primary' : 'text-dark-medium'} hover:text-primary font-medium transition`}>
+          <Link href="/" className={`${isActive('/') ? 'text-primary' : 'text-foreground'} hover:text-primary font-medium transition`}>
               Home
-            </a>
           </Link>
-          <Link href="/ads">
-            <a className={`${isActive('/ads') ? 'text-primary' : 'text-dark-medium'} hover:text-primary font-medium transition`}>
+          <Link href="/ads" className={`${isActive('/ads') ? 'text-primary' : 'text-foreground'} hover:text-primary font-medium transition`}>
               Ads
-            </a>
           </Link>
-          <Link href="/participants">
-            <a className={`${isActive('/participants') ? 'text-primary' : 'text-dark-medium'} hover:text-primary font-medium transition`}>
+          <Link href="/participants" className={`${isActive('/participants') ? 'text-primary' : 'text-foreground'} hover:text-primary font-medium transition`}>
               Participants
-            </a>
           </Link>
-          <Link href="/submit-ad">
-            <a className={`${isActive('/submit-ad') ? 'text-primary' : 'text-dark-medium'} hover:text-primary font-medium transition`}>
+          <Link href="/submit-ad" className={`${isActive('/submit-ad') ? 'text-primary' : 'text-foreground'} hover:text-primary font-medium transition`}>
               Submit Ad
-            </a>
           </Link>
           {user && user.role === 'admin' && (
-            <Link href="/admin">
-              <a className={`${isActive('/admin') ? 'text-primary' : 'text-dark-medium'} hover:text-primary font-medium transition`}>
+            <Link href="/admin" className={`${isActive('/admin') ? 'text-primary' : 'text-foreground'} hover:text-primary font-medium transition`}>
                 Admin
-              </a>
             </Link>
           )}
         </div>
@@ -62,7 +52,7 @@ export const Header: React.FC = () => {
           ) : (
             <>
               <Link href="/register">
-                <Button variant="default">Register</Button>
+                <Button variant="default" className="btn-gold">Register</Button>
               </Link>
             </>
           )}
@@ -85,46 +75,41 @@ export const Header: React.FC = () => {
                 </Button>
               </div>
               <div className="flex flex-col space-y-4 mt-4">
-                <Link href="/">
-                  <a 
-                    className={`${isActive('/') ? 'text-primary' : 'text-dark-medium'} hover:text-primary font-medium transition py-2`}
-                    onClick={() => setIsOpen(false)}
-                  >
-                    Home
-                  </a>
+                <Link 
+                  href="/" 
+                  className={`${isActive('/') ? 'text-primary' : 'text-foreground'} hover:text-primary font-medium transition py-2`}
+                  onClick={() => setIsOpen(false)}
+                >
+                  Home
                 </Link>
-                <Link href="/ads">
-                  <a 
-                    className={`${isActive('/ads') ? 'text-primary' : 'text-dark-medium'} hover:text-primary font-medium transition py-2`}
-                    onClick={() => setIsOpen(false)}
-                  >
-                    Ads
-                  </a>
+                <Link 
+                  href="/ads" 
+                  className={`${isActive('/ads') ? 'text-primary' : 'text-foreground'} hover:text-primary font-medium transition py-2`}
+                  onClick={() => setIsOpen(false)}
+                >
+                  Ads
                 </Link>
-                <Link href="/participants">
-                  <a 
-                    className={`${isActive('/participants') ? 'text-primary' : 'text-dark-medium'} hover:text-primary font-medium transition py-2`}
-                    onClick={() => setIsOpen(false)}
-                  >
-                    Participants
-                  </a>
+                <Link 
+                  href="/participants" 
+                  className={`${isActive('/participants') ? 'text-primary' : 'text-foreground'} hover:text-primary font-medium transition py-2`}
+                  onClick={() => setIsOpen(false)}
+                >
+                  Participants
                 </Link>
-                <Link href="/submit-ad">
-                  <a 
-                    className={`${isActive('/submit-ad') ? 'text-primary' : 'text-dark-medium'} hover:text-primary font-medium transition py-2`}
-                    onClick={() => setIsOpen(false)}
-                  >
-                    Submit Ad
-                  </a>
+                <Link 
+                  href="/submit-ad" 
+                  className={`${isActive('/submit-ad') ? 'text-primary' : 'text-foreground'} hover:text-primary font-medium transition py-2`}
+                  onClick={() => setIsOpen(false)}
+                >
+                  Submit Ad
                 </Link>
                 {user && user.role === 'admin' && (
-                  <Link href="/admin">
-                    <a 
-                      className={`${isActive('/admin') ? 'text-primary' : 'text-dark-medium'} hover:text-primary font-medium transition py-2`}
-                      onClick={() => setIsOpen(false)}
-                    >
-                      Admin
-                    </a>
+                  <Link 
+                    href="/admin" 
+                    className={`${isActive('/admin') ? 'text-primary' : 'text-foreground'} hover:text-primary font-medium transition py-2`}
+                    onClick={() => setIsOpen(false)}
+                  >
+                    Admin
                   </Link>
                 )}
                 <div className="border-t border-gray-200 my-4 pt-4">
@@ -138,7 +123,7 @@ export const Header: React.FC = () => {
                   ) : (
                     <>
                       <Link href="/register">
-                        <Button onClick={() => setIsOpen(false)} className="w-full mb-2">
+                        <Button onClick={() => setIsOpen(false)} className="w-full mb-2 btn-gold">
                           Register
                         </Button>
                       </Link>

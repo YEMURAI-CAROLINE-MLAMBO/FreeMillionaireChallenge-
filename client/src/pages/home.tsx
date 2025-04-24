@@ -36,26 +36,26 @@ const Home: React.FC = () => {
   return (
     <div>
       {/* Hero Section */}
-      <section className="bg-gradient-to-r from-primary/90 to-secondary/90 text-white py-16">
+      <section className="bg-gradient-to-br from-black via-accent to-black text-white py-20">
         <div className="container mx-auto px-4">
           <div className="max-w-3xl mx-auto text-center">
-            <h1 className="text-4xl md:text-5xl font-bold mb-6">The FreeMillionaire Challenge</h1>
-            <p className="text-lg md:text-xl mb-8">Submit your ads, pay with crypto, and participate in our global business challenge.</p>
+            <h1 className="text-gradient-gold mb-6">#FreeMillionaire Challenge</h1>
+            <p className="text-lg md:text-xl mb-8 text-silver">Submit your ads, pay with crypto, and participate in our global business challenge.</p>
             
             <div className="flex flex-col items-center justify-center">
-              <p className="text-lg mb-4">Season 1 begins in:</p>
+              <p className="text-lg mb-4 text-silver">Season 1 begins in:</p>
               
               {/* Countdown Timer */}
               <CountdownTimer />
               
-              <div className="flex flex-col sm:flex-row gap-4">
+              <div className="flex flex-col sm:flex-row gap-4 mt-8">
                 <Link href="/submit-ad">
-                  <Button className="px-8 py-6 bg-white text-primary font-semibold rounded-lg hover:bg-gray-100 transition">
+                  <Button className="px-8 py-6 btn-gold shadow-lg">
                     Submit Your Ad
                   </Button>
                 </Link>
-                <Link href={isParticipantsFull() ? "/join-as-viewer" : "/register"}>
-                  <Button className="px-8 py-6 bg-secondary/80 text-white font-semibold rounded-lg hover:bg-secondary transition">
+                <Link href={isParticipantsFull() ? "/viewer-registration" : "/register"}>
+                  <Button className="px-8 py-6 btn-silver shadow-lg">
                     {isParticipantsFull() ? "Join as Viewer" : "Join as Participant"}
                   </Button>
                 </Link>
