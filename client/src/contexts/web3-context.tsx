@@ -9,6 +9,20 @@ declare global {
   }
 }
 
+// Supported networks for the application
+const SUPPORTED_NETWORKS = {
+  1: 'Ethereum Mainnet',
+  // The following are test networks, kept for development/testing
+  3: 'Ropsten Testnet',
+  4: 'Rinkeby Testnet',
+  5: 'Goerli Testnet',
+  42: 'Kovan Testnet',
+  // Popular L2s and sidechains
+  56: 'Binance Smart Chain',
+  137: 'Polygon (Matic)',
+  80001: 'Polygon Mumbai Testnet'
+};
+
 interface Web3ContextType {
   account: string | null;
   chainId: number | undefined;
@@ -17,6 +31,8 @@ interface Web3ContextType {
   connectWallet: () => Promise<void>;
   disconnectWallet: () => void;
   isConnecting: boolean;
+  isNetworkSupported: boolean;
+  networkName: string;
 }
 
 const Web3Context = createContext<Web3ContextType>({
@@ -27,6 +43,8 @@ const Web3Context = createContext<Web3ContextType>({
   connectWallet: async () => {},
   disconnectWallet: () => {},
   isConnecting: false,
+  isNetworkSupported: false,
+  networkName: '',
 });
 
 interface Web3ProviderProps {
@@ -39,7 +57,18 @@ export const Web3ContextProvider: React.FC<Web3ProviderProps> = ({ children }) =
   const [active, setActive] = useState(false);
   const [library, setLibrary] = useState<ethers.providers.Web3Provider | undefined>(undefined);
   const [isConnecting, setIsConnecting] = useState(false);
+  const [isNetworkSupported, setIsNetworkSupported] = useState(false);
+  const [networkName, setNetworkName] = useState('');
   const { toast } = useToast();
+
+  // Check if the current network is supported
+  const checkNetworkSupport = (networkId: number) => {
+    const isSupported = networkId in SUPPORTED_NETWORKS;
+    setIsNetworkSupported(isSupported);
+    setNetworkName(isSupported ? SUPPORTED_NETWORKS[networkId as keyof typeof SUPPORTED_NETWORKS] : 'Unsupported Network');
+    
+    return isSupported;
+  };
 
   // Initialize provider
   useEffect(() => {
@@ -53,12 +82,24 @@ export const Web3ContextProvider: React.FC<Web3ProviderProps> = ({ children }) =
           setAccount(accounts[0]);
           setActive(true);
           provider.getNetwork().then(network => {
-            setChainId(network.chainId);
+            const currentChainId = network.chainId;
+            setChainId(currentChainId);
+            
+            // Check if the network is supported
+            const isSupported = checkNetworkSupport(currentChainId);
+            
+            if (!isSupported) {
+              toast({
+                title: 'Network Not Supported',
+                description: `You are currently on ${network.name}. Please switch to a supported network.`,
+                variant: 'destructive',
+              });
+            }
           });
         }
       });
     }
-  }, []);
+  }, [toast]);
 
   // Listen for account changes
   useEffect(() => {
@@ -74,8 +115,24 @@ export const Web3ContextProvider: React.FC<Web3ProviderProps> = ({ children }) =
       };
 
       const handleChainChanged = (chainId: string) => {
-        setChainId(parseInt(chainId, 16));
-        window.location.reload();
+        const newChainId = parseInt(chainId, 16);
+        setChainId(newChainId);
+        
+        // Check if the new network is supported
+        const isSupported = checkNetworkSupport(newChainId);
+        
+        if (!isSupported) {
+          toast({
+            title: 'Network Not Supported',
+            description: 'You switched to an unsupported network. Some features may not work correctly.',
+            variant: 'destructive',
+          });
+        } else {
+          toast({
+            title: 'Network Changed',
+            description: `Connected to ${SUPPORTED_NETWORKS[newChainId as keyof typeof SUPPORTED_NETWORKS]}`,
+          });
+        }
       };
 
       window.ethereum.on('accountsChanged', handleAccountsChanged);
@@ -86,7 +143,7 @@ export const Web3ContextProvider: React.FC<Web3ProviderProps> = ({ children }) =
         window.ethereum?.removeListener('chainChanged', handleChainChanged);
       };
     }
-  }, []);
+  }, [toast]);
 
   // Connect to MetaMask wallet
   const connectWallet = async () => {
@@ -109,13 +166,25 @@ export const Web3ContextProvider: React.FC<Web3ProviderProps> = ({ children }) =
         
         if (library) {
           const network = await library.getNetwork();
-          setChainId(network.chainId);
+          const currentChainId = network.chainId;
+          setChainId(currentChainId);
+          
+          // Check if the network is supported
+          const isSupported = checkNetworkSupport(currentChainId);
+          
+          if (!isSupported) {
+            toast({
+              title: 'Network Not Supported',
+              description: `You are currently on ${network.name}. Please switch to a supported network.`,
+              variant: 'destructive',
+            });
+          } else {
+            toast({
+              title: 'Wallet Connected',
+              description: `Connected to ${SUPPORTED_NETWORKS[currentChainId as keyof typeof SUPPORTED_NETWORKS]}`,
+            });
+          }
         }
-        
-        toast({
-          title: 'Wallet Connected',
-          description: 'Your wallet has been connected successfully.',
-        });
       }
     } catch (error: any) {
       console.error('Error connecting to MetaMask:', error);
@@ -150,6 +219,8 @@ export const Web3ContextProvider: React.FC<Web3ProviderProps> = ({ children }) =
         connectWallet,
         disconnectWallet,
         isConnecting,
+        isNetworkSupported,
+        networkName,
       }}
     >
       {children}

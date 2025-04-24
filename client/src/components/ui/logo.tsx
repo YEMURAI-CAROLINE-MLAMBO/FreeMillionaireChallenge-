@@ -1,16 +1,15 @@
 import React from 'react';
 import { Link } from 'wouter';
-import logoImg from '../../assets/logo.png';
+import logoImg from '../../assets/fmc-logo-2025.jpg'; // Updated to use the new 2025 logo
 
 export const Logo: React.FC = () => {
   return (
-    <Link href="/" className="flex items-center space-x-2">
+    <Link href="/" className="flex items-center">
       <img
         src={logoImg}
-        alt="FreeMillionaire Challenge Logo 2025"
-        className="h-12 w-auto object-contain"
+        alt="FreeMillionaire Challenge 2025"
+        className="h-12 md:h-14 w-auto object-contain"
       />
-      <span className="text-xl font-bold bg-gradient-to-r from-yellow-400 via-yellow-300 to-gray-300 text-transparent bg-clip-text">#FreeMillionaire</span>
     </Link>
   );
 };

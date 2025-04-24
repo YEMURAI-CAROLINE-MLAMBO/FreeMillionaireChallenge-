@@ -1,8 +1,7 @@
 import React from 'react';
 import { Link } from 'wouter';
 import { Logo } from '@/components/ui/logo';
-import { Button } from '@/components/ui/button';
-import { Twitter, Facebook, Instagram, Linkedin, Mail, Phone, MapPin } from 'lucide-react';
+// Removed social media and contact icons imports as they are no longer needed
 
 export const Footer: React.FC = () => {
   return (
@@ -74,19 +73,16 @@ export const Footer: React.FC = () => {
           </div>
           
           <div>
-            <h4 className="text-lg font-semibold mb-4">Contact</h4>
+            <h4 className="text-lg font-semibold mb-4">About</h4>
             <ul className="space-y-3">
               <li className="flex items-start">
-                <Mail className="text-gray-400 h-5 w-5 mt-0.5 mr-3" />
-                <span className="text-gray-400">contact@freemillionaire.com</span>
+                <span className="text-gray-400">Fully autonomous blockchain challenge</span>
               </li>
               <li className="flex items-start">
-                <Phone className="text-gray-400 h-5 w-5 mt-0.5 mr-3" />
-                <span className="text-gray-400">+1 (555) 123-4567</span>
+                <span className="text-gray-400">Launch date: August 1, 2025</span>
               </li>
               <li className="flex items-start">
-                <MapPin className="text-gray-400 h-5 w-5 mt-0.5 mr-3" />
-                <span className="text-gray-400">123 Innovation Way, Tech City, TC 98765</span>
+                <span className="text-gray-400">Limited to 9 participants for Season 1</span>
               </li>
             </ul>
           </div>

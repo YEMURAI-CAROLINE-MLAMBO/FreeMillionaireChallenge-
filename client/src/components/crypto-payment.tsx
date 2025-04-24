@@ -5,7 +5,8 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { useWeb3 } from '@/contexts/web3-context';
 import { useToast } from '@/hooks/use-toast';
 import { apiRequest } from '@/lib/queryClient';
-import { Wallet, ArrowRight, CheckCircle, Loader2 } from 'lucide-react';
+import { Wallet, ArrowRight, CheckCircle, Loader2, AlertTriangle } from 'lucide-react';
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 
 interface CryptoPaymentProps {
   amount: number;
@@ -15,7 +16,7 @@ interface CryptoPaymentProps {
 }
 
 const CryptoPayment: React.FC<CryptoPaymentProps> = ({ amount, adId, onSuccess, onCancel }) => {
-  const { account, connectWallet, active, library } = useWeb3();
+  const { account, connectWallet, active, library, isNetworkSupported, networkName } = useWeb3();
   const { toast } = useToast();
   const [isProcessing, setIsProcessing] = useState(false);
   const [isComplete, setIsComplete] = useState(false);
@@ -29,6 +30,15 @@ const CryptoPayment: React.FC<CryptoPaymentProps> = ({ amount, adId, onSuccess, 
       toast({
         title: 'Wallet not connected',
         description: 'Please connect your MetaMask wallet to proceed with payment.',
+        variant: 'destructive',
+      });
+      return;
+    }
+    
+    if (!isNetworkSupported) {
+      toast({
+        title: 'Unsupported Network',
+        description: `You're currently on ${networkName}. Please switch to a supported network.`,
         variant: 'destructive',
       });
       return;
@@ -51,6 +61,7 @@ const CryptoPayment: React.FC<CryptoPaymentProps> = ({ amount, adId, onSuccess, 
             transactionHash: `0x${Math.random().toString(16).substring(2, 42)}`, // Simulated transaction hash
             paymentMethod: 'ethereum',
             amount,
+            network: networkName, // Add network information
           });
 
           if (response.ok) {
