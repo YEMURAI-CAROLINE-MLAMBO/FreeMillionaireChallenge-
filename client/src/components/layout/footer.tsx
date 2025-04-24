@@ -38,23 +38,23 @@ export const Footer: React.FC = () => {
             <h4 className="text-lg font-semibold mb-4">Quick Links</h4>
             <ul className="space-y-2">
               <li>
-                <Link href="/">
-                  <a className="text-gray-400 hover:text-white transition">Home</a>
+                <Link href="/" className="text-gray-400 hover:text-white transition">
+                  Home
                 </Link>
               </li>
               <li>
-                <Link href="/ads">
-                  <a className="text-gray-400 hover:text-white transition">Ads</a>
+                <Link href="/ads" className="text-gray-400 hover:text-white transition">
+                  Ads
                 </Link>
               </li>
               <li>
-                <Link href="/participants">
-                  <a className="text-gray-400 hover:text-white transition">Participants</a>
+                <Link href="/participants" className="text-gray-400 hover:text-white transition">
+                  Participants
                 </Link>
               </li>
               <li>
-                <Link href="/submit-ad">
-                  <a className="text-gray-400 hover:text-white transition">Submit Ad</a>
+                <Link href="/submit-ad" className="text-gray-400 hover:text-white transition">
+                  Submit Ad
                 </Link>
               </li>
             </ul>
@@ -64,23 +64,23 @@ export const Footer: React.FC = () => {
             <h4 className="text-lg font-semibold mb-4">Resources</h4>
             <ul className="space-y-2">
               <li>
-                <Link href="/">
-                  <a className="text-gray-400 hover:text-white transition">FAQ</a>
+                <Link href="/" className="text-gray-400 hover:text-white transition">
+                  FAQ
                 </Link>
               </li>
               <li>
-                <Link href="/">
-                  <a className="text-gray-400 hover:text-white transition">Support</a>
+                <Link href="/" className="text-gray-400 hover:text-white transition">
+                  Support
                 </Link>
               </li>
               <li>
-                <Link href="/">
-                  <a className="text-gray-400 hover:text-white transition">Blog</a>
+                <Link href="/" className="text-gray-400 hover:text-white transition">
+                  Blog
                 </Link>
               </li>
               <li>
-                <Link href="/">
-                  <a className="text-gray-400 hover:text-white transition">Crypto Guide</a>
+                <Link href="/" className="text-gray-400 hover:text-white transition">
+                  Crypto Guide
                 </Link>
               </li>
             </ul>
@@ -111,14 +111,14 @@ export const Footer: React.FC = () => {
               © 2023 FreeMillionaire Challenge. All rights reserved.
             </p>
             <div className="flex space-x-6">
-              <Link href="/">
-                <a className="text-gray-400 hover:text-white text-sm transition">Terms of Service</a>
+              <Link href="/" className="text-gray-400 hover:text-white text-sm transition">
+                Terms of Service
               </Link>
-              <Link href="/">
-                <a className="text-gray-400 hover:text-white text-sm transition">Privacy Policy</a>
+              <Link href="/" className="text-gray-400 hover:text-white text-sm transition">
+                Privacy Policy
               </Link>
-              <Link href="/">
-                <a className="text-gray-400 hover:text-white text-sm transition">Cookie Policy</a>
+              <Link href="/" className="text-gray-400 hover:text-white text-sm transition">
+                Cookie Policy
               </Link>
             </div>
           </div>

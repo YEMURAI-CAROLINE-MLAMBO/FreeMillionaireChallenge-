@@ -39,8 +39,8 @@ const Home: React.FC = () => {
       <section className="bg-gradient-to-br from-black via-accent to-black text-white py-20">
         <div className="container mx-auto px-4">
           <div className="max-w-3xl mx-auto text-center">
-            <h1 className="text-gradient-gold mb-6">#FreeMillionaire Challenge</h1>
-            <p className="text-lg md:text-xl mb-8 text-silver">Submit your ads, pay with crypto, and participate in our global business challenge.</p>
+            <h1 className="text-gradient-gold mb-6 text-4xl md:text-5xl lg:text-6xl font-extrabold">#FreeMillionaire Challenge</h1>
+            <p className="text-lg md:text-xl mb-8 text-silver">Unleash Your Potential! Join the most exciting global business challenge where crypto meets opportunity. Transform your vision into reality at zero cost.</p>
             
             <div className="flex flex-col items-center justify-center">
               <p className="text-lg mb-4 text-silver">Season 1 begins in:</p>
@@ -70,7 +70,7 @@ const Home: React.FC = () => {
         <div className="container mx-auto px-4">
           <div className="max-w-4xl mx-auto text-center mb-16">
             <h2 className="text-3xl font-bold mb-4 text-dark">How It Works</h2>
-            <p className="text-dark-medium text-lg">Our platform combines advertising, cryptocurrency, and business challenges in one innovative solution.</p>
+            <p className="text-dark-medium text-lg">Experience the revolutionary fusion of advertising power, cryptocurrency innovation, and entrepreneurial spirit. Our platform isn't just a marketplace—it's your gateway to financial freedom.</p>
           </div>
           
           <div className="grid md:grid-cols-3 gap-10">
@@ -79,7 +79,7 @@ const Home: React.FC = () => {
                 <Upload className="text-primary h-6 w-6" />
               </div>
               <h3 className="text-xl font-semibold mb-3 text-dark">Upload Your Ad</h3>
-              <p className="text-dark-medium">Create and submit your advertisement through our simple upload form.</p>
+              <p className="text-dark-medium">Showcase your vision to the world! Our intuitive platform makes creating and submitting stunning ads a breeze.</p>
             </div>
             
             <div className="text-center p-6 bg-light-bg rounded-xl shadow-sm">
@@ -87,7 +87,7 @@ const Home: React.FC = () => {
                 <Coins className="text-primary h-6 w-6" />
               </div>
               <h3 className="text-xl font-semibold mb-3 text-dark">Pay with Crypto</h3>
-              <p className="text-dark-medium">Process your payment securely using cryptocurrency of your choice.</p>
+              <p className="text-dark-medium">Embrace the future of finance! Seamlessly connect your wallet and make secure transactions with cutting-edge blockchain technology.</p>
             </div>
             
             <div className="text-center p-6 bg-light-bg rounded-xl shadow-sm">
