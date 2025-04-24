@@ -18,20 +18,7 @@ export const Footer: React.FC = () => {
             <p className="text-gray-400 mb-6">
               The future of advertising and business challenges, powered by cryptocurrency.
             </p>
-            <div className="flex space-x-4">
-              <Button variant="ghost" size="icon" className="text-gray-400 hover:text-white transition">
-                <Twitter className="h-5 w-5" />
-              </Button>
-              <Button variant="ghost" size="icon" className="text-gray-400 hover:text-white transition">
-                <Facebook className="h-5 w-5" />
-              </Button>
-              <Button variant="ghost" size="icon" className="text-gray-400 hover:text-white transition">
-                <Instagram className="h-5 w-5" />
-              </Button>
-              <Button variant="ghost" size="icon" className="text-gray-400 hover:text-white transition">
-                <Linkedin className="h-5 w-5" />
-              </Button>
-            </div>
+            {/* Social media links removed to make the app fully autonomous */}
           </div>
           
           <div>
@@ -108,7 +95,7 @@ export const Footer: React.FC = () => {
         <div className="border-t border-gray-800 mt-10 pt-6">
           <div className="flex flex-col md:flex-row justify-between items-center">
             <p className="text-gray-400 text-sm mb-4 md:mb-0">
-              © 2023 FreeMillionaire Challenge. All rights reserved.
+              © 2025 FreeMillionaire Challenge. All rights reserved.
             </p>
             <div className="flex space-x-6">
               <Link href="/" className="text-gray-400 hover:text-white text-sm transition">

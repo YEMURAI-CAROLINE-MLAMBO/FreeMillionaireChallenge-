@@ -7,8 +7,8 @@ export const Logo: React.FC = () => {
     <Link href="/" className="flex items-center space-x-2">
       <img
         src={logoImg}
-        alt="FreeMillionaire Challenge Logo"
-        className="h-10 w-auto"
+        alt="FreeMillionaire Challenge Logo 2025"
+        className="h-12 w-auto object-contain"
       />
       <span className="text-xl font-bold bg-gradient-to-r from-yellow-400 via-yellow-300 to-gray-300 text-transparent bg-clip-text">#FreeMillionaire</span>
     </Link>
