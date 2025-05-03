@@ -1,12 +1,16 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { ethers } from 'ethers';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { useWeb3 } from '@/contexts/web3-context';
 import { useToast } from '@/hooks/use-toast';
 import { apiRequest } from '@/lib/queryClient';
-import { Wallet, ArrowRight, CheckCircle, Loader2, AlertTriangle } from 'lucide-react';
+import { Wallet, ArrowRight, CheckCircle, Loader2, AlertTriangle, RefreshCw } from 'lucide-react';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+
+// The recipient address for all payments
+// This is the wallet address provided for the FreeMillionaireChallenge
+const RECIPIENT_ADDRESS = '0xDebF00937a402ebffaF25ABeF1BdE9aA8fe2c330';
 
 interface CryptoPaymentProps {
   amount: number;

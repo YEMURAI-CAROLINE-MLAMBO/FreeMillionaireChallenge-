@@ -11,14 +11,12 @@ declare global {
 
 // Supported networks for the application
 const SUPPORTED_NETWORKS = {
-  1: 'Ethereum Mainnet',
-  // The following are test networks, kept for development/testing
-  3: 'Ropsten Testnet',
-  4: 'Rinkeby Testnet',
-  5: 'Goerli Testnet',
-  42: 'Kovan Testnet',
-  // Popular L2s and sidechains
+  // Prioritize Binance Smart Chain (BSC)
   56: 'Binance Smart Chain',
+  97: 'Binance Smart Chain Testnet',
+  // Other networks for fallback
+  1: 'Ethereum Mainnet',
+  5: 'Goerli Testnet',
   137: 'Polygon (Matic)',
   80001: 'Polygon Mumbai Testnet'
 };
@@ -30,6 +28,7 @@ interface Web3ContextType {
   library: ethers.providers.Web3Provider | undefined;
   connectWallet: () => Promise<void>;
   disconnectWallet: () => void;
+  switchToBSC: (testnet?: boolean) => Promise<boolean>;
   isConnecting: boolean;
   isNetworkSupported: boolean;
   networkName: string;
@@ -42,6 +41,7 @@ const Web3Context = createContext<Web3ContextType>({
   library: undefined,
   connectWallet: async () => {},
   disconnectWallet: () => {},
+  switchToBSC: async () => false,
   isConnecting: false,
   isNetworkSupported: false,
   networkName: '',
@@ -61,14 +61,72 @@ export const Web3ContextProvider: React.FC<Web3ProviderProps> = ({ children }) =
   const [networkName, setNetworkName] = useState('');
   const { toast } = useToast();
 
-  // Check if the current network is supported
-  const checkNetworkSupport = (networkId: number) => {
-    const isSupported = networkId in SUPPORTED_NETWORKS;
-    setIsNetworkSupported(isSupported);
-    setNetworkName(isSupported ? SUPPORTED_NETWORKS[networkId as keyof typeof SUPPORTED_NETWORKS] : 'Unsupported Network');
-    
-    return isSupported;
-  };
+  // Binance Smart Chain (BSC) configuration for MetaMask
+const BSC_MAINNET_PARAMS = {
+  chainId: '0x38', // 56 in decimal
+  chainName: 'Binance Smart Chain',
+  nativeCurrency: {
+    name: 'BNB',
+    symbol: 'BNB',
+    decimals: 18
+  },
+  rpcUrls: ['https://bsc-dataseed.binance.org/'],
+  blockExplorerUrls: ['https://bscscan.com/']
+};
+
+const BSC_TESTNET_PARAMS = {
+  chainId: '0x61', // 97 in decimal
+  chainName: 'Binance Smart Chain Testnet',
+  nativeCurrency: {
+    name: 'BNB',
+    symbol: 'BNB',
+    decimals: 18
+  },
+  rpcUrls: ['https://data-seed-prebsc-1-s1.binance.org:8545/'],
+  blockExplorerUrls: ['https://testnet.bscscan.com/']
+};
+
+// Check if the current network is supported
+const checkNetworkSupport = (networkId: number) => {
+  const isSupported = networkId in SUPPORTED_NETWORKS;
+  setIsNetworkSupported(isSupported);
+  setNetworkName(isSupported ? SUPPORTED_NETWORKS[networkId as keyof typeof SUPPORTED_NETWORKS] : 'Unsupported Network');
+  
+  return isSupported;
+};
+
+// Function to request network switch to BSC (preferred network)
+const switchToBSC = async (testnet = false) => {
+  if (!window.ethereum) return false;
+  
+  const targetChainId = testnet ? '0x61' : '0x38'; // Testnet or Mainnet
+  const params = testnet ? BSC_TESTNET_PARAMS : BSC_MAINNET_PARAMS;
+  
+  try {
+    // Try to switch to the BSC network
+    await window.ethereum.request({
+      method: 'wallet_switchEthereumChain',
+      params: [{ chainId: targetChainId }],
+    });
+    return true;
+  } catch (switchError: any) {
+    // This error code indicates that the chain has not been added to MetaMask
+    if (switchError.code === 4902) {
+      try {
+        await window.ethereum.request({
+          method: 'wallet_addEthereumChain',
+          params: [params],
+        });
+        return true;
+      } catch (addError) {
+        console.error('Error adding BSC network to MetaMask:', addError);
+        return false;
+      }
+    }
+    console.error('Error switching to BSC network:', switchError);
+    return false;
+  }
+};
 
   // Initialize provider
   useEffect(() => {
@@ -218,6 +276,7 @@ export const Web3ContextProvider: React.FC<Web3ProviderProps> = ({ children }) =
         library,
         connectWallet,
         disconnectWallet,
+        switchToBSC,
         isConnecting,
         isNetworkSupported,
         networkName,
