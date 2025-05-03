@@ -226,9 +226,9 @@ const SocialEntrepreneurshipPage = () => {
                     <p className="text-sm text-gray-600">
                       Aravind has become the largest eye care system in the world, performing over 500,000 surgeries annually, with approximately 50% provided free or at deeply subsidized rates to poor patients.
                     </p>
-                    <h4 className="font-medium">Harvard Business School Analysis:</h4>
+                    <h4 className="font-medium">Business Analysis:</h4>
                     <p className="text-sm text-gray-600">
-                      HBS cites Aravind as a prime example of "cost innovation" and a sustainable cross-subsidization model that achieves both financial sustainability and inclusive healthcare delivery.
+                      Business analysts cite Aravind as a prime example of "cost innovation" and a sustainable cross-subsidization model that achieves both financial sustainability and inclusive healthcare delivery.
                     </p>
                   </div>
                 </AccordionContent>
@@ -256,9 +256,9 @@ const SocialEntrepreneurshipPage = () => {
                     <p className="text-sm text-gray-600">
                       TOMS has given over 100 million pairs of shoes to children in need and expanded into providing eyewear, clean water, and safe birth services through its giving programs.
                     </p>
-                    <h4 className="font-medium">Harvard Business School Analysis:</h4>
+                    <h4 className="font-medium">Business Analysis:</h4>
                     <p className="text-sm text-gray-600">
-                      Harvard studies note TOMS' evolution from a simple donation model to more sustainable community-based interventions, highlighting both the power and limitations of the one-for-one approach in creating lasting impact.
+                      Business studies note TOMS' evolution from a simple donation model to more sustainable community-based interventions, highlighting both the power and limitations of the one-for-one approach in creating lasting impact.
                     </p>
                   </div>
                 </AccordionContent>
@@ -286,9 +286,9 @@ const SocialEntrepreneurshipPage = () => {
                     <p className="text-sm text-gray-600">
                       DDD graduates increase their lifetime earnings by 4-5 times, with over 2,000 disadvantaged youth working their way out of poverty through the program.
                     </p>
-                    <h4 className="font-medium">Harvard Business School Analysis:</h4>
+                    <h4 className="font-medium">Business Analysis:</h4>
                     <p className="text-sm text-gray-600">
-                      Harvard researchers highlight DDD's ability to create a sustainable business model in the competitive BPO (Business Process Outsourcing) industry while simultaneously achieving significant social impact through human capital development.
+                      Researchers highlight DDD's ability to create a sustainable business model in the competitive BPO (Business Process Outsourcing) industry while simultaneously achieving significant social impact through human capital development.
                     </p>
                   </div>
                 </AccordionContent>
@@ -300,7 +300,7 @@ const SocialEntrepreneurshipPage = () => {
         {/* Educational Resources Section */}
         <Card>
           <CardHeader>
-            <CardTitle>Harvard Educational Resources</CardTitle>
+            <CardTitle>Educational Resources</CardTitle>
             <CardDescription>
               Deepen your knowledge with these academic resources on social entrepreneurship
             </CardDescription>
@@ -324,7 +324,7 @@ const SocialEntrepreneurshipPage = () => {
                   <div>
                     <h4 className="font-medium">Shared Value Creation</h4>
                     <p className="text-sm text-gray-600">
-                      Developed by Harvard's Michael Porter, this concept describes creating economic value in ways that also create value for society.
+                      A business concept that describes creating economic value in ways that also create value for society.
                     </p>
                   </div>
                   <div>
@@ -335,7 +335,7 @@ const SocialEntrepreneurshipPage = () => {
                   </div>
                   <div className="pt-2">
                     <Button variant="link" className="px-0 text-amber-600 flex items-center gap-1">
-                      <span>Explore Harvard frameworks</span>
+                      <span>Explore academic frameworks</span>
                       <ArrowRight className="h-4 w-4" />
                     </Button>
                   </div>
