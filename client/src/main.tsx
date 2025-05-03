@@ -3,11 +3,14 @@ import App from "./App";
 import "./index.css";
 import { ThemeProvider } from "next-themes";
 import { AuthProvider } from "./contexts/auth-context";
+import { LanguageProvider } from "./contexts/language-context";
 
 createRoot(document.getElementById("root")!).render(
   <ThemeProvider attribute="class" defaultTheme="light">
-    <AuthProvider>
-      <App />
-    </AuthProvider>
+    <LanguageProvider>
+      <AuthProvider>
+        <App />
+      </AuthProvider>
+    </LanguageProvider>
   </ThemeProvider>
 );

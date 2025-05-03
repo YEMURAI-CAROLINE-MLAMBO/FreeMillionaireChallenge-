@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '@/contexts/auth-context';
 import { useQuery } from '@tanstack/react-query';
-import StreamPlayer from '@/components/stream-player';
+import StreamPlayerEnhanced from '@/components/stream-player-enhanced';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import {
@@ -176,7 +176,7 @@ const StreamingPage = () => {
           {/* Main stream player */}
           <div className="lg:col-span-2">
             {selectedStream ? (
-              <StreamPlayer 
+              <StreamPlayerEnhanced 
                 streamUrl={undefined} // In production, this would be a real stream URL
                 title={selectedStream.title}
                 description={selectedStream.description}
