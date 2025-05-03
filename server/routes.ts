@@ -11,6 +11,7 @@ import {
   insertParticipantSchema,
   insertViewerSchema,
 } from "@shared/schema";
+import { createNFTBadge, simulateMinting, formatBadgeForDisplay } from "./nft-service";
 
 // Content filtering function
 function filterContent(text: string): { approved: boolean; reason?: string } {
@@ -261,10 +262,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
         status, 
         paymentMethod, 
         transactionHash,
-        amount 
+        amount,
+        network 
       } = req.body;
       
-      if (!paymentMethod || !["bitcoin", "ethereum"].includes(paymentMethod)) {
+      // Update accepted payment methods to include BSC
+      if (!paymentMethod || !["bitcoin", "ethereum", "bnb"].includes(paymentMethod)) {
         return res.status(400).json({ message: "Invalid payment method" });
       }
       
@@ -282,18 +285,25 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // 1. Verify the crypto transaction using a blockchain API
       // 2. Confirm the payment amount matches expected amount
       // 3. Check if the transaction is confirmed on the blockchain
+      // 4. Confirm that the recipient address matches the expected address
       
-      // For our simulation, we'll trust the client-side information
+      // For a BSC transaction, you might verify with BSCScan API or similar
       
-      // Update payment status
-      const updatedAd = await storage.updateAdPaymentStatus(id, status || "completed");
+      // Update payment status and save transaction hash
+      const updatedAd = await storage.updateAdPaymentStatus(
+        id, 
+        status || "completed",
+        transactionHash || null
+      );
       
-      // In a real app, we would store additional payment details:
-      // - Transaction hash
-      // - Payment amount
-      // - Payment date
-      // - Blockchain confirmation status
+      // Store currency mapping for different payment methods
+      const currencyMap: Record<string, string> = {
+        "bitcoin": "BTC",
+        "ethereum": "ETH",
+        "bnb": "BNB"
+      };
       
+      // Return transaction details to the client
       res.json({
         success: true,
         message: "Payment processed successfully",
@@ -301,7 +311,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
         transaction: {
           hash: transactionHash || `tx_${Date.now()}`,
           amount: amount || 25,
-          currency: paymentMethod === "bitcoin" ? "BTC" : "ETH",
+          currency: currencyMap[paymentMethod] || "CRYPTO",
+          network: network || "blockchain",
           date: new Date().toISOString()
         }
       });

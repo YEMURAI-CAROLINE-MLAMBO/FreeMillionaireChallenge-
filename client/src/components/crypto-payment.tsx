@@ -20,15 +20,49 @@ interface CryptoPaymentProps {
 }
 
 const CryptoPayment: React.FC<CryptoPaymentProps> = ({ amount, adId, onSuccess, onCancel }) => {
-  const { account, connectWallet, active, library, isNetworkSupported, networkName } = useWeb3();
+  const { account, connectWallet, switchToBSC, active, library, isNetworkSupported, networkName, chainId } = useWeb3();
   const { toast } = useToast();
   const [isProcessing, setIsProcessing] = useState(false);
   const [isComplete, setIsComplete] = useState(false);
+  const [bnbAmount, setBnbAmount] = useState("0");
+  const [isBSC, setIsBSC] = useState(false);
 
-  // Convert the amount to ETH for display (this is just a simulation)
-  // In a real app, you would use an oracle or API to get the current exchange rate
-  const ethAmount = (amount / 2000).toFixed(6); // Simple conversion for demo purposes
+  // Check if we're on BSC network (mainnet or testnet)
+  useEffect(() => {
+    if (chainId) {
+      const onBSC = chainId === 56 || chainId === 97;
+      setIsBSC(onBSC);
+    }
+  }, [chainId]);
 
+  // Calculate BNB amount for payment (with a simple conversion for demo)
+  // In a production app, you would use an oracle or price feed
+  useEffect(() => {
+    // Use a simple conversion ratio (1 BNB = $300 USD for example)
+    // In a real app, this would come from a price oracle
+    const bnbPrice = 300;
+    const calculatedAmount = (amount / bnbPrice).toFixed(6);
+    setBnbAmount(calculatedAmount);
+  }, [amount]);
+
+  // Handler to switch to BSC network
+  const handleSwitchToBSC = async () => {
+    const success = await switchToBSC();
+    if (success) {
+      toast({
+        title: "Network Switched",
+        description: "Successfully connected to Binance Smart Chain",
+      });
+    } else {
+      toast({
+        title: "Network Switch Failed",
+        description: "Unable to switch to Binance Smart Chain. Please try manually in MetaMask.",
+        variant: "destructive",
+      });
+    }
+  };
+
+  // Send transaction to the recipient address
   const handlePayment = async () => {
     if (!active || !account || !library) {
       toast({
@@ -39,10 +73,10 @@ const CryptoPayment: React.FC<CryptoPaymentProps> = ({ amount, adId, onSuccess, 
       return;
     }
     
-    if (!isNetworkSupported) {
+    if (!isBSC) {
       toast({
-        title: 'Unsupported Network',
-        description: `You're currently on ${networkName}. Please switch to a supported network.`,
+        title: 'BSC Network Required',
+        description: 'Please switch to Binance Smart Chain to make your payment.',
         variant: 'destructive',
       });
       return;
@@ -51,50 +85,71 @@ const CryptoPayment: React.FC<CryptoPaymentProps> = ({ amount, adId, onSuccess, 
     setIsProcessing(true);
 
     try {
-      // In a real application, we would:
-      // 1. Get the recipient address from the server
-      // 2. Perform the actual transaction using the wallet
+      // Get the signer from the library
+      const signer = library.getSigner();
       
-      // For simulation purposes, we'll just wait 2 seconds
-      // and then complete the payment without actually transferring funds
-      setTimeout(async () => {
+      // Convert amount to wei (BNB has 18 decimals)
+      const amountInWei = ethers.utils.parseEther(bnbAmount);
+      
+      // Prepare the transaction
+      const tx = {
+        to: RECIPIENT_ADDRESS,
+        value: amountInWei,
+        // Optional: include a memo/data field for tracking
+        data: ethers.utils.hexlify(ethers.utils.toUtf8Bytes(`Ad payment: ${adId}`)),
+      };
+
+      // Send the transaction
+      const transaction = await signer.sendTransaction(tx);
+      
+      // Wait for transaction to be mined (at least 1 confirmation)
+      const receipt = await transaction.wait(1);
+      
+      if (receipt && receipt.status === 1) {
+        // Transaction successful, update the server
         try {
-          // Update ad payment status on the server
           const response = await apiRequest('POST', `/api/ads/${adId}/payment`, {
             status: 'completed',
-            transactionHash: `0x${Math.random().toString(16).substring(2, 42)}`, // Simulated transaction hash
-            paymentMethod: 'ethereum',
+            transactionHash: transaction.hash,
+            paymentMethod: 'bnb',
             amount,
-            network: networkName, // Add network information
+            network: networkName,
           });
 
           if (response.ok) {
             setIsComplete(true);
             toast({
               title: 'Payment Successful',
-              description: 'Your crypto payment was successful!',
+              description: 'Your BNB payment was successfully processed!',
             });
+            
             // Wait 2 seconds before calling onSuccess to show the success state
             setTimeout(() => {
               onSuccess();
             }, 2000);
           } else {
-            throw new Error('Failed to process payment on server');
+            throw new Error('Failed to update payment status on server');
           }
         } catch (error) {
+          // The blockchain transaction was successful but server update failed
           toast({
-            title: 'Payment Error',
-            description: 'There was an error processing your payment on the server.',
-            variant: 'destructive',
+            title: 'Payment Recorded on Blockchain',
+            description: 'Your payment was processed, but we had trouble updating our records. Please contact support with your transaction hash.',
           });
-          setIsProcessing(false);
+          console.error('Server update error:', error);
+          setIsComplete(true);
+          setTimeout(() => {
+            onSuccess();
+          }, 2000);
         }
-      }, 2000);
-    } catch (error) {
+      } else {
+        throw new Error('Transaction was not confirmed');
+      }
+    } catch (error: any) {
       console.error('Payment error:', error);
       toast({
         title: 'Transaction Failed',
-        description: 'There was an error processing your crypto transaction.',
+        description: error?.message || 'There was an error processing your crypto transaction.',
         variant: 'destructive',
       });
       setIsProcessing(false);
@@ -104,8 +159,8 @@ const CryptoPayment: React.FC<CryptoPaymentProps> = ({ amount, adId, onSuccess, 
   return (
     <Card className="w-full max-w-md mx-auto card-premium border-2">
       <CardHeader className="text-center">
-        <CardTitle className="text-xl md:text-2xl text-gradient-gold">Crypto Payment</CardTitle>
-        <CardDescription>Complete your ad payment using MetaMask</CardDescription>
+        <CardTitle className="text-xl md:text-2xl text-gradient-gold">BNB Payment</CardTitle>
+        <CardDescription>Complete your ad payment using Binance Smart Chain</CardDescription>
       </CardHeader>
       <CardContent className="space-y-6">
         {active && !isNetworkSupported && (
@@ -124,16 +179,24 @@ const CryptoPayment: React.FC<CryptoPaymentProps> = ({ amount, adId, onSuccess, 
             <span className="font-bold text-primary">${amount.toFixed(2)} USD</span>
           </div>
           <div className="flex justify-between items-center">
-            <span className="text-foreground/70">Equivalent ETH:</span>
-            <span className="font-mono text-primary">{ethAmount} ETH</span>
+            <span className="text-foreground/70">Equivalent BNB:</span>
+            <span className="font-mono text-primary">{bnbAmount} BNB</span>
           </div>
           {active && (
-            <div className="flex justify-between items-center">
-              <span className="text-foreground/70">Network:</span>
-              <span className={isNetworkSupported ? "text-green-600" : "text-red-600"}>
-                {networkName}
-              </span>
-            </div>
+            <>
+              <div className="flex justify-between items-center">
+                <span className="text-foreground/70">Network:</span>
+                <span className={isBSC ? "text-green-600" : "text-red-600"}>
+                  {networkName}
+                </span>
+              </div>
+              <div className="flex justify-between items-center">
+                <span className="text-foreground/70">Recipient:</span>
+                <span className="text-xs font-mono text-foreground/70 truncate max-w-[200px]" title={RECIPIENT_ADDRESS}>
+                  {RECIPIENT_ADDRESS.slice(0, 6)}...{RECIPIENT_ADDRESS.slice(-4)}
+                </span>
+              </div>
+            </>
           )}
         </div>
 
@@ -151,20 +214,29 @@ const CryptoPayment: React.FC<CryptoPaymentProps> = ({ amount, adId, onSuccess, 
             <CheckCircle className="h-5 w-5" />
             <span>Payment Complete!</span>
           </div>
+        ) : !isBSC ? (
+          <Button 
+            className="w-full btn-gold py-6" 
+            onClick={handleSwitchToBSC}
+            disabled={isProcessing}
+          >
+            <RefreshCw className="mr-2 h-5 w-5" />
+            Switch to Binance Smart Chain
+          </Button>
         ) : (
           <Button 
             className="w-full btn-gold py-6" 
             onClick={handlePayment}
-            disabled={isProcessing || !isNetworkSupported}
+            disabled={isProcessing}
           >
             {isProcessing ? (
               <>
                 <Loader2 className="mr-2 h-5 w-5 animate-spin" />
-                Processing...
+                Processing Transaction...
               </>
             ) : (
               <>
-                Pay with MetaMask
+                Pay {bnbAmount} BNB
                 <ArrowRight className="ml-2 h-5 w-5" />
               </>
             )}
