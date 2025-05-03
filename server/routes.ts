@@ -28,6 +28,11 @@ import {
   processTransaction,
   getTokenomicsOverview
 } from "./tokenomics";
+import { 
+  simulateAdPayment, 
+  simulateVoteTransaction, 
+  simulateMultipleTransactions 
+} from "./test-transaction";
 
 // Legacy content filtering function - kept for backward compatibility
 // New code should use the comprehensive moderation system from content-moderation.ts
@@ -1018,6 +1023,43 @@ export async function registerRoutes(app: Express): Promise<Server> {
       });
     } catch (error) {
       res.status(500).json({ message: "Failed to fetch tokenomics data" });
+    }
+  });
+  
+  // Simulate transactions for testing tokenomics (development only)
+  app.post("/api/test/simulate-transactions", async (req, res) => {
+    try {
+      // Create a test user if one doesn't exist
+      let testUser = await storage.getUserByUsername("test_user");
+      if (!testUser) {
+        testUser = await storage.createUser({
+          username: "test_user",
+          email: "test@example.com",
+          password: "test123",
+          role: "user"
+        });
+      }
+      
+      // Get transaction count parameter
+      const count = req.query.count ? parseInt(req.query.count as string) : 5;
+      
+      // Simulate multiple transactions
+      const result = await simulateMultipleTransactions(testUser.id, count);
+      
+      // Get updated tokenomics data
+      const tokenomicsData = await getTokenomicsOverview();
+      
+      res.json({
+        message: `Successfully simulated ${count} ad payments and ${count * 2} votes`,
+        transactionCounts: {
+          adPayments: result.adTransactions.length,
+          votes: result.voteTransactions.length
+        },
+        totalFounderProfit: result.totalProfit,
+        tokenomics: tokenomicsData
+      });
+    } catch (error) {
+      res.status(500).json({ message: "Failed to simulate transactions" });
     }
   });
   
