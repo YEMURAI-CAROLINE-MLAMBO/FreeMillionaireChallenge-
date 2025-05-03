@@ -1,92 +1,101 @@
 /**
- * NFT Badge Service
- * 
- * This service handles the creation and minting of NFT badges for the FreeMillionaireChallenge.
- * For the prototype, we'll simulate minting on BSC without actually deploying contracts.
+ * NFT Service for FreeMillionaireChallenge
+ * Handles the creation and management of NFT badges for affiliates and participants
  */
 
-// Using crypto module for random byte generation instead of ethers to avoid compatibility issues
-import crypto from 'crypto';
-import { InsertNFTBadge, NFTBadge } from '@shared/schema';
-import { storage } from './storage';
-
-// Constants for NFT badge generation
-const NFT_BADGE_TYPES = {
-  PARTICIPANT: 'participant',
-  VIEWER: 'viewer',
-  SUPPORTER: 'supporter'
-};
-
-const DEFAULT_NETWORK = 'bsc-testnet'; // Using testnet for development
-
-// Simulated contract address for our NFT badges
-const BADGE_CONTRACT_ADDRESS = '0x123456789012345678901234567890123456789a'; // Simulated address
+import { storage } from "./storage";
+import { InsertNFTBadge, NFTBadge } from "@shared/schema";
 
 /**
- * Generate metadata for an NFT badge
- * In a real implementation, this would be stored on IPFS or similar
+ * Generate metadata for an NFT Badge
+ * 
+ * @param type The type of badge (affiliate, participant)
+ * @param userId The ID of the user associated with the badge
+ * @param name The name to use for the badge
+ * @returns The metadata for the NFT badge
  */
 function generateMetadata(type: string, userId: number, name: string) {
+  // Generate a unique token ID for the badge
+  const tokenId = `${type}-${userId}-${Date.now()}`;
+  
+  // Create attributes based on badge type
+  const attributes = [
+    {
+      trait_type: "Badge Type",
+      value: type.charAt(0).toUpperCase() + type.slice(1)
+    },
+    {
+      trait_type: "Issue Date",
+      value: new Date().toISOString().split('T')[0]
+    }
+  ];
+  
+  if (type === 'affiliate') {
+    attributes.push({
+      trait_type: "Revenue Share",
+      value: "5%"
+    });
+  } else if (type === 'participant') {
+    attributes.push({
+      trait_type: "Revenue Share",
+      value: "10%"
+    });
+  }
+  
+  // Generate a base color based on the badge type
+  let imageColor = "#FFD700"; // Gold for participants
+  if (type === 'affiliate') {
+    imageColor = "#C0C0C0"; // Silver for affiliates
+  }
+  
+  // Return the complete metadata
   return {
-    name: `FMC ${type.charAt(0).toUpperCase() + type.slice(1)} Badge`,
-    description: `FreeMillionaireChallenge badge for ${type} ${name}`,
-    image: `https://fmc-badges.example.com/${type}_${userId}.png`, // Simulated image URL
-    attributes: [
-      {
-        trait_type: 'Badge Type',
-        value: type
-      },
-      {
-        trait_type: 'User ID',
-        value: userId.toString()
-      },
-      {
-        trait_type: 'Mint Date',
-        value: new Date().toISOString()
-      }
-    ]
+    name: `${name} ${type.charAt(0).toUpperCase() + type.slice(1)} Badge`,
+    description: `Official FreeMillionaireChallenge ${type} badge for ${name}. This NFT badge includes revenue sharing capabilities.`,
+    image: `https://fmc-badges.example.com/api/badge?address=${userId}&type=${type}&color=${encodeURIComponent(imageColor)}`,
+    external_url: `https://freemillionairechallenge.com/profile/${userId}`,
+    attributes,
+    tokenId
   };
 }
 
 /**
  * Create a new NFT badge for a user
  * This simulates the creation of an NFT without actual blockchain interaction
+ * 
+ * @param userId ID of the user receiving the badge
+ * @param type Type of badge (affiliate, participant)
+ * @param name Name of the user or entity receiving the badge
+ * @returns The created NFT badge
  */
 export async function createNFTBadge(
-  userId: number, 
-  badgeType: string = NFT_BADGE_TYPES.PARTICIPANT,
-  userName: string = 'FMC User'
+  userId: number,
+  type: string,
+  name: string
 ): Promise<NFTBadge> {
-  // Check if user already has a badge
-  const existingBadge = await storage.getNFTBadgeByUserId(userId);
-  if (existingBadge) {
-    return existingBadge;
-  }
-
-  // Generate simulated token ID (in production this would come from the contract)
-  const tokenId = `${Date.now()}-${userId}-${Math.floor(Math.random() * 1000000)}`;
+  // Generate metadata for the NFT
+  const metadata = generateMetadata(type, userId, name);
   
-  // Generate metadata
-  const metadata = generateMetadata(badgeType, userId, userName);
+  // Define revenue share percentage based on badge type
+  const revenueSharePercent = type === 'affiliate' ? 5 : 10;
   
-  // Insert the NFT badge into storage
+  // Prepare badge data for storage
   const badgeData: InsertNFTBadge = {
     userId,
-    tokenId,
-    contractAddress: BADGE_CONTRACT_ADDRESS,
-    tokenUri: `https://fmc-api.example.com/nft/${tokenId}`, // Simulated URI
-    badgeType,
-    network: DEFAULT_NETWORK,
-    metadata
+    type,
+    tokenId: metadata.tokenId,
+    metadata: JSON.stringify(metadata),
+    revenueSharePercent,
+    status: "pending"
   };
   
+  // Store the badge in the database
   const badge = await storage.createNFTBadge(badgeData);
   
-  // Update the user with the badge ID
-  const user = await storage.getUser(userId);
-  if (user) {
-    await storage.updateUserNFTBadge(userId, badge.id);
-  }
+  // Simulate a minting process in the background
+  simulateMinting(badge.id).then(txHash => {
+    storage.updateNFTBadgeTransaction(badge.id, txHash);
+  });
   
   return badge;
 }
@@ -94,48 +103,83 @@ export async function createNFTBadge(
 /**
  * Simulates a blockchain transaction for minting an NFT
  * In a real implementation, this would interact with a deployed smart contract
+ * 
+ * @param badgeId ID of the badge to mint
+ * @returns A simulated transaction hash
  */
 export async function simulateMinting(badgeId: number): Promise<string> {
-  const badge = await storage.getNFTBadge(badgeId);
-  if (!badge) {
-    throw new Error('Badge not found');
-  }
+  // In a real implementation, this would use web3.js or ethers.js to interact with the blockchain
   
-  // Generate a simulated transaction hash using Node.js crypto module
-  const randomBytes = crypto.randomBytes(32);
-  const transactionHash = '0x' + randomBytes.toString('hex');
+  // Simulate blockchain network delay (1-3 seconds)
+  await new Promise(resolve => setTimeout(resolve, 1000 + Math.random() * 2000));
   
-  // Update the badge with the transaction hash
-  await storage.updateNFTBadgeTransaction(badgeId, transactionHash);
+  // Generate a fake transaction hash
+  const txHash = "0x" + Array(64).fill(0).map(() => 
+    Math.floor(Math.random() * 16).toString(16)
+  ).join('');
   
-  return transactionHash;
+  return txHash;
 }
 
 /**
  * Format badge data for display in the frontend
  * Simplifies the data structure for client consumption
+ * 
+ * @param badge The NFT badge from storage
+ * @returns Formatted badge data for display
  */
 export function formatBadgeForDisplay(badge: NFTBadge) {
-  // Extract image URL from metadata if available
-  let metadataImage: string | null = null;
-  if (badge.metadata && 
-      typeof badge.metadata === 'object' && 
-      badge.metadata !== null &&
-      'image' in badge.metadata && 
-      typeof badge.metadata.image === 'string') {
-    metadataImage = badge.metadata.image;
-  }
+  // Parse the metadata JSON
+  const metadata = JSON.parse(badge.metadata);
   
   return {
     id: badge.id,
     userId: badge.userId,
+    type: badge.type,
     tokenId: badge.tokenId,
-    contractAddress: badge.contractAddress,
-    tokenUri: badge.tokenUri,
-    badgeType: badge.badgeType,
-    network: badge.network,
-    imageUrl: badge.imageUrl || metadataImage,
-    mintDate: badge.createdAt,
-    transactionHash: badge.transactionHash
+    name: metadata.name,
+    description: metadata.description,
+    image: metadata.image,
+    attributes: metadata.attributes,
+    revenueSharePercent: badge.revenueSharePercent,
+    status: badge.status,
+    transactionHash: badge.transactionHash,
+    createdAt: badge.createdAt
   };
+}
+
+/**
+ * Get a user's NFT badge
+ * 
+ * @param userId ID of the user
+ * @returns The user's badge or undefined if none exists
+ */
+export async function getUserBadge(userId: number) {
+  const badge = await storage.getNFTBadgeByUserId(userId);
+  if (!badge) return undefined;
+  
+  return formatBadgeForDisplay(badge);
+}
+
+/**
+ * Get an NFT badge by its ID
+ * 
+ * @param badgeId ID of the badge
+ * @returns The badge or undefined if none exists
+ */
+export async function getBadgeById(badgeId: number) {
+  const badge = await storage.getNFTBadge(badgeId);
+  if (!badge) return undefined;
+  
+  return formatBadgeForDisplay(badge);
+}
+
+/**
+ * Get all NFT badges
+ * 
+ * @returns Array of all badges
+ */
+export async function getAllBadges() {
+  const badges = await storage.getNFTBadges();
+  return badges.map(formatBadgeForDisplay);
 }
