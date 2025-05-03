@@ -453,6 +453,102 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.status(500).json({ message: "Failed to fetch challenge settings" });
     }
   });
+  
+  // NFT BADGE ROUTES
+  
+  // Get NFT badge for the current user
+  app.get("/api/nft/badge", isAuthenticated, async (req, res) => {
+    try {
+      if (!req.session.userId) {
+        return res.status(401).json({ message: "Authentication required" });
+      }
+      
+      const badge = await storage.getNFTBadgeByUserId(req.session.userId);
+      
+      if (!badge) {
+        return res.status(404).json({ message: "NFT badge not found" });
+      }
+      
+      res.json(formatBadgeForDisplay(badge));
+    } catch (error) {
+      res.status(500).json({ message: "Failed to fetch NFT badge" });
+    }
+  });
+  
+  // Create NFT badge for user (issued on registration/participation)
+  app.post("/api/nft/badge", isAuthenticated, async (req, res) => {
+    try {
+      if (!req.session.userId) {
+        return res.status(401).json({ message: "Authentication required" });
+      }
+      
+      // Check if user already has a badge
+      const existingBadge = await storage.getNFTBadgeByUserId(req.session.userId);
+      if (existingBadge) {
+        return res.json(formatBadgeForDisplay(existingBadge));
+      }
+      
+      // Get the user to determine their role and badge type
+      const user = await storage.getUser(req.session.userId);
+      if (!user) {
+        return res.status(404).json({ message: "User not found" });
+      }
+      
+      // Determine badge type based on user role
+      const badgeType = user.role === "participant" ? "participant" : 
+                        user.role === "admin" ? "admin" : "viewer";
+      
+      // Create the NFT badge
+      const badge = await createNFTBadge(user.id, badgeType, user.username);
+      
+      res.status(201).json(formatBadgeForDisplay(badge));
+    } catch (error) {
+      console.error("Error creating NFT badge:", error);
+      res.status(500).json({ message: "Failed to create NFT badge" });
+    }
+  });
+  
+  // Mint an NFT badge (simulate transaction)
+  app.post("/api/nft/badge/mint", isAuthenticated, async (req, res) => {
+    try {
+      if (!req.session.userId) {
+        return res.status(401).json({ message: "Authentication required" });
+      }
+      
+      // Get the user's badge
+      const badge = await storage.getNFTBadgeByUserId(req.session.userId);
+      if (!badge) {
+        return res.status(404).json({ message: "NFT badge not found. Create a badge first." });
+      }
+      
+      // Check if badge is already minted
+      if (badge.transactionHash) {
+        return res.status(400).json({ 
+          message: "Badge already minted",
+          transactionHash: badge.transactionHash
+        });
+      }
+      
+      // Simulate minting transaction
+      const transactionHash = await simulateMinting(badge.id);
+      
+      // Get the updated badge
+      const updatedBadge = await storage.getNFTBadge(badge.id);
+      if (!updatedBadge) {
+        throw new Error("Failed to retrieve updated badge");
+      }
+      
+      res.json({
+        success: true,
+        message: "NFT badge minted successfully",
+        transactionHash,
+        badge: formatBadgeForDisplay(updatedBadge)
+      });
+    } catch (error) {
+      console.error("Error minting NFT badge:", error);
+      res.status(500).json({ message: "Failed to mint NFT badge" });
+    }
+  });
 
   // ADMIN ROUTES
   

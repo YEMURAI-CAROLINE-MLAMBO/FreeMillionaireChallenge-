@@ -5,7 +5,8 @@
  * For the prototype, we'll simulate minting on BSC without actually deploying contracts.
  */
 
-import { ethers } from 'ethers';
+// Using crypto module for random byte generation instead of ethers to avoid compatibility issues
+import crypto from 'crypto';
 import { InsertNFTBadge, NFTBadge } from '@shared/schema';
 import { storage } from './storage';
 
@@ -100,8 +101,9 @@ export async function simulateMinting(badgeId: number): Promise<string> {
     throw new Error('Badge not found');
   }
   
-  // Generate a simulated transaction hash
-  const transactionHash = `0x${ethers.utils.randomBytes(32).toString('hex')}`;
+  // Generate a simulated transaction hash using Node.js crypto module
+  const randomBytes = crypto.randomBytes(32);
+  const transactionHash = '0x' + randomBytes.toString('hex');
   
   // Update the badge with the transaction hash
   await storage.updateNFTBadgeTransaction(badgeId, transactionHash);
@@ -114,6 +116,16 @@ export async function simulateMinting(badgeId: number): Promise<string> {
  * Simplifies the data structure for client consumption
  */
 export function formatBadgeForDisplay(badge: NFTBadge) {
+  // Extract image URL from metadata if available
+  let metadataImage: string | null = null;
+  if (badge.metadata && 
+      typeof badge.metadata === 'object' && 
+      badge.metadata !== null &&
+      'image' in badge.metadata && 
+      typeof badge.metadata.image === 'string') {
+    metadataImage = badge.metadata.image;
+  }
+  
   return {
     id: badge.id,
     userId: badge.userId,
@@ -122,10 +134,7 @@ export function formatBadgeForDisplay(badge: NFTBadge) {
     tokenUri: badge.tokenUri,
     badgeType: badge.badgeType,
     network: badge.network,
-    imageUrl: badge.imageUrl || 
-      (badge.metadata && typeof badge.metadata === 'object' && 'image' in badge.metadata) 
-        ? badge.metadata.image 
-        : null,
+    imageUrl: badge.imageUrl || metadataImage,
     mintDate: badge.createdAt,
     transactionHash: badge.transactionHash
   };
