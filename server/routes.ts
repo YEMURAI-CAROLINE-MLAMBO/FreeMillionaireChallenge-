@@ -10,6 +10,10 @@ import {
   insertAdSchema,
   insertParticipantSchema,
   insertViewerSchema,
+  insertProgressUpdateSchema,
+  insertVoteSchema,
+  insertTransactionSchema,
+  insertAwardSchema,
 } from "@shared/schema";
 import { createNFTBadge, simulateMinting, formatBadgeForDisplay } from "./nft-service";
 
@@ -382,6 +386,59 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Check participant eligibility
+  app.post("/api/participants/check-eligibility", isAuthenticated, async (req, res) => {
+    try {
+      const { age, graduationYear, workExperience } = req.body;
+      
+      // Get eligibility rules from settings
+      const maxAgeSetting = await storage.getSetting("maxParticipantAge");
+      const maxAge = maxAgeSetting ? parseInt(maxAgeSetting.value) : 35;
+      
+      const maxExpSetting = await storage.getSetting("maxWorkExperience");
+      const maxExp = maxExpSetting ? parseInt(maxExpSetting.value) : 36; // 3 years in months
+      
+      const requireRecentGradSetting = await storage.getSetting("requireRecentGraduate");
+      const requireRecentGrad = requireRecentGradSetting ? requireRecentGradSetting.value === "true" : true;
+      
+      // Current year for graduation check
+      const currentYear = new Date().getFullYear();
+      
+      // Validation results
+      const eligibilityResults = {
+        eligible: true,
+        reasons: [] as string[],
+        checks: {
+          age: age <= maxAge,
+          workExperience: workExperience <= maxExp,
+          recentGraduate: !requireRecentGrad || (currentYear - graduationYear <= 3)
+        }
+      };
+      
+      // Check age
+      if (age > maxAge) {
+        eligibilityResults.eligible = false;
+        eligibilityResults.reasons.push(`Age must be ${maxAge} or under`);
+      }
+      
+      // Check work experience
+      if (workExperience > maxExp) {
+        eligibilityResults.eligible = false;
+        eligibilityResults.reasons.push(`Work experience must be ${maxExp} months (3 years) or less`);
+      }
+      
+      // Check graduation year if required
+      if (requireRecentGrad && (currentYear - graduationYear > 3)) {
+        eligibilityResults.eligible = false;
+        eligibilityResults.reasons.push(`Must be a recent graduate (within the last 3 years)`);
+      }
+      
+      res.json(eligibilityResults);
+    } catch (error) {
+      res.status(500).json({ message: "Failed to check eligibility" });
+    }
+  });
+
   // Apply as participant
   app.post("/api/participants", isAuthenticated, async (req, res) => {
     try {
@@ -416,13 +473,52 @@ export async function registerRoutes(app: Express): Promise<Server> {
         order: currentCount + 1 // Assign next order number
       });
       
+      // Check eligibility criteria
+      const maxAgeSetting = await storage.getSetting("maxParticipantAge");
+      const maxAge = maxAgeSetting ? parseInt(maxAgeSetting.value) : 35;
+      
+      if (participantData.age > maxAge) {
+        return res.status(400).json({ message: `Participants must be ${maxAge} years or younger` });
+      }
+      
+      const maxExpSetting = await storage.getSetting("maxWorkExperience");
+      const maxExp = maxExpSetting ? parseInt(maxExpSetting.value) : 36; // 3 years in months
+      
+      if (participantData.workExperience > maxExp) {
+        return res.status(400).json({ message: `Work experience must be ${maxExp} months (3 years) or less` });
+      }
+      
+      const currentYear = new Date().getFullYear();
+      const requireRecentGradSetting = await storage.getSetting("requireRecentGraduate");
+      const requireRecentGrad = requireRecentGradSetting ? requireRecentGradSetting.value === "true" : true;
+      
+      if (requireRecentGrad && (currentYear - participantData.graduationYear > 3)) {
+        return res.status(400).json({ message: `Must be a recent graduate (within the last 3 years)` });
+      }
+      
       // Filter content
       const bioFilter = filterContent(participantData.bio);
+      const nameFilter = filterContent(participantData.name);
+      const projectFilter = filterContent(participantData.projectDescription);
       
       if (!bioFilter.approved) {
         return res.status(400).json({ 
           message: "Bio contains inappropriate content",
           reason: bioFilter.reason 
+        });
+      }
+      
+      if (!nameFilter.approved) {
+        return res.status(400).json({ 
+          message: "Name contains inappropriate content",
+          reason: nameFilter.reason 
+        });
+      }
+      
+      if (!projectFilter.approved) {
+        return res.status(400).json({ 
+          message: "Project description contains inappropriate content",
+          reason: projectFilter.reason 
         });
       }
       
@@ -440,7 +536,22 @@ export async function registerRoutes(app: Express): Promise<Server> {
         }
       }
       
-      res.status(201).json(participant);
+      // Create NFT badge for the participant
+      const badgeData = await createNFTBadge("participant", req.session.userId, participantData.name);
+      
+      // Mint the NFT
+      const txHash = await simulateMinting(badgeData.id);
+      await storage.updateNFTBadgeTransaction(badgeData.id, txHash);
+      
+      // Update user with NFT badge reference
+      if (req.session.userId) {
+        await storage.updateUserNFTBadge(req.session.userId, badgeData.id);
+      }
+      
+      res.status(201).json({
+        participant,
+        badge: formatBadgeForDisplay(badgeData)
+      });
     } catch (error) {
       if (error instanceof z.ZodError) {
         return res.status(400).json({ message: "Invalid participant data", errors: error.errors });
@@ -589,6 +700,233 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // PROGRESS UPDATES AND CHALLENGE TRACKING
+  
+  // Get progress updates for a participant
+  app.get("/api/participants/:id/progress", async (req, res) => {
+    try {
+      const participantId = parseInt(req.params.id);
+      const progressUpdates = await storage.getProgressUpdatesByParticipant(participantId);
+      res.json(progressUpdates);
+    } catch (error) {
+      res.status(500).json({ message: "Failed to fetch progress updates" });
+    }
+  });
+  
+  // Submit a progress update (for participants only)
+  app.post("/api/progress-update", isAuthenticated, async (req, res) => {
+    try {
+      if (!req.session.userId) {
+        return res.status(401).json({ message: "Authentication required" });
+      }
+      
+      // Check if user is a participant
+      const participant = await storage.getParticipantByUserId(req.session.userId);
+      if (!participant) {
+        return res.status(403).json({ message: "Only participants can submit progress updates" });
+      }
+      
+      const updateData = insertProgressUpdateSchema.parse({
+        ...req.body,
+        participantId: participant.id
+      });
+      
+      // Check update content
+      const titleFilter = filterContent(updateData.title);
+      const descFilter = filterContent(updateData.description);
+      
+      if (!titleFilter.approved) {
+        return res.status(400).json({ 
+          message: "Title contains inappropriate content",
+          reason: titleFilter.reason 
+        });
+      }
+      
+      if (!descFilter.approved) {
+        return res.status(400).json({ 
+          message: "Description contains inappropriate content",
+          reason: descFilter.reason 
+        });
+      }
+      
+      // Check if month is valid (1-12)
+      if (updateData.month < 1 || updateData.month > 12) {
+        return res.status(400).json({ message: "Month must be between 1 and 12" });
+      }
+      
+      // Check if update for this month already exists
+      const existingUpdates = await storage.getProgressUpdatesByParticipant(participant.id);
+      const existingMonthUpdate = existingUpdates.find(update => update.month === updateData.month);
+      
+      if (existingMonthUpdate) {
+        return res.status(400).json({ 
+          message: `You have already submitted an update for month ${updateData.month}` 
+        });
+      }
+      
+      const progressUpdate = await storage.createProgressUpdate(updateData);
+      
+      // Create gas fee transaction for the participant
+      const platformWalletAddressSetting = await storage.getSetting("platformWalletAddress");
+      const platformWalletAddress = platformWalletAddressSetting?.value || 
+        "0xDebF00937a402ebffaF25ABeF1BdE9aA8fe2c330";
+      
+      const founderPercentageSetting = await storage.getSetting("founderProfitPercentage");
+      const founderPercentage = founderPercentageSetting ? 
+        parseInt(founderPercentageSetting.value) : 30;
+      
+      // Simulate blockchain transaction with gas fee
+      const gasPrice = 0.001; // Sample gas price in BNB
+      const founderProfit = (gasPrice * founderPercentage / 100).toFixed(6);
+      const platformFee = (gasPrice - parseFloat(founderProfit)).toFixed(6);
+      
+      // Create a transaction record
+      await storage.createTransaction({
+        userId: req.session.userId,
+        amount: gasPrice.toString(),
+        txType: "progress_update",
+        platformFee: platformFee,
+        founderProfit: founderProfit,
+        transactionHash: `tx_progress_${Date.now()}`,
+        status: "confirmed"
+      });
+      
+      res.status(201).json(progressUpdate);
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        return res.status(400).json({ message: "Invalid progress update data", errors: error.errors });
+      }
+      res.status(500).json({ message: "Could not submit progress update" });
+    }
+  });
+  
+  // Vote for a participant
+  app.post("/api/participants/:id/vote", isAuthenticated, async (req, res) => {
+    try {
+      if (!req.session.userId) {
+        return res.status(401).json({ message: "Authentication required" });
+      }
+      
+      const participantId = parseInt(req.params.id);
+      const { awardId, comment } = req.body;
+      
+      // Check if participant exists
+      const participant = await storage.getParticipant(participantId);
+      if (!participant) {
+        return res.status(404).json({ message: "Participant not found" });
+      }
+      
+      // Check if award exists
+      const award = await storage.getAward(awardId);
+      if (!award) {
+        return res.status(404).json({ message: "Award not found" });
+      }
+      
+      // Check if award is active
+      if (award.status !== "active") {
+        return res.status(400).json({ message: `Voting for ${award.name} is not currently active` });
+      }
+      
+      // Check if user already voted for this participant in this award
+      const existingVotes = await storage.getVotesByUser(req.session.userId);
+      const alreadyVoted = existingVotes.some(
+        vote => vote.participantId === participantId && vote.awardId === awardId
+      );
+      
+      if (alreadyVoted) {
+        return res.status(400).json({ message: "You have already voted for this participant in this award category" });
+      }
+      
+      // Create the vote
+      const voteData = insertVoteSchema.parse({
+        participantId,
+        userId: req.session.userId,
+        awardId,
+        comment: comment || null,
+        value: 1 // Default to 1 for simple voting
+      });
+      
+      const vote = await storage.createVote(voteData);
+      
+      // Increment participant's vote count
+      const updatedVoteCount = await storage.countVotesForParticipant(participantId);
+      
+      // Create gas fee transaction for voting
+      const platformWalletAddressSetting = await storage.getSetting("platformWalletAddress");
+      const platformWalletAddress = platformWalletAddressSetting?.value || 
+        "0xDebF00937a402ebffaF25ABeF1BdE9aA8fe2c330";
+      
+      const votingFeeSetting = await storage.getSetting("votingFee");
+      const votingFee = votingFeeSetting ? parseFloat(votingFeeSetting.value) : 0.005;
+      
+      const founderPercentageSetting = await storage.getSetting("founderProfitPercentage");
+      const founderPercentage = founderPercentageSetting ? 
+        parseInt(founderPercentageSetting.value) : 30;
+      
+      const founderProfit = (votingFee * founderPercentage / 100).toFixed(6);
+      const platformFee = (votingFee - parseFloat(founderProfit)).toFixed(6);
+      
+      // Create a transaction record
+      const transaction = await storage.createTransaction({
+        userId: req.session.userId,
+        amount: votingFee.toString(),
+        txType: "vote",
+        platformFee: platformFee,
+        founderProfit: founderProfit,
+        transactionHash: `tx_vote_${Date.now()}`,
+        status: "confirmed"
+      });
+      
+      // Update the vote with transaction hash
+      await storage.createVote({
+        ...vote,
+        transactionHash: transaction.transactionHash
+      });
+      
+      res.status(201).json({ 
+        success: true,
+        message: "Vote submitted successfully",
+        vote,
+        voteCount: updatedVoteCount,
+        transaction: {
+          hash: transaction.transactionHash,
+          amount: votingFee,
+          currency: "BNB",
+          date: new Date().toISOString()
+        }
+      });
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        return res.status(400).json({ message: "Invalid vote data", errors: error.errors });
+      }
+      res.status(500).json({ message: "Could not submit vote" });
+    }
+  });
+  
+  // Get all transactions for the current user
+  app.get("/api/transactions", isAuthenticated, async (req, res) => {
+    try {
+      if (!req.session.userId) {
+        return res.status(401).json({ message: "Authentication required" });
+      }
+      
+      const transactions = await storage.getTransactionsByUser(req.session.userId);
+      res.json(transactions);
+    } catch (error) {
+      res.status(500).json({ message: "Failed to fetch transactions" });
+    }
+  });
+  
+  // Get founder profit total
+  app.get("/api/founder-profit", async (req, res) => {
+    try {
+      const totalProfit = await storage.getFounderProfitTotal();
+      res.json({ totalProfit });
+    } catch (error) {
+      res.status(500).json({ message: "Failed to calculate founder profit" });
+    }
+  });
+  
   // ADMIN ROUTES
   
   // Get all ads for admin

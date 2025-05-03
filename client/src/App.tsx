@@ -13,10 +13,13 @@ import ViewerRegistration from "@/pages/viewer-registration";
 import Dashboard from "@/pages/dashboard";
 import Admin from "@/pages/admin";
 import AffiliateProgram from "@/pages/affiliate-program";
+import About from "@/pages/about";
+import Whitepaper from "@/pages/whitepaper";
 import { Header } from "@/components/layout/header";
 import { Footer } from "@/components/layout/footer";
 import { useAuth } from "@/contexts/auth-context";
 import { Web3ContextProvider } from "@/contexts/web3-context";
+import { LanguageProvider } from "@/contexts/language-context";
 
 function Router() {
   const { user } = useAuth();
@@ -24,6 +27,8 @@ function Router() {
   return (
     <Switch>
       <Route path="/" component={Home} />
+      <Route path="/about" component={About} />
+      <Route path="/whitepaper" component={Whitepaper} />
       <Route path="/ads" component={Ads} />
       <Route path="/submit-ad" component={SubmitAd} />
       <Route path="/participants" component={Participants} />
@@ -44,18 +49,20 @@ function Router() {
 function App() {
   return (
     <QueryClientProvider client={queryClient}>
-      <Web3ContextProvider>
-        <TooltipProvider>
-          <div className="flex flex-col min-h-screen">
-            <Header />
-            <main className="flex-grow">
-              <Router />
-            </main>
-            <Footer />
-          </div>
-          <Toaster />
-        </TooltipProvider>
-      </Web3ContextProvider>
+      <LanguageProvider>
+        <Web3ContextProvider>
+          <TooltipProvider>
+            <div className="flex flex-col min-h-screen">
+              <Header />
+              <main className="flex-grow">
+                <Router />
+              </main>
+              <Footer />
+            </div>
+            <Toaster />
+          </TooltipProvider>
+        </Web3ContextProvider>
+      </LanguageProvider>
     </QueryClientProvider>
   );
 }

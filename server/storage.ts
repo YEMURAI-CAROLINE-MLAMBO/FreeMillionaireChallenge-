@@ -181,11 +181,83 @@ export class MemStorage implements IStorage {
       description: "The end date for the challenge"
     });
     
+    // Challenge start date (12 months before end date)
+    this.createOrUpdateSetting({
+      key: "challengeStartDate",
+      value: "2024-08-01T00:00:00.000Z",
+      description: "The start date for the challenge"
+    });
+    
     // Set the maximum participants
     this.createOrUpdateSetting({
       key: "maxParticipants",
       value: "9",
       description: "Maximum number of participants allowed"
+    });
+    
+    // Set the participant eligibility rules
+    this.createOrUpdateSetting({
+      key: "maxParticipantAge",
+      value: "35",
+      description: "Maximum age for participants"
+    });
+    
+    this.createOrUpdateSetting({
+      key: "maxWorkExperience",
+      value: "36",
+      description: "Maximum work experience in months (3 years)"
+    });
+    
+    this.createOrUpdateSetting({
+      key: "requireRecentGraduate",
+      value: "true",
+      description: "Require participants to be recent graduates"
+    });
+    
+    // Award details
+    this.createOrUpdateSetting({
+      key: "viewersChoiceAward",
+      value: "1.0",
+      description: "Amount in BNB for Viewers' Choice Award"
+    });
+    
+    this.createOrUpdateSetting({
+      key: "judgesChoiceAward",
+      value: "1.5",
+      description: "Amount in BNB for Judges' Choice Award"
+    });
+    
+    this.createOrUpdateSetting({
+      key: "socialMediaAward",
+      value: "1.0",
+      description: "Amount in BNB for Social Media Interaction Award"
+    });
+    
+    // Founder profit settings
+    this.createOrUpdateSetting({
+      key: "founderProfitPercentage",
+      value: "30",
+      description: "Percentage of transaction fees that go to founder (30%)"
+    });
+    
+    // Transaction fee settings
+    this.createOrUpdateSetting({
+      key: "adSubmissionFee",
+      value: "0.05",
+      description: "Fee in BNB for submitting an ad"
+    });
+    
+    this.createOrUpdateSetting({
+      key: "votingFee",
+      value: "0.005",
+      description: "Fee in BNB for casting a vote"
+    });
+    
+    // Platform wallet address
+    this.createOrUpdateSetting({
+      key: "platformWalletAddress",
+      value: "0xDebF00937a402ebffaF25ABeF1BdE9aA8fe2c330",
+      description: "Platform wallet address for receiving fees"
     });
   }
 
@@ -516,6 +588,212 @@ export class MemStorage implements IStorage {
 
   async getSettings(): Promise<Setting[]> {
     return Array.from(this.settings.values());
+  }
+  
+  // Award methods
+  async getAward(id: number): Promise<Award | undefined> {
+    return this.awards.get(id);
+  }
+  
+  async getAwards(): Promise<Award[]> {
+    return Array.from(this.awards.values());
+  }
+  
+  async getActiveAwards(): Promise<Award[]> {
+    return Array.from(this.awards.values()).filter(
+      award => award.status === "active"
+    );
+  }
+  
+  async createAward(insertAward: InsertAward): Promise<Award> {
+    const id = this.awardIdCounter++;
+    const now = new Date();
+    const award: Award = {
+      ...insertAward,
+      id,
+      status: insertAward.status || "upcoming",
+      startDate: insertAward.startDate || null,
+      endDate: insertAward.endDate || null,
+      createdAt: now
+    };
+    this.awards.set(id, award);
+    return award;
+  }
+  
+  async updateAwardStatus(id: number, status: string): Promise<Award | undefined> {
+    const award = this.awards.get(id);
+    if (!award) return undefined;
+    
+    const updatedAward = { ...award, status };
+    this.awards.set(id, updatedAward);
+    return updatedAward;
+  }
+  
+  // Vote methods
+  async getVote(id: number): Promise<Vote | undefined> {
+    return this.votes.get(id);
+  }
+  
+  async getVotesByParticipant(participantId: number): Promise<Vote[]> {
+    return Array.from(this.votes.values()).filter(
+      vote => vote.participantId === participantId
+    );
+  }
+  
+  async getVotesByUser(userId: number): Promise<Vote[]> {
+    return Array.from(this.votes.values()).filter(
+      vote => vote.userId === userId
+    );
+  }
+  
+  async getVotesByAward(awardId: number): Promise<Vote[]> {
+    return Array.from(this.votes.values()).filter(
+      vote => vote.awardId === awardId
+    );
+  }
+  
+  async createVote(insertVote: InsertVote): Promise<Vote> {
+    const id = this.voteIdCounter++;
+    const now = new Date();
+    const vote: Vote = {
+      ...insertVote,
+      id,
+      value: insertVote.value || 1,
+      comment: insertVote.comment || null,
+      transactionHash: insertVote.transactionHash || null,
+      createdAt: now
+    };
+    this.votes.set(id, vote);
+    return vote;
+  }
+  
+  async countVotesForParticipant(participantId: number): Promise<number> {
+    return Array.from(this.votes.values()).filter(
+      vote => vote.participantId === participantId
+    ).length;
+  }
+  
+  // Progress Update methods
+  async getProgressUpdate(id: number): Promise<ProgressUpdate | undefined> {
+    return this.progressUpdates.get(id);
+  }
+  
+  async getProgressUpdatesByParticipant(participantId: number): Promise<ProgressUpdate[]> {
+    return Array.from(this.progressUpdates.values())
+      .filter(update => update.participantId === participantId)
+      .sort((a, b) => a.month - b.month);
+  }
+  
+  async getProgressUpdatesByMonth(month: number): Promise<ProgressUpdate[]> {
+    return Array.from(this.progressUpdates.values()).filter(
+      update => update.month === month
+    );
+  }
+  
+  async createProgressUpdate(insertUpdate: InsertProgressUpdate): Promise<ProgressUpdate> {
+    const id = this.progressUpdateIdCounter++;
+    const now = new Date();
+    const update: ProgressUpdate = {
+      ...insertUpdate,
+      id,
+      milestone: insertUpdate.milestone || null,
+      videoUrl: insertUpdate.videoUrl || null,
+      images: insertUpdate.images || [],
+      socialPosts: insertUpdate.socialPosts || [],
+      interactionCount: 0, // Initialize with 0
+      createdAt: now
+    };
+    this.progressUpdates.set(id, update);
+    
+    // Update the participant's current milestone
+    const participant = await this.getParticipant(insertUpdate.participantId);
+    if (participant) {
+      const completionPercentage = Math.floor((insertUpdate.month / 12) * 100);
+      const updatedParticipant = { 
+        ...participant, 
+        currentMilestone: insertUpdate.milestone || participant.currentMilestone,
+        challengeCompletion: completionPercentage
+      };
+      this.participants.set(participant.id, updatedParticipant);
+    }
+    
+    return update;
+  }
+  
+  async updateInteractionCount(id: number, count: number): Promise<ProgressUpdate | undefined> {
+    const update = this.progressUpdates.get(id);
+    if (!update) return undefined;
+    
+    const updatedUpdate = { ...update, interactionCount: count };
+    this.progressUpdates.set(id, updatedUpdate);
+    
+    // Also update the participant's social interactions total
+    const participant = await this.getParticipant(update.participantId);
+    if (participant) {
+      // Get all progress updates for this participant
+      const updates = await this.getProgressUpdatesByParticipant(participant.id);
+      const totalInteractions = updates.reduce((sum, update) => sum + update.interactionCount, 0);
+      
+      // Update the participant's social interactions count
+      const updatedParticipant = { ...participant, socialInteractions: totalInteractions };
+      this.participants.set(participant.id, updatedParticipant);
+    }
+    
+    return updatedUpdate;
+  }
+  
+  // Transaction methods
+  async getTransaction(id: number): Promise<Transaction | undefined> {
+    return this.transactions.get(id);
+  }
+  
+  async getTransactionsByUser(userId: number): Promise<Transaction[]> {
+    return Array.from(this.transactions.values()).filter(
+      tx => tx.userId === userId
+    );
+  }
+  
+  async getTransactionsByType(txType: string): Promise<Transaction[]> {
+    return Array.from(this.transactions.values()).filter(
+      tx => tx.txType === txType
+    );
+  }
+  
+  async createTransaction(insertTx: InsertTransaction): Promise<Transaction> {
+    const id = this.transactionIdCounter++;
+    const now = new Date();
+    const tx: Transaction = {
+      ...insertTx,
+      id,
+      status: insertTx.status || "pending",
+      createdAt: now
+    };
+    this.transactions.set(id, tx);
+    return tx;
+  }
+  
+  async updateTransactionStatus(id: number, status: string): Promise<Transaction | undefined> {
+    const tx = this.transactions.get(id);
+    if (!tx) return undefined;
+    
+    const updatedTx = { ...tx, status };
+    this.transactions.set(id, updatedTx);
+    return updatedTx;
+  }
+  
+  async getFounderProfitTotal(): Promise<string> {
+    // Sum up all confirmed founder profits
+    const confirmedTxs = Array.from(this.transactions.values()).filter(
+      tx => tx.status === "confirmed"
+    );
+    
+    // Convert string BNB values to numbers, sum them, then convert back to string
+    // Using string representation to avoid floating point precision issues with crypto amounts
+    const totalProfit = confirmedTxs.reduce((sum, tx) => {
+      return sum + parseFloat(tx.founderProfit);
+    }, 0);
+    
+    return totalProfit.toString();
   }
 }
 
