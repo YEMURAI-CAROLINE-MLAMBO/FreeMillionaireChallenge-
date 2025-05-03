@@ -54,7 +54,7 @@ const AdSubmissionForm: React.FC = () => {
     defaultValues: {
       title: '',
       description: '',
-      category: '',
+      category: 'design', // Default to design category
       imageUrl: '',
     },
   });

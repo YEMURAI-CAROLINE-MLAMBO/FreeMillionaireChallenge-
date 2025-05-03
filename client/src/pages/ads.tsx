@@ -20,7 +20,7 @@ import {
 
 const Ads: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState('');
-  const [category, setCategory] = useState('');
+  const [category, setCategory] = useState('all');
   const [status, setStatus] = useState('approved');
   
   // Fetch ads
@@ -37,8 +37,8 @@ const Ads: React.FC = () => {
         ad.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
         ad.description.toLowerCase().includes(searchTerm.toLowerCase());
         
-      const matchesCategory = category === '' || ad.category === category;
-      const matchesStatus = status === '' || ad.status === status;
+      const matchesCategory = category === 'all' || ad.category === category;
+      const matchesStatus = status === 'all' || ad.status === status;
       
       return matchesSearch && matchesCategory && matchesStatus;
     });
@@ -74,7 +74,7 @@ const Ads: React.FC = () => {
                 <SelectValue placeholder="Filter by category" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="">All Categories</SelectItem>
+                <SelectItem value="all">All Categories</SelectItem>
                 <SelectItem value="design">Design Services</SelectItem>
                 <SelectItem value="crypto">Cryptocurrency</SelectItem>
                 <SelectItem value="business">Business Services</SelectItem>
@@ -90,7 +90,7 @@ const Ads: React.FC = () => {
                 <SelectValue placeholder="Filter by status" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="">All Statuses</SelectItem>
+                <SelectItem value="all">All Statuses</SelectItem>
                 <SelectItem value="approved">Approved</SelectItem>
                 <SelectItem value="pending">Pending</SelectItem>
               </SelectContent>
