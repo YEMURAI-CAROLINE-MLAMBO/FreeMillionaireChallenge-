@@ -64,29 +64,26 @@ function generateMetadata(type: string, userId: number, name: string) {
  * This simulates the creation of an NFT without actual blockchain interaction
  * 
  * @param userId ID of the user receiving the badge
- * @param type Type of badge (affiliate, participant)
+ * @param badgeType Type of badge (affiliate, participant)
  * @param name Name of the user or entity receiving the badge
  * @returns The created NFT badge
  */
 export async function createNFTBadge(
   userId: number,
-  type: string,
+  badgeType: string,
   name: string
 ): Promise<NFTBadge> {
   // Generate metadata for the NFT
-  const metadata = generateMetadata(type, userId, name);
-  
-  // Define revenue share percentage based on badge type
-  const revenueSharePercent = type === 'affiliate' ? 5 : 10;
+  const metadata = generateMetadata(badgeType, userId, name);
   
   // Prepare badge data for storage
   const badgeData: InsertNFTBadge = {
     userId,
-    type,
+    badgeType,
+    network: "binance-smart-chain",
     tokenId: metadata.tokenId,
     metadata: JSON.stringify(metadata),
-    revenueSharePercent,
-    status: "pending"
+    imageUrl: metadata.image
   };
   
   // Store the badge in the database

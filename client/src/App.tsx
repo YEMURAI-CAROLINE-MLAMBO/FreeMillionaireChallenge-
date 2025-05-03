@@ -17,6 +17,7 @@ import AffiliateProgram from "@/pages/affiliate-program";
 import About from "@/pages/about";
 import Whitepaper from "@/pages/whitepaper";
 import Tokenomics from "@/pages/tokenomics";
+import SocialEntrepreneurship from "@/pages/social-entrepreneurship";
 import { Header } from "@/components/layout/header";
 import { Footer } from "@/components/layout/footer";
 import { useAuth } from "@/contexts/auth-context";
@@ -33,6 +34,7 @@ function Router() {
       <Route path="/about" component={About} />
       <Route path="/whitepaper" component={Whitepaper} />
       <Route path="/tokenomics" component={Tokenomics} />
+      <Route path="/social-entrepreneurship" component={SocialEntrepreneurship} />
       <Route path="/ads" component={Ads} />
       <Route path="/submit-ad" component={SubmitAd} />
       <Route path="/participants" component={Participants} />
