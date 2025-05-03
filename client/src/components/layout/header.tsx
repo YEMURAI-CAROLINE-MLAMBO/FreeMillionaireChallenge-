@@ -3,8 +3,6 @@ import { Link, useLocation } from 'wouter';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import { useAuth } from '@/contexts/auth-context';
-import { useLanguage } from '@/contexts/language-context';
-import LanguageSelector from '@/components/language-selector';
 import { 
   Menu, 
   X, 
@@ -29,8 +27,6 @@ export const Header: React.FC = () => {
   };
 
   const isActive = (path: string) => location === path;
-
-  const { t } = useLanguage();
   
   return (
     <header className="bg-white shadow-sm sticky top-0 z-50">
@@ -41,140 +37,94 @@ export const Header: React.FC = () => {
           </Link>
         </div>
         
-        {/* Desktop Navigation - Redesigned with Dropdowns */}
-        <div className="hidden md:flex items-center space-x-3">
-          <Link href="/" className={`${isActive('/') ? 'text-primary' : 'text-foreground'} hover:text-primary font-medium transition flex items-center gap-1 px-3 py-2`}>
-            <PanelRight className="h-4 w-4" />
-            <span>Home</span>
-          </Link>
-          
-          {/* About Dropdown */}
+        {/* Desktop Navigation - Left-side menu with hover dropdown */}
+        <div className="hidden md:flex items-center">
           <div className="relative group">
-            <button className={`${isActive('/about') || isActive('/whitepaper') || isActive('/social-entrepreneurship') ? 'text-primary' : 'text-foreground'} hover:text-primary font-medium transition flex items-center gap-1 px-3 py-2`}>
-              <Info className="h-4 w-4" />
-              <span>About</span>
-              <ChevronDown className="h-4 w-4 ml-1" />
+            <button className="hover:text-primary font-medium transition flex items-center gap-1 px-3 py-2">
+              <Menu className="h-5 w-5" />
+              <span>Menu</span>
             </button>
             <div className="absolute left-0 mt-1 w-64 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 hidden group-hover:block z-50">
               <div className="py-1">
-                <Link href="/about" className="flex items-center gap-2 px-4 py-3 text-sm text-gray-800 hover:bg-gray-100">
+                <Link href="/" className={`flex items-center gap-2 px-4 py-3 text-sm ${isActive('/') ? 'bg-gray-100 text-primary' : 'text-gray-800'} hover:bg-gray-100`}>
+                  <PanelRight className="h-4 w-4 text-amber-500" />
+                  <span>Home</span>
+                </Link>
+                
+                {/* About Section */}
+                <div className="px-4 py-2 border-t border-gray-100">
+                  <p className="text-xs uppercase text-gray-500 font-semibold tracking-wider">About</p>
+                </div>
+                <Link href="/about" className={`flex items-center gap-2 px-4 py-2 text-sm ${isActive('/about') ? 'bg-gray-100 text-primary' : 'text-gray-800'} hover:bg-gray-100`}>
                   <Info className="h-4 w-4 text-amber-500" />
-                  <div>
-                    <p className="font-medium">About FMC</p>
-                    <p className="text-xs text-gray-500">Our mission, vision & impact</p>
-                  </div>
+                  <span>About FMC</span>
                 </Link>
-                <Link href="/whitepaper" className="flex items-center gap-2 px-4 py-3 text-sm text-gray-800 hover:bg-gray-100">
+                <Link href="/whitepaper" className={`flex items-center gap-2 px-4 py-2 text-sm ${isActive('/whitepaper') ? 'bg-gray-100 text-primary' : 'text-gray-800'} hover:bg-gray-100`}>
                   <FileText className="h-4 w-4 text-amber-500" />
-                  <div>
-                    <p className="font-medium">Whitepaper</p>
-                    <p className="text-xs text-gray-500">Technical details & roadmap</p>
-                  </div>
+                  <span>Whitepaper</span>
                 </Link>
-                <Link href="/social-entrepreneurship" className="flex items-center gap-2 px-4 py-3 text-sm text-gray-800 hover:bg-gray-100">
+                <Link href="/social-entrepreneurship" className={`flex items-center gap-2 px-4 py-2 text-sm ${isActive('/social-entrepreneurship') ? 'bg-gray-100 text-primary' : 'text-gray-800'} hover:bg-gray-100`}>
                   <Heart className="h-4 w-4 text-amber-500" />
-                  <div>
-                    <p className="font-medium">Social Entrepreneurship</p>
-                    <p className="text-xs text-gray-500">Educational resources & case studies</p>
-                  </div>
+                  <span>Social Entrepreneurship</span>
                 </Link>
-              </div>
-            </div>
-          </div>
-          
-          {/* Finance Dropdown */}
-          <div className="relative group">
-            <button className={`${isActive('/tokenomics') ? 'text-primary' : 'text-foreground'} hover:text-primary font-medium transition flex items-center gap-1 px-3 py-2`}>
-              <BarChart className="h-4 w-4" />
-              <span>Finance</span>
-              <ChevronDown className="h-4 w-4 ml-1" />
-            </button>
-            <div className="absolute left-0 mt-1 w-60 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 hidden group-hover:block z-50">
-              <div className="py-1">
-                <Link href="/tokenomics" className="flex items-center gap-2 px-4 py-3 text-sm text-gray-800 hover:bg-gray-100">
+                
+                {/* Finance Section */}
+                <div className="px-4 py-2 border-t border-gray-100">
+                  <p className="text-xs uppercase text-gray-500 font-semibold tracking-wider">Finance</p>
+                </div>
+                <Link href="/tokenomics" className={`flex items-center gap-2 px-4 py-2 text-sm ${isActive('/tokenomics') ? 'bg-gray-100 text-primary' : 'text-gray-800'} hover:bg-gray-100`}>
                   <BarChart className="h-4 w-4 text-amber-500" />
-                  <div>
-                    <p className="font-medium">Tokenomics</p>
-                    <p className="text-xs text-gray-500">Platform economics & profit distribution</p>
-                  </div>
+                  <span>Tokenomics</span>
                 </Link>
-                <Link href="/affiliate-program" className="flex items-center gap-2 px-4 py-3 text-sm text-gray-800 hover:bg-gray-100">
+                <Link href="/affiliate-program" className={`flex items-center gap-2 px-4 py-2 text-sm ${isActive('/affiliate-program') ? 'bg-gray-100 text-primary' : 'text-gray-800'} hover:bg-gray-100`}>
                   <Users className="h-4 w-4 text-amber-500" />
-                  <div>
-                    <p className="font-medium">Affiliate Program</p>
-                    <p className="text-xs text-gray-500">Earn through referrals & NFT badges</p>
-                  </div>
+                  <span>Affiliate Program</span>
                 </Link>
-              </div>
-            </div>
-          </div>
-          
-          {/* Community Dropdown */}
-          <div className="relative group">
-            <button className={`${isActive('/participants') || isActive('/streaming') ? 'text-primary' : 'text-foreground'} hover:text-primary font-medium transition flex items-center gap-1 px-3 py-2`}>
-              <Users className="h-4 w-4" />
-              <span>Community</span>
-              <ChevronDown className="h-4 w-4 ml-1" />
-            </button>
-            <div className="absolute left-0 mt-1 w-60 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 hidden group-hover:block z-50">
-              <div className="py-1">
-                <Link href="/participants" className="flex items-center gap-2 px-4 py-3 text-sm text-gray-800 hover:bg-gray-100">
+                
+                {/* Community Section */}
+                <div className="px-4 py-2 border-t border-gray-100">
+                  <p className="text-xs uppercase text-gray-500 font-semibold tracking-wider">Community</p>
+                </div>
+                <Link href="/participants" className={`flex items-center gap-2 px-4 py-2 text-sm ${isActive('/participants') ? 'bg-gray-100 text-primary' : 'text-gray-800'} hover:bg-gray-100`}>
                   <Users className="h-4 w-4 text-amber-500" />
-                  <div>
-                    <p className="font-medium">Participants</p>
-                    <p className="text-xs text-gray-500">Meet our social entrepreneurs</p>
-                  </div>
+                  <span>Participants</span>
                 </Link>
-                <Link href="/streaming" className="flex items-center gap-2 px-4 py-3 text-sm text-gray-800 hover:bg-gray-100">
+                <Link href="/streaming" className={`flex items-center gap-2 px-4 py-2 text-sm ${isActive('/streaming') ? 'bg-gray-100 text-primary' : 'text-gray-800'} hover:bg-gray-100`}>
                   <Video className="h-4 w-4 text-amber-500" />
-                  <div>
-                    <p className="font-medium">Live Streaming</p>
-                    <p className="text-xs text-gray-500">Watch participant updates & events</p>
-                  </div>
+                  <span>Live Streaming</span>
                 </Link>
-              </div>
-            </div>
-          </div>
-          
-          {/* Advertising Section */}
-          <div className="relative group">
-            <button className={`${isActive('/ads') || isActive('/submit-ad') ? 'text-primary' : 'text-foreground'} hover:text-primary font-medium transition flex items-center gap-1 px-3 py-2`}>
-              <LayoutGrid className="h-4 w-4" />
-              <span>Advertise</span>
-              <ChevronDown className="h-4 w-4 ml-1" />
-            </button>
-            <div className="absolute left-0 mt-1 w-60 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 hidden group-hover:block z-50">
-              <div className="py-1">
-                <Link href="/ads" className="flex items-center gap-2 px-4 py-3 text-sm text-gray-800 hover:bg-gray-100">
+                
+                {/* Advertising Section */}
+                <div className="px-4 py-2 border-t border-gray-100">
+                  <p className="text-xs uppercase text-gray-500 font-semibold tracking-wider">Advertising</p>
+                </div>
+                <Link href="/ads" className={`flex items-center gap-2 px-4 py-2 text-sm ${isActive('/ads') ? 'bg-gray-100 text-primary' : 'text-gray-800'} hover:bg-gray-100`}>
                   <LayoutGrid className="h-4 w-4 text-amber-500" />
-                  <div>
-                    <p className="font-medium">Browse Ads</p>
-                    <p className="text-xs text-gray-500">See current advertisements</p>
-                  </div>
+                  <span>Browse Ads</span>
                 </Link>
-                <Link href="/submit-ad" className="flex items-center gap-2 px-4 py-3 text-sm text-gray-800 hover:bg-gray-100">
+                <Link href="/submit-ad" className={`flex items-center gap-2 px-4 py-2 text-sm ${isActive('/submit-ad') ? 'bg-gray-100 text-primary' : 'text-gray-800'} hover:bg-gray-100`}>
                   <FileText className="h-4 w-4 text-amber-500" />
-                  <div>
-                    <p className="font-medium">Submit Ad</p>
-                    <p className="text-xs text-gray-500">Create and publish your ad</p>
-                  </div>
+                  <span>Submit Ad</span>
                 </Link>
+                
+                {/* Admin Panel - Visible only to admins */}
+                {user && user.role === 'admin' && (
+                  <>
+                    <div className="px-4 py-2 border-t border-gray-100">
+                      <p className="text-xs uppercase text-gray-500 font-semibold tracking-wider">Admin</p>
+                    </div>
+                    <Link 
+                      href="/admin" 
+                      className={`flex items-center gap-2 px-4 py-2 text-sm ${isActive('/admin') ? 'bg-gray-100 text-primary' : 'text-gray-800'} hover:bg-gray-100`}
+                    >
+                      <LayoutGrid className="h-4 w-4 text-amber-500" />
+                      <span>Admin Dashboard</span>
+                    </Link>
+                  </>
+                )}
               </div>
             </div>
           </div>
-          
-          {/* Admin Panel - Visible only to admins */}
-          {user && user.role === 'admin' && (
-            <Link 
-              href="/admin" 
-              className={`${isActive('/admin') ? 'text-primary' : 'text-foreground'} hover:text-primary font-medium transition flex items-center gap-1 px-3 py-2`}
-            >
-              <LayoutGrid className="h-4 w-4" />
-              <span>Admin</span>
-            </Link>
-          )}
-          
-          <LanguageSelector />
         </div>
         
         <div className="hidden md:flex items-center space-x-4">

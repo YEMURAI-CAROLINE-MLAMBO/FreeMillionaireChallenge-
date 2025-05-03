@@ -167,7 +167,7 @@ const SocialEntrepreneurshipPage = () => {
         {/* Case Studies Section */}
         <Card>
           <CardHeader>
-            <CardTitle>Harvard-Level Case Studies</CardTitle>
+            <CardTitle>Notable Case Studies</CardTitle>
             <CardDescription>
               Examining landmark social enterprises that have changed the world
             </CardDescription>
@@ -196,9 +196,9 @@ const SocialEntrepreneurshipPage = () => {
                     <p className="text-sm text-gray-600">
                       Grameen has served over 9 million borrowers (97% women), distributed billions in loans, and inspired a global microfinance movement that has reached hundreds of millions of people worldwide.
                     </p>
-                    <h4 className="font-medium">Harvard Business School Analysis:</h4>
+                    <h4 className="font-medium">Business Analysis:</h4>
                     <p className="text-sm text-gray-600">
-                      HBS studies highlight how Grameen's model challenged conventional banking wisdom by demonstrating that the poor are "bankable" and that social capital can effectively replace financial collateral.
+                      Business case studies highlight how Grameen's model challenged conventional banking wisdom by demonstrating that the poor are "bankable" and that social capital can effectively replace financial collateral.
                     </p>
                   </div>
                 </AccordionContent>
