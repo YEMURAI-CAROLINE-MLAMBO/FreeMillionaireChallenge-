@@ -12,7 +12,8 @@ import {
   FileText,
   Info,
   Users,
-  PanelRight
+  PanelRight,
+  BarChart
 } from 'lucide-react';
 
 export const Header: React.FC = () => {
@@ -57,6 +58,11 @@ export const Header: React.FC = () => {
           <Link href="/whitepaper" className={`${isActive('/whitepaper') ? 'text-primary' : 'text-foreground'} hover:text-primary font-medium transition flex items-center gap-1`}>
             <FileText className="h-4 w-4" />
             Whitepaper
+          </Link>
+          
+          <Link href="/tokenomics" className={`${isActive('/tokenomics') ? 'text-primary' : 'text-foreground'} hover:text-primary font-medium transition flex items-center gap-1`}>
+            <BarChart className="h-4 w-4" />
+            Tokenomics
           </Link>
           
           <div className="relative group">
@@ -136,6 +142,20 @@ export const Header: React.FC = () => {
                   onClick={() => setIsOpen(false)}
                 >
                   Home
+                </Link>
+                <Link 
+                  href="/whitepaper" 
+                  className={`${isActive('/whitepaper') ? 'text-primary' : 'text-foreground'} hover:text-primary font-medium transition py-2`}
+                  onClick={() => setIsOpen(false)}
+                >
+                  Whitepaper
+                </Link>
+                <Link 
+                  href="/tokenomics" 
+                  className={`${isActive('/tokenomics') ? 'text-primary' : 'text-foreground'} hover:text-primary font-medium transition py-2`}
+                  onClick={() => setIsOpen(false)}
+                >
+                  Tokenomics
                 </Link>
                 <div className="py-2">
                   <span className={`${isActive('/ads') || isActive('/submit-ad') ? 'text-primary' : 'text-foreground'} font-medium`}>Ads</span>

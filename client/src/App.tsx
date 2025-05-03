@@ -32,6 +32,7 @@ function Router() {
       <Route path="/" component={Home} />
       <Route path="/about" component={About} />
       <Route path="/whitepaper" component={Whitepaper} />
+      <Route path="/tokenomics" component={Tokenomics} />
       <Route path="/ads" component={Ads} />
       <Route path="/submit-ad" component={SubmitAd} />
       <Route path="/participants" component={Participants} />
