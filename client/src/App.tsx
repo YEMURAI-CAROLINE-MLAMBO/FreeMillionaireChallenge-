@@ -12,6 +12,7 @@ import Register from "@/pages/register";
 import ViewerRegistration from "@/pages/viewer-registration";
 import Dashboard from "@/pages/dashboard";
 import Admin from "@/pages/admin";
+import AffiliateProgram from "@/pages/affiliate-program";
 import { Header } from "@/components/layout/header";
 import { Footer } from "@/components/layout/footer";
 import { useAuth } from "@/contexts/auth-context";
@@ -28,6 +29,7 @@ function Router() {
       <Route path="/participants" component={Participants} />
       <Route path="/register" component={Register} />
       <Route path="/join-as-viewer" component={ViewerRegistration} />
+      <Route path="/affiliate-program" component={AffiliateProgram} />
       {user && (
         <Route path="/dashboard" component={Dashboard} />
       )}

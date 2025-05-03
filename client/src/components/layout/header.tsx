@@ -27,14 +27,26 @@ export const Header: React.FC = () => {
           <Link href="/" className={`${isActive('/') ? 'text-primary' : 'text-foreground'} hover:text-primary font-medium transition`}>
               Home
           </Link>
-          <Link href="/ads" className={`${isActive('/ads') ? 'text-primary' : 'text-foreground'} hover:text-primary font-medium transition`}>
-              Ads
-          </Link>
+          <div className="relative group">
+              <Link href="/ads" className={`${isActive('/ads') || isActive('/submit-ad') ? 'text-primary' : 'text-foreground'} hover:text-primary font-medium transition flex items-center`}>
+                  Ads <span className="ml-1">▼</span>
+              </Link>
+              <div className="absolute left-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 hidden group-hover:block">
+                <div className="py-1">
+                  <Link href="/ads" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                    Browse Ads
+                  </Link>
+                  <Link href="/submit-ad" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                    Submit Ad
+                  </Link>
+                </div>
+              </div>
+          </div>
           <Link href="/participants" className={`${isActive('/participants') ? 'text-primary' : 'text-foreground'} hover:text-primary font-medium transition`}>
               Participants
           </Link>
-          <Link href="/submit-ad" className={`${isActive('/submit-ad') ? 'text-primary' : 'text-foreground'} hover:text-primary font-medium transition`}>
-              Submit Ad
+          <Link href="/affiliate-program" className={`${isActive('/affiliate-program') ? 'text-primary' : 'text-foreground'} hover:text-primary font-medium transition`}>
+              Affiliate Program
           </Link>
           {user && user.role === 'admin' && (
             <Link href="/admin" className={`${isActive('/admin') ? 'text-primary' : 'text-foreground'} hover:text-primary font-medium transition`}>
@@ -85,13 +97,25 @@ export const Header: React.FC = () => {
                 >
                   Home
                 </Link>
-                <Link 
-                  href="/ads" 
-                  className={`${isActive('/ads') ? 'text-primary' : 'text-foreground'} hover:text-primary font-medium transition py-2`}
-                  onClick={() => setIsOpen(false)}
-                >
-                  Ads
-                </Link>
+                <div className="py-2">
+                  <span className={`${isActive('/ads') || isActive('/submit-ad') ? 'text-primary' : 'text-foreground'} font-medium`}>Ads</span>
+                  <div className="pl-4 mt-2 flex flex-col space-y-2">
+                    <Link 
+                      href="/ads" 
+                      className="text-foreground/80 hover:text-primary"
+                      onClick={() => setIsOpen(false)}
+                    >
+                      Browse Ads
+                    </Link>
+                    <Link 
+                      href="/submit-ad" 
+                      className="text-foreground/80 hover:text-primary"
+                      onClick={() => setIsOpen(false)}
+                    >
+                      Submit Ad
+                    </Link>
+                  </div>
+                </div>
                 <Link 
                   href="/participants" 
                   className={`${isActive('/participants') ? 'text-primary' : 'text-foreground'} hover:text-primary font-medium transition py-2`}
@@ -100,11 +124,11 @@ export const Header: React.FC = () => {
                   Participants
                 </Link>
                 <Link 
-                  href="/submit-ad" 
-                  className={`${isActive('/submit-ad') ? 'text-primary' : 'text-foreground'} hover:text-primary font-medium transition py-2`}
+                  href="/affiliate-program" 
+                  className={`${isActive('/affiliate-program') ? 'text-primary' : 'text-foreground'} hover:text-primary font-medium transition py-2`}
                   onClick={() => setIsOpen(false)}
                 >
-                  Submit Ad
+                  Affiliate Program
                 </Link>
                 {user && user.role === 'admin' && (
                   <Link 
