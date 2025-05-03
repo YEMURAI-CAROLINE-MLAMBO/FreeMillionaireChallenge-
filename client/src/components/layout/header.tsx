@@ -119,7 +119,20 @@ export const Header: React.FC = () => {
                   {user ? (
                     <>
                       <span className="block text-dark-medium mb-2">Hi, {user.username}</span>
-                      <Button variant="outline" onClick={() => { handleLogout(); setIsOpen(false); }}>
+                      <Link href="/dashboard">
+                        <Button 
+                          variant="default" 
+                          className="w-full mb-2"
+                          onClick={() => setIsOpen(false)}
+                        >
+                          Dashboard
+                        </Button>
+                      </Link>
+                      <Button 
+                        variant="outline" 
+                        className="w-full"
+                        onClick={() => { handleLogout(); setIsOpen(false); }}
+                      >
                         Log Out
                       </Button>
                     </>

@@ -55,6 +55,24 @@ const Dashboard: React.FC = () => {
     },
     enabled: !!user,
   });
+  
+  // Fetch user's NFT badge
+  const { data: nftBadge } = useQuery({
+    queryKey: ['/api/nft/badge'],
+    queryFn: async () => {
+      if (!user) return null;
+      try {
+        const response = await fetch('/api/nft/badge');
+        if (response.status === 404) return null;
+        if (!response.ok) return null;
+        return await response.json();
+      } catch (error) {
+        console.error('Failed to fetch NFT badge:', error);
+        return null;
+      }
+    },
+    enabled: !!user,
+  });
 
   if (!user) {
     return null; // Return nothing while redirecting

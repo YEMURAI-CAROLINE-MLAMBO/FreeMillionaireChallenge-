@@ -180,6 +180,20 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Get ads by current user
+  app.get("/api/ads/user", isAuthenticated, async (req, res) => {
+    try {
+      if (!req.session.userId) {
+        return res.status(401).json({ message: "Authentication required" });
+      }
+      
+      const ads = await storage.getAdsByUser(req.session.userId);
+      res.json(ads);
+    } catch (error) {
+      res.status(500).json({ message: "Failed to fetch user ads" });
+    }
+  });
+
   // Get ad by id
   app.get("/api/ads/:id", async (req, res) => {
     try {
@@ -330,6 +344,25 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.json(participants);
     } catch (error) {
       res.status(500).json({ message: "Failed to fetch participants" });
+    }
+  });
+
+  // Get participant by current user session
+  app.get("/api/participants/user", isAuthenticated, async (req, res) => {
+    try {
+      if (!req.session.userId) {
+        return res.status(401).json({ message: "Authentication required" });
+      }
+      
+      const participant = await storage.getParticipantByUserId(req.session.userId);
+      
+      if (!participant) {
+        return res.status(404).json({ message: "Participant not found for this user" });
+      }
+      
+      res.json(participant);
+    } catch (error) {
+      res.status(500).json({ message: "Failed to fetch participant data" });
     }
   });
 
