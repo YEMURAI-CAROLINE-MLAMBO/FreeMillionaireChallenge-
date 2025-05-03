@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Link } from 'wouter';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Separator } from '@/components/ui/separator';
-import { Check, Users, DollarSign, FileText } from 'lucide-react';
+import { Check, Users, DollarSign, FileText, Award, Medal, Shield } from 'lucide-react';
 
 const AffiliateProgram: React.FC = () => {
   return (
@@ -17,9 +17,10 @@ const AffiliateProgram: React.FC = () => {
       </div>
 
       <Tabs defaultValue="overview" className="max-w-4xl mx-auto">
-        <TabsList className="grid w-full grid-cols-3">
+        <TabsList className="grid w-full grid-cols-4">
           <TabsTrigger value="overview">Overview</TabsTrigger>
           <TabsTrigger value="benefits">Benefits</TabsTrigger>
+          <TabsTrigger value="nft-badges">NFT Badges</TabsTrigger>
           <TabsTrigger value="smart-contract">Smart Contract</TabsTrigger>
         </TabsList>
 
@@ -161,6 +162,154 @@ const AffiliateProgram: React.FC = () => {
                 </div>
               </div>
             </CardContent>
+          </Card>
+        </TabsContent>
+
+        <TabsContent value="nft-badges" className="mt-6">
+          <Card>
+            <CardHeader>
+              <CardTitle>Exclusive NFT Badges</CardTitle>
+              <CardDescription>
+                Earn and monetize unique NFT badges as an affiliate partner
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-8">
+                <div className="text-center mb-8">
+                  <p className="text-lg mb-6">
+                    As an affiliate, you'll receive exclusive NFT badges that serve as both recognition of your contribution 
+                    and a revenue-generating asset you can leverage.
+                  </p>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                  <div className="bg-gradient-to-br from-amber-100 to-amber-300 rounded-lg p-6 shadow-sm border border-amber-200 text-center">
+                    <div className="bg-amber-500/20 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                      <Award className="text-amber-600 h-8 w-8" />
+                    </div>
+                    <h3 className="font-medium text-lg mb-2">Bronze Affiliate</h3>
+                    <p className="text-sm text-amber-900/80 mb-4">
+                      Entry-level badge earned after 5 successful referrals
+                    </p>
+                    <ul className="text-left text-sm space-y-2 text-amber-900/70">
+                      <li className="flex items-start">
+                        <Check className="h-4 w-4 mr-2 mt-0.5 text-amber-600" />
+                        <span>5% revenue sharing</span>
+                      </li>
+                      <li className="flex items-start">
+                        <Check className="h-4 w-4 mr-2 mt-0.5 text-amber-600" />
+                        <span>Basic affiliate dashboard</span>
+                      </li>
+                      <li className="flex items-start">
+                        <Check className="h-4 w-4 mr-2 mt-0.5 text-amber-600" />
+                        <span>Digital certificate of achievement</span>
+                      </li>
+                    </ul>
+                  </div>
+
+                  <div className="bg-gradient-to-br from-gray-100 to-gray-300 rounded-lg p-6 shadow-sm border border-gray-200 text-center">
+                    <div className="bg-gray-500/20 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                      <Medal className="text-gray-600 h-8 w-8" />
+                    </div>
+                    <h3 className="font-medium text-lg mb-2">Silver Affiliate</h3>
+                    <p className="text-sm text-gray-900/80 mb-4">
+                      Advanced badge earned after 15 successful referrals
+                    </p>
+                    <ul className="text-left text-sm space-y-2 text-gray-900/70">
+                      <li className="flex items-start">
+                        <Check className="h-4 w-4 mr-2 mt-0.5 text-gray-600" />
+                        <span>7.5% revenue sharing</span>
+                      </li>
+                      <li className="flex items-start">
+                        <Check className="h-4 w-4 mr-2 mt-0.5 text-gray-600" />
+                        <span>Priority support channel</span>
+                      </li>
+                      <li className="flex items-start">
+                        <Check className="h-4 w-4 mr-2 mt-0.5 text-gray-600" />
+                        <span>Advanced marketing materials</span>
+                      </li>
+                      <li className="flex items-start">
+                        <Check className="h-4 w-4 mr-2 mt-0.5 text-gray-600" />
+                        <span>Monetizable badge profile page</span>
+                      </li>
+                    </ul>
+                  </div>
+
+                  <div className="bg-gradient-to-br from-amber-300 to-yellow-500 rounded-lg p-6 shadow-sm border border-yellow-400 text-center">
+                    <div className="bg-yellow-500/20 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                      <Shield className="text-yellow-700 h-8 w-8" />
+                    </div>
+                    <h3 className="font-medium text-lg mb-2">Gold Affiliate</h3>
+                    <p className="text-sm text-amber-900/80 mb-4">
+                      Elite badge earned after 30 successful referrals
+                    </p>
+                    <ul className="text-left text-sm space-y-2 text-amber-900/70">
+                      <li className="flex items-start">
+                        <Check className="h-4 w-4 mr-2 mt-0.5 text-amber-800" />
+                        <span>10% revenue sharing</span>
+                      </li>
+                      <li className="flex items-start">
+                        <Check className="h-4 w-4 mr-2 mt-0.5 text-amber-800" />
+                        <span>VIP membership benefits</span>
+                      </li>
+                      <li className="flex items-start">
+                        <Check className="h-4 w-4 mr-2 mt-0.5 text-amber-800" />
+                        <span>Custom badge design options</span>
+                      </li>
+                      <li className="flex items-start">
+                        <Check className="h-4 w-4 mr-2 mt-0.5 text-amber-800" />
+                        <span>Enhanced monetization tools</span>
+                      </li>
+                      <li className="flex items-start">
+                        <Check className="h-4 w-4 mr-2 mt-0.5 text-amber-800" />
+                        <span>Early access to new features</span>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+
+                <div className="bg-black/5 p-6 rounded-lg mt-4">
+                  <h3 className="font-medium text-lg mb-4">How to Monetize Your NFT Badges</h3>
+                  <div className="space-y-4">
+                    <p className="text-muted-foreground">
+                      Your NFT badges aren't just for show - they're designed to help you generate additional revenue:
+                    </p>
+                    <ul className="space-y-3">
+                      <li className="flex items-start">
+                        <div className="mr-3 mt-1 bg-primary/10 p-1 rounded-full">
+                          <DollarSign className="h-4 w-4 text-primary" />
+                        </div>
+                        <div>
+                          <span className="font-medium">Direct Revenue Sharing:</span>
+                          <p className="text-sm text-muted-foreground">Each badge automatically entitles you to a percentage of all transactions from your referrals.</p>
+                        </div>
+                      </li>
+                      <li className="flex items-start">
+                        <div className="mr-3 mt-1 bg-primary/10 p-1 rounded-full">
+                          <Award className="h-4 w-4 text-primary" />
+                        </div>
+                        <div>
+                          <span className="font-medium">Badge Profile Marketing:</span>
+                          <p className="text-sm text-muted-foreground">Each badge comes with a customizable profile page where you can showcase your achievements and attract new referrals.</p>
+                        </div>
+                      </li>
+                      <li className="flex items-start">
+                        <div className="mr-3 mt-1 bg-primary/10 p-1 rounded-full">
+                          <Shield className="h-4 w-4 text-primary" />
+                        </div>
+                        <div>
+                          <span className="font-medium">Badge Transferability:</span>
+                          <p className="text-sm text-muted-foreground">NFT badges can be transferred to others, allowing you to potentially sell your position as an affiliate.</p>
+                        </div>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </CardContent>
+            <CardFooter className="flex justify-center">
+              <Button className="btn-gold">Apply for Your NFT Badge</Button>
+            </CardFooter>
           </Card>
         </TabsContent>
 
