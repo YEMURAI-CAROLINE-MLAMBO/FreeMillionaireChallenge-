@@ -14,7 +14,10 @@ import {
   BarChart,
   Heart,
   ChevronDown,
-  LayoutGrid
+  LayoutGrid,
+  HelpCircle,
+  MessageSquare,
+  Book
 } from 'lucide-react';
 
 export const Header: React.FC = () => {
@@ -105,6 +108,23 @@ export const Header: React.FC = () => {
                 <Link href="/submit-ad" className={`flex items-center gap-2 px-4 py-2 text-sm ${isActive('/submit-ad') ? 'bg-gray-100 text-primary' : 'text-gray-800'} hover:bg-gray-100`}>
                   <FileText className="h-4 w-4 text-amber-500" />
                   <span>Submit Ad</span>
+                </Link>
+                
+                {/* Help & Support Section */}
+                <div className="px-4 py-2 border-t border-gray-100">
+                  <p className="text-xs uppercase text-gray-500 font-semibold tracking-wider">Help & Support</p>
+                </div>
+                <Link href="/faq" className={`flex items-center gap-2 px-4 py-2 text-sm ${isActive('/faq') ? 'bg-gray-100 text-primary' : 'text-gray-800'} hover:bg-gray-100`}>
+                  <HelpCircle className="h-4 w-4 text-amber-500" />
+                  <span>FAQ</span>
+                </Link>
+                <Link href="/support" className={`flex items-center gap-2 px-4 py-2 text-sm ${isActive('/support') ? 'bg-gray-100 text-primary' : 'text-gray-800'} hover:bg-gray-100`}>
+                  <MessageSquare className="h-4 w-4 text-amber-500" />
+                  <span>Support Center</span>
+                </Link>
+                <Link href="/terms" className={`flex items-center gap-2 px-4 py-2 text-sm ${isActive('/terms') ? 'bg-gray-100 text-primary' : 'text-gray-800'} hover:bg-gray-100`}>
+                  <Book className="h-4 w-4 text-amber-500" />
+                  <span>Terms of Service</span>
                 </Link>
                 
                 {/* Admin Panel - Visible only to admins */}
@@ -281,6 +301,40 @@ export const Header: React.FC = () => {
                     >
                       <FileText className="h-4 w-4 text-amber-500" />
                       Submit Ad
+                    </Link>
+                  </div>
+                </div>
+                
+                {/* Help & Support Section */}
+                <div className="py-2 border-t border-gray-100">
+                  <div className={`${isActive('/faq') || isActive('/support') || isActive('/terms') ? 'text-primary' : 'text-foreground'} font-medium flex items-center gap-2`}>
+                    <HelpCircle className="h-4 w-4" />
+                    Help & Support
+                  </div>
+                  <div className="pl-6 mt-2 flex flex-col space-y-3">
+                    <Link 
+                      href="/faq" 
+                      className="text-foreground/80 hover:text-primary flex items-center gap-2"
+                      onClick={() => setIsOpen(false)}
+                    >
+                      <HelpCircle className="h-4 w-4 text-amber-500" />
+                      FAQ
+                    </Link>
+                    <Link 
+                      href="/support" 
+                      className="text-foreground/80 hover:text-primary flex items-center gap-2"
+                      onClick={() => setIsOpen(false)}
+                    >
+                      <MessageSquare className="h-4 w-4 text-amber-500" />
+                      Support Center
+                    </Link>
+                    <Link 
+                      href="/terms" 
+                      className="text-foreground/80 hover:text-primary flex items-center gap-2"
+                      onClick={() => setIsOpen(false)}
+                    >
+                      <Book className="h-4 w-4 text-amber-500" />
+                      Terms of Service
                     </Link>
                   </div>
                 </div>

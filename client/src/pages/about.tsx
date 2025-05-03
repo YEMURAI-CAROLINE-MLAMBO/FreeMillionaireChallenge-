@@ -28,23 +28,14 @@ import {
   Target,
   Search,
   ShieldCheck,
-  TrendingUp
+  TrendingUp,
+  HelpCircle,
+  MessageSquare,
+  Book
 } from "lucide-react";
 
 const AboutPage = () => {
-  // Languages available for translation
-  const availableLanguages = [
-    { code: "en", name: "English" },
-    { code: "es", name: "Español" },
-    { code: "fr", name: "Français" },
-    { code: "de", name: "Deutsch" },
-    { code: "zh", name: "中文" },
-    { code: "ja", name: "日本語" },
-    { code: "ar", name: "العربية" },
-    { code: "ru", name: "Русский" },
-    { code: "hi", name: "हिन्दी" },
-    { code: "pt", name: "Português" },
-  ];
+  // Removed language translations as requested
 
   return (
     <div className="container mx-auto py-10 px-4 sm:px-6 max-w-7xl">
@@ -206,19 +197,40 @@ const AboutPage = () => {
 
               <Card>
                 <CardHeader>
-                  <CardTitle>Languages</CardTitle>
+                  <CardTitle>Support</CardTitle>
                   <CardDescription>
-                    The FMC platform is available in multiple languages
+                    Resources for participants and community members
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
-                  <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
-                    {availableLanguages.map((lang) => (
-                      <div key={lang.code} className="flex items-center gap-2 p-2 rounded-md hover:bg-gray-100">
-                        <Globe className="h-4 w-4 text-gray-400" />
-                        <span>{lang.name}</span>
+                  <div className="space-y-4">
+                    <div className="flex items-center gap-3">
+                      <HelpCircle className="h-5 w-5 text-amber-500" />
+                      <div>
+                        <h3 className="font-medium">Help Center</h3>
+                        <p className="text-sm text-gray-600">
+                          Visit our comprehensive support resources and FAQ
+                        </p>
                       </div>
-                    ))}
+                    </div>
+                    <div className="flex items-center gap-3">
+                      <MessageSquare className="h-5 w-5 text-amber-500" />
+                      <div>
+                        <h3 className="font-medium">Contact Support</h3>
+                        <p className="text-sm text-gray-600">
+                          Reach out to our support team for assistance
+                        </p>
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-3">
+                      <Book className="h-5 w-5 text-amber-500" />
+                      <div>
+                        <h3 className="font-medium">Terms of Service</h3>
+                        <p className="text-sm text-gray-600">
+                          Review our platform's terms and policies
+                        </p>
+                      </div>
+                    </div>
                   </div>
                 </CardContent>
               </Card>

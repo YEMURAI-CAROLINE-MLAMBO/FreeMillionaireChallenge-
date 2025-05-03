@@ -18,11 +18,13 @@ import About from "@/pages/about";
 import Whitepaper from "@/pages/whitepaper";
 import Tokenomics from "@/pages/tokenomics";
 import SocialEntrepreneurship from "@/pages/social-entrepreneurship";
+import FAQ from "@/pages/faq";
+import Support from "@/pages/support";
+import Terms from "@/pages/terms";
 import { Header } from "@/components/layout/header";
 import { Footer } from "@/components/layout/footer";
 import { useAuth } from "@/contexts/auth-context";
 import { Web3ContextProvider } from "@/contexts/web3-context";
-import { LanguageProvider } from "@/contexts/language-context";
 import { Skeleton } from "@/components/ui/skeleton";
 
 function Router() {
@@ -41,6 +43,9 @@ function Router() {
       <Route path="/register" component={Register} />
       <Route path="/join-as-viewer" component={ViewerRegistration} />
       <Route path="/affiliate-program" component={AffiliateProgram} />
+      <Route path="/faq" component={FAQ} />
+      <Route path="/support" component={Support} />
+      <Route path="/terms" component={Terms} />
       <Route path="/streaming">
         <Suspense fallback={
           <div className="container mx-auto py-12 px-4">
@@ -78,20 +83,18 @@ function Router() {
 function App() {
   return (
     <QueryClientProvider client={queryClient}>
-      <LanguageProvider>
-        <Web3ContextProvider>
-          <TooltipProvider>
-            <div className="flex flex-col min-h-screen">
-              <Header />
-              <main className="flex-grow">
-                <Router />
-              </main>
-              <Footer />
-            </div>
-            <Toaster />
-          </TooltipProvider>
-        </Web3ContextProvider>
-      </LanguageProvider>
+      <Web3ContextProvider>
+        <TooltipProvider>
+          <div className="flex flex-col min-h-screen">
+            <Header />
+            <main className="flex-grow">
+              <Router />
+            </main>
+            <Footer />
+          </div>
+          <Toaster />
+        </TooltipProvider>
+      </Web3ContextProvider>
     </QueryClientProvider>
   );
 }
