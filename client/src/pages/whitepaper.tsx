@@ -26,7 +26,7 @@ const WhitepaperPage = () => {
           <CardHeader className="bg-amber-50">
             <CardTitle>Free Millionaire Challenge: A Blockchain-Powered Social Entrepreneurship Platform</CardTitle>
             <CardDescription>
-              Official whitepaper v1.0 - Released May 2025
+              Official whitepaper v1.0 - Released July 2025
             </CardDescription>
           </CardHeader>
           <CardContent className="pt-6 space-y-6">
