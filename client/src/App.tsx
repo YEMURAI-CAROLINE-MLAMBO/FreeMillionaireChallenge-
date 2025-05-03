@@ -10,6 +10,7 @@ import Participants from "@/pages/participants";
 import Ads from "@/pages/ads";
 import Register from "@/pages/register";
 import ViewerRegistration from "@/pages/viewer-registration";
+import Dashboard from "@/pages/dashboard";
 import Admin from "@/pages/admin";
 import { Header } from "@/components/layout/header";
 import { Footer } from "@/components/layout/footer";
@@ -27,6 +28,9 @@ function Router() {
       <Route path="/participants" component={Participants} />
       <Route path="/register" component={Register} />
       <Route path="/join-as-viewer" component={ViewerRegistration} />
+      {user && (
+        <Route path="/dashboard" component={Dashboard} />
+      )}
       {user && user.role === "admin" && (
         <Route path="/admin" component={Admin} />
       )}

@@ -47,6 +47,9 @@ export const Header: React.FC = () => {
           {user ? (
             <>
               <span className="text-dark-medium">Hi, {user.username}</span>
+              <Link href="/dashboard">
+                <Button variant="default" className="mr-2">Dashboard</Button>
+              </Link>
               <Button variant="outline" onClick={handleLogout}>Log Out</Button>
             </>
           ) : (
