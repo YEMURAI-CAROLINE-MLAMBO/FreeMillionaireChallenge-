@@ -1,3 +1,4 @@
+import React, { Suspense } from "react";
 import { Switch, Route } from "wouter";
 import { queryClient } from "./lib/queryClient";
 import { QueryClientProvider } from "@tanstack/react-query";
@@ -20,6 +21,7 @@ import { Footer } from "@/components/layout/footer";
 import { useAuth } from "@/contexts/auth-context";
 import { Web3ContextProvider } from "@/contexts/web3-context";
 import { LanguageProvider } from "@/contexts/language-context";
+import { Skeleton } from "@/components/ui/skeleton";
 
 function Router() {
   const { user } = useAuth();
@@ -35,6 +37,29 @@ function Router() {
       <Route path="/register" component={Register} />
       <Route path="/join-as-viewer" component={ViewerRegistration} />
       <Route path="/affiliate-program" component={AffiliateProgram} />
+      <Route path="/streaming">
+        <Suspense fallback={
+          <div className="container mx-auto py-12 px-4">
+            <Skeleton className="h-12 w-64 mb-8" />
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+              <div className="lg:col-span-2">
+                <Skeleton className="aspect-video w-full mb-4" />
+                <Skeleton className="h-24 w-full" />
+              </div>
+              <div>
+                <Skeleton className="h-10 w-full mb-4" />
+                <div className="space-y-4">
+                  {[1, 2, 3].map(i => (
+                    <Skeleton key={i} className="h-20 w-full" />
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+        }>
+          {React.createElement(React.lazy(() => import("@/pages/streaming")))}
+        </Suspense>
+      </Route>
       {user && (
         <Route path="/dashboard" component={Dashboard} />
       )}
