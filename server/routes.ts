@@ -16,21 +16,28 @@ import {
   insertAwardSchema,
 } from "@shared/schema";
 import { createNFTBadge, simulateMinting, formatBadgeForDisplay } from "./nft-service";
+import { 
+  moderateContent, 
+  moderateImage, 
+  moderateAdvertisement,
+  autoModerateContent 
+} from "./content-moderation";
+import {
+  calculateFeeBreakdown,
+  getFeeForTransactionType,
+  processTransaction,
+  getTokenomicsOverview
+} from "./tokenomics";
 
-// Content filtering function
+// Legacy content filtering function - kept for backward compatibility
+// New code should use the comprehensive moderation system from content-moderation.ts
 function filterContent(text: string): { approved: boolean; reason?: string } {
-  const forbiddenWords = ["scam", "fraud", "illegal", "hack", "porn"];
-  
-  for (const word of forbiddenWords) {
-    if (text.toLowerCase().includes(word)) {
-      return {
-        approved: false,
-        reason: `Content contains prohibited word: ${word}`
-      };
-    }
-  }
-  
-  return { approved: true };
+  if (!text) return { approved: true };
+  const result = moderateContent(text);
+  return {
+    approved: result.approved,
+    reason: result.reason
+  };
 }
 
 export async function registerRoutes(app: Express): Promise<Server> {
@@ -214,7 +221,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Create ad
+  // Create ad with auto-moderation
   app.post("/api/ads", isAuthenticated, async (req, res) => {
     try {
       const adData = insertAdSchema.parse({
@@ -222,31 +229,74 @@ export async function registerRoutes(app: Express): Promise<Server> {
         userId: req.session.userId
       });
       
-      // Filter content
-      const titleFilter = filterContent(adData.title);
-      const descFilter = filterContent(adData.description);
+      // Use advanced content moderation system
+      const moderationResult = autoModerateContent({
+        title: adData.title,
+        description: adData.description,
+        imageUrl: adData.imageUrl,
+        targetUrl: adData.targetUrl
+      });
       
-      if (!titleFilter.approved) {
+      // If content is rejected by moderation system
+      if (moderationResult.decision === 'rejected') {
         return res.status(400).json({ 
-          message: "Ad title contains inappropriate content",
-          reason: titleFilter.reason 
+          message: "Advertisement contains inappropriate content",
+          reason: moderationResult.reason,
+          details: moderationResult.moderationResults.rejectionReasons
         });
       }
       
-      if (!descFilter.approved) {
-        return res.status(400).json({ 
-          message: "Ad description contains inappropriate content",
-          reason: descFilter.reason 
-        });
-      }
+      // Set initial status based on moderation decision
+      const initialStatus = moderationResult.decision === 'approved' ? 'approved' : 'pending';
       
-      const ad = await storage.createAd(adData);
-      res.status(201).json(ad);
+      // Create ad with auto-approved status if it passes moderation
+      const ad = await storage.createAd({
+        ...adData,
+        status: initialStatus
+      });
+      
+      // Add moderation results to the response
+      res.status(201).json({
+        ad,
+        moderation: {
+          decision: moderationResult.decision,
+          confidenceScore: moderationResult.confidenceScore
+        }
+      });
     } catch (error) {
       if (error instanceof z.ZodError) {
         return res.status(400).json({ message: "Invalid ad data", errors: error.errors });
       }
       res.status(500).json({ message: "Could not create ad" });
+    }
+  });
+  
+  // Check ad content against moderation guidelines (without creating the ad)
+  app.post("/api/ads/check-content", async (req, res) => {
+    try {
+      const { title, description, imageUrl, targetUrl } = req.body;
+      
+      if (!title && !description) {
+        return res.status(400).json({ message: "Title or description is required" });
+      }
+      
+      // Use advanced content moderation system
+      const moderationResult = autoModerateContent({
+        title: title || "",
+        description: description || "",
+        imageUrl,
+        targetUrl
+      });
+      
+      res.json({
+        approved: moderationResult.decision === 'approved',
+        decision: moderationResult.decision,
+        reason: moderationResult.reason,
+        confidenceScore: moderationResult.confidenceScore,
+        details: moderationResult.moderationResults.rejectionReasons
+      });
+    } catch (error) {
+      res.status(500).json({ message: "Content moderation check failed" });
     }
   });
 
@@ -272,21 +322,26 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Process payment for an ad
+  // Process payment for an ad with auto-approval and tokenomics
   app.post("/api/ads/:id/payment", isAuthenticated, async (req, res) => {
     try {
       const id = parseInt(req.params.id);
       const { 
-        status, 
         paymentMethod, 
         transactionHash,
         amount,
+        senderAddress,
         network 
       } = req.body;
       
-      // Update accepted payment methods to include BSC
-      if (!paymentMethod || !["bitcoin", "ethereum", "bnb"].includes(paymentMethod)) {
-        return res.status(400).json({ message: "Invalid payment method" });
+      // Auto-approved status - no manual review needed
+      const status = "completed";
+      
+      // Validate payment method - only accept BNB (BSC) for now
+      if (!paymentMethod || !["bnb"].includes(paymentMethod.toLowerCase())) {
+        return res.status(400).json({ 
+          message: "Invalid payment method. Only BNB (Binance Smart Chain) is currently accepted" 
+        });
       }
       
       const ad = await storage.getAd(id);
@@ -299,19 +354,26 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(403).json({ message: "Not authorized to pay for this ad" });
       }
       
-      // In a production app, we would:
-      // 1. Verify the crypto transaction using a blockchain API
-      // 2. Confirm the payment amount matches expected amount
-      // 3. Check if the transaction is confirmed on the blockchain
-      // 4. Confirm that the recipient address matches the expected address
+      // Get ad submission fee
+      const adFee = await getFeeForTransactionType("adSubmission");
+      const paymentAmount = amount ? parseFloat(amount.toString()) : adFee;
       
-      // For a BSC transaction, you might verify with BSCScan API or similar
+      // Process transaction with tokenomics fee breakdown
+      const transaction = await processTransaction(
+        req.session.userId,
+        paymentAmount,
+        "adSubmission",
+        transactionHash
+      );
       
-      // Update payment status and save transaction hash
+      // Calculate fee breakdown to show the user
+      const feeBreakdown = await calculateFeeBreakdown(paymentAmount, "adSubmission");
+      
+      // Update ad payment status and save transaction hash
       const updatedAd = await storage.updateAdPaymentStatus(
         id, 
-        status || "completed",
-        transactionHash || null
+        status,
+        transaction.transactionHash
       );
       
       // Store currency mapping for different payment methods
@@ -321,17 +383,24 @@ export async function registerRoutes(app: Express): Promise<Server> {
         "bnb": "BNB"
       };
       
-      // Return transaction details to the client
+      // Return transaction details to the client with tokenomics breakdown
       res.json({
         success: true,
         message: "Payment processed successfully",
         ad: updatedAd,
         transaction: {
-          hash: transactionHash || `tx_${Date.now()}`,
-          amount: amount || 25,
-          currency: currencyMap[paymentMethod] || "CRYPTO",
-          network: network || "blockchain",
+          hash: transaction.transactionHash,
+          amount: paymentAmount,
+          currency: currencyMap[paymentMethod] || "BNB",
+          network: network || "bsc",
           date: new Date().toISOString()
+        },
+        tokenomics: {
+          totalAmount: feeBreakdown.totalAmount,
+          platformFee: feeBreakdown.platformFee,
+          founderProfit: feeBreakdown.founderProfit,
+          founderProfitPercentage: "30%",
+          recipientWallet: feeBreakdown.platformWallet
         }
       });
     } catch (error) {
@@ -924,6 +993,31 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.json({ totalProfit });
     } catch (error) {
       res.status(500).json({ message: "Failed to calculate founder profit" });
+    }
+  });
+  
+  // Get tokenomics dashboard data
+  app.get("/api/tokenomics", async (req, res) => {
+    try {
+      const tokenomicsData = await getTokenomicsOverview();
+      
+      // Get transaction count by type
+      const adPayments = await storage.getTransactionsByType("adSubmission");
+      const votes = await storage.getTransactionsByType("vote");
+      const nftMintings = await storage.getTransactionsByType("nftMinting");
+      
+      // Add transaction breakdown to the response
+      res.json({
+        ...tokenomicsData,
+        transactionBreakdown: {
+          adPayments: adPayments.length,
+          votes: votes.length,
+          nftMintings: nftMintings.length
+        },
+        lastUpdated: new Date().toISOString()
+      });
+    } catch (error) {
+      res.status(500).json({ message: "Failed to fetch tokenomics data" });
     }
   });
   
