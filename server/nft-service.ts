@@ -9,20 +9,20 @@ import { InsertNFTBadge, NFTBadge } from "@shared/schema";
 /**
  * Generate metadata for an NFT Badge
  * 
- * @param type The type of badge (affiliate, participant)
+ * @param badgeType The type of badge (affiliate, participant)
  * @param userId The ID of the user associated with the badge
  * @param name The name to use for the badge
  * @returns The metadata for the NFT badge
  */
-function generateMetadata(type: string, userId: number, name: string) {
+function generateMetadata(badgeType: string, userId: number, name: string) {
   // Generate a unique token ID for the badge
-  const tokenId = `${type}-${userId}-${Date.now()}`;
+  const tokenId = `${badgeType}-${userId}-${Date.now()}`;
   
   // Create attributes based on badge type
   const attributes = [
     {
       trait_type: "Badge Type",
-      value: type.charAt(0).toUpperCase() + type.slice(1)
+      value: badgeType.charAt(0).toUpperCase() + badgeType.slice(1)
     },
     {
       trait_type: "Issue Date",
@@ -30,12 +30,12 @@ function generateMetadata(type: string, userId: number, name: string) {
     }
   ];
   
-  if (type === 'affiliate') {
+  if (badgeType === 'affiliate') {
     attributes.push({
       trait_type: "Revenue Share",
       value: "5%"
     });
-  } else if (type === 'participant') {
+  } else if (badgeType === 'participant') {
     attributes.push({
       trait_type: "Revenue Share",
       value: "10%"
@@ -44,15 +44,15 @@ function generateMetadata(type: string, userId: number, name: string) {
   
   // Generate a base color based on the badge type
   let imageColor = "#FFD700"; // Gold for participants
-  if (type === 'affiliate') {
+  if (badgeType === 'affiliate') {
     imageColor = "#C0C0C0"; // Silver for affiliates
   }
   
   // Return the complete metadata
   return {
-    name: `${name} ${type.charAt(0).toUpperCase() + type.slice(1)} Badge`,
-    description: `Official FreeMillionaireChallenge ${type} badge for ${name}. This NFT badge includes revenue sharing capabilities.`,
-    image: `https://fmc-badges.example.com/api/badge?address=${userId}&type=${type}&color=${encodeURIComponent(imageColor)}`,
+    name: `${name} ${badgeType.charAt(0).toUpperCase() + badgeType.slice(1)} Badge`,
+    description: `Official FreeMillionaireChallenge ${badgeType} badge for ${name}. This NFT badge includes revenue sharing capabilities.`,
+    image: `https://fmc-badges.example.com/api/badge?address=${userId}&type=${badgeType}&color=${encodeURIComponent(imageColor)}`,
     external_url: `https://freemillionairechallenge.com/profile/${userId}`,
     attributes,
     tokenId
@@ -126,20 +126,19 @@ export async function simulateMinting(badgeId: number): Promise<string> {
  * @returns Formatted badge data for display
  */
 export function formatBadgeForDisplay(badge: NFTBadge) {
-  // Parse the metadata JSON
-  const metadata = JSON.parse(badge.metadata);
+  // Parse the metadata JSON as a strongly typed object
+  const metadata = badge.metadata ? JSON.parse(String(badge.metadata)) : {};
   
   return {
     id: badge.id,
     userId: badge.userId,
-    type: badge.type,
+    badgeType: badge.badgeType,
     tokenId: badge.tokenId,
-    name: metadata.name,
-    description: metadata.description,
-    image: metadata.image,
-    attributes: metadata.attributes,
-    revenueSharePercent: badge.revenueSharePercent,
-    status: badge.status,
+    network: badge.network,
+    name: metadata.name || "",
+    description: metadata.description || "",
+    image: metadata.image || badge.imageUrl,
+    attributes: metadata.attributes || [],
     transactionHash: badge.transactionHash,
     createdAt: badge.createdAt
   };
