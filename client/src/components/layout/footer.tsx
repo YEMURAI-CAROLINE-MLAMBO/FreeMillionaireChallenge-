@@ -50,23 +50,23 @@ export const Footer: React.FC = () => {
             <h4 className="text-lg font-semibold mb-4">Resources</h4>
             <ul className="space-y-2">
               <li>
-                <Link href="/" className="text-gray-400 hover:text-white transition">
+                <Link href="/faq" className="text-gray-400 hover:text-white transition">
                   FAQ
                 </Link>
               </li>
               <li>
-                <Link href="/" className="text-gray-400 hover:text-white transition">
+                <Link href="/support" className="text-gray-400 hover:text-white transition">
                   Support
                 </Link>
               </li>
               <li>
-                <Link href="/" className="text-gray-400 hover:text-white transition">
-                  Blog
+                <Link href="/tokenomics" className="text-gray-400 hover:text-white transition">
+                  Tokenomics
                 </Link>
               </li>
               <li>
-                <Link href="/" className="text-gray-400 hover:text-white transition">
-                  Crypto Guide
+                <Link href="/social-entrepreneurship" className="text-gray-400 hover:text-white transition">
+                  Social Entrepreneurship
                 </Link>
               </li>
             </ul>
@@ -94,14 +94,8 @@ export const Footer: React.FC = () => {
               © 2025 FreeMillionaire Challenge. All rights reserved.
             </p>
             <div className="flex space-x-6">
-              <Link href="/" className="text-gray-400 hover:text-white text-sm transition">
+              <Link href="/terms" className="text-gray-400 hover:text-white text-sm transition">
                 Terms of Service
-              </Link>
-              <Link href="/" className="text-gray-400 hover:text-white text-sm transition">
-                Privacy Policy
-              </Link>
-              <Link href="/" className="text-gray-400 hover:text-white text-sm transition">
-                Cookie Policy
               </Link>
             </div>
           </div>
