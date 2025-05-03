@@ -399,6 +399,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }
       
       // Check if user is already a participant
+      if (!req.session.userId) {
+        return res.status(401).json({ message: "Authentication required" });
+      }
+      
       const existingParticipant = await storage.getParticipantByUserId(req.session.userId);
       if (existingParticipant) {
         return res.status(400).json({ 
@@ -425,13 +429,15 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const participant = await storage.createParticipant(participantData);
       
       // Update user role to participant
-      const user = await storage.getUser(req.session.userId);
-      if (user) {
-        await storage.createUser({
-          ...user,
-          role: "participant"
-        });
-        req.session.role = "participant";
+      if (req.session.userId) {
+        const user = await storage.getUser(req.session.userId);
+        if (user) {
+          await storage.createUser({
+            ...user,
+            role: "participant"
+          });
+          req.session.role = "participant";
+        }
       }
       
       res.status(201).json(participant);

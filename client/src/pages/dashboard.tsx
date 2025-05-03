@@ -161,8 +161,7 @@ const Dashboard: React.FC = () => {
                     <div className="bg-black/5 p-4 rounded-lg">
                       <div className="text-sm text-muted-foreground mb-1">NFT Badge</div>
                       <div className="text-2xl font-bold">
-                        {/* Will be replaced with actual badge data */}
-                        Not Minted
+                        {nftBadge ? 'Owned' : 'Not Minted'}
                       </div>
                     </div>
                   </div>
@@ -274,9 +273,8 @@ const Dashboard: React.FC = () => {
                           <div className="space-y-4">
                             <div className="flex items-center justify-between">
                               <span>NFT Badge Minted</span>
-                              <Badge variant="outline">
-                                {/* Will be updated with real badge data */}
-                                Pending
+                              <Badge variant={nftBadge ? "default" : "outline"}>
+                                {nftBadge ? "Completed" : "Pending"}
                               </Badge>
                             </div>
                             
