@@ -1167,6 +1167,43 @@ export async function registerRoutes(app: Express): Promise<Server> {
   
   // Register tokenomics webhooks
   registerTokenomicsWebhooks(app);
+  
+  // Public transaction verification endpoint
+  app.get("/api/transactions/verify/:hash", async (req, res) => {
+    try {
+      const { hash } = req.params;
+      
+      if (!hash) {
+        return res.status(400).json({ message: "Transaction hash is required" });
+      }
+      
+      const transactions = await storage.getTransactionsByType("adSubmission");
+      const transaction = transactions.find(tx => tx.transactionHash === hash);
+      
+      if (!transaction) {
+        return res.status(404).json({ 
+          message: "Transaction not found", 
+          verified: false 
+        });
+      }
+      
+      // Return transaction details with public info only
+      res.json({
+        verified: true,
+        transaction: {
+          txHash: transaction.transactionHash,
+          type: transaction.txType,
+          amount: transaction.amount,
+          status: transaction.status,
+          timestamp: transaction.createdAt,
+          founderProfit: transaction.founderProfit,
+          platformFee: transaction.platformFee
+        }
+      });
+    } catch (error) {
+      res.status(500).json({ message: "Failed to verify transaction" });
+    }
+  });
 
   const httpServer = createServer(app);
   return httpServer;

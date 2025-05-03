@@ -16,6 +16,7 @@ import Admin from "@/pages/admin";
 import AffiliateProgram from "@/pages/affiliate-program";
 import About from "@/pages/about";
 import Whitepaper from "@/pages/whitepaper";
+import Tokenomics from "@/pages/tokenomics";
 import { Header } from "@/components/layout/header";
 import { Footer } from "@/components/layout/footer";
 import { useAuth } from "@/contexts/auth-context";
