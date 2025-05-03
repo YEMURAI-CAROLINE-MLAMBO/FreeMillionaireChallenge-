@@ -34,19 +34,15 @@ export const Header: React.FC = () => {
   return (
     <header className="bg-white shadow-sm sticky top-0 z-50">
       <nav className="container mx-auto px-4 py-3 flex justify-between items-center">
+        {/* Left side: Menu button and logo */}
         <div className="flex items-center">
-          <Link href="/" className="text-xl font-bold bg-gradient-to-r from-amber-500 via-yellow-500 to-zinc-800 bg-clip-text text-transparent">
-            FreeMillionaireChallenge
-          </Link>
-        </div>
-        
-        {/* Desktop Navigation - Left-side menu with hover dropdown */}
-        <div className="hidden md:flex items-center">
-          <div className="relative group">
+          {/* Menu dropdown */}
+          <div className="relative group mr-4">
             <button className="hover:text-primary font-medium transition flex items-center gap-1 px-3 py-2">
               <Menu className="h-5 w-5" />
               <span>Menu</span>
             </button>
+            
             <div className="absolute left-0 mt-1 w-64 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 hidden group-hover:block z-50">
               <div className="py-1">
                 <Link href="/" className={`flex items-center gap-2 px-4 py-3 text-sm ${isActive('/') ? 'bg-gray-100 text-primary' : 'text-gray-800'} hover:bg-gray-100`}>
@@ -145,8 +141,14 @@ export const Header: React.FC = () => {
               </div>
             </div>
           </div>
+          
+          {/* Logo text */}
+          <Link href="/" className="text-xl font-bold bg-gradient-to-r from-amber-500 via-yellow-500 to-zinc-800 bg-clip-text text-transparent ml-2">
+            FreeMillionaireChallenge
+          </Link>
         </div>
         
+        {/* Right side: Desktop auth buttons */}
         <div className="hidden md:flex items-center space-x-4">
           {user ? (
             <>
@@ -341,44 +343,47 @@ export const Header: React.FC = () => {
                 
                 {/* Admin Section */}
                 {user && user.role === 'admin' && (
-                  <Link 
-                    href="/admin" 
-                    className={`${isActive('/admin') ? 'text-primary' : 'text-foreground'} hover:text-primary font-medium transition py-2 border-t border-gray-100 flex items-center gap-2`}
-                    onClick={() => setIsOpen(false)}
-                  >
-                    <LayoutGrid className="h-4 w-4" />
-                    Admin
-                  </Link>
-                )}
-                <div className="border-t border-gray-200 my-4 pt-4">
-                  {user ? (
-                    <>
-                      <span className="block text-dark-medium mb-2">Hi, {user.username}</span>
-                      <Link href="/dashboard">
-                        <Button 
-                          variant="default" 
-                          className="w-full mb-2"
-                          onClick={() => setIsOpen(false)}
-                        >
-                          Dashboard
-                        </Button>
-                      </Link>
-                      <Button 
-                        variant="outline" 
-                        className="w-full"
-                        onClick={() => { handleLogout(); setIsOpen(false); }}
+                  <div className="py-2 border-t border-gray-100">
+                    <div className="text-foreground font-medium flex items-center gap-2">
+                      <LayoutGrid className="h-4 w-4" />
+                      Admin
+                    </div>
+                    <div className="pl-6 mt-2 flex flex-col space-y-3">
+                      <Link 
+                        href="/admin" 
+                        className="text-foreground/80 hover:text-primary flex items-center gap-2"
+                        onClick={() => setIsOpen(false)}
                       >
-                        Log Out
-                      </Button>
-                    </>
-                  ) : (
-                    <>
-                      <Link href="/register">
-                        <Button onClick={() => setIsOpen(false)} className="w-full mb-2 btn-gold">
-                          Register
-                        </Button>
+                        <LayoutGrid className="h-4 w-4 text-amber-500" />
+                        Dashboard
                       </Link>
-                    </>
+                    </div>
+                  </div>
+                )}
+                
+                {/* Auth Buttons for Mobile */}
+                <div className="mt-4 pt-4 border-t border-gray-100">
+                  {user ? (
+                    <div className="flex flex-col space-y-3">
+                      <Link 
+                        href="/dashboard" 
+                        className="w-full"
+                        onClick={() => setIsOpen(false)}
+                      >
+                        <Button variant="default" className="w-full">Dashboard</Button>
+                      </Link>
+                      <Button variant="outline" className="w-full" onClick={handleLogout}>Log Out</Button>
+                    </div>
+                  ) : (
+                    <div className="flex flex-col space-y-3">
+                      <Link 
+                        href="/register" 
+                        className="w-full"
+                        onClick={() => setIsOpen(false)}
+                      >
+                        <Button variant="default" className="w-full btn-gold">Register</Button>
+                      </Link>
+                    </div>
                   )}
                 </div>
               </div>
