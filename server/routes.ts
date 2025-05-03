@@ -33,6 +33,7 @@ import {
   simulateVoteTransaction, 
   simulateMultipleTransactions 
 } from "./test-transaction";
+import { registerTokenomicsWebhooks } from "./tokenomics-webhook";
 
 // Legacy content filtering function - kept for backward compatibility
 // New code should use the comprehensive moderation system from content-moderation.ts
@@ -1063,6 +1064,37 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
   
+  // Simple endpoint to add a transaction (for testing)
+  app.get("/api/test/add-transaction", async (req, res) => {
+    try {
+      // Create a test user if one doesn't exist
+      let testUser = await storage.getUserByUsername("test_user");
+      if (!testUser) {
+        testUser = await storage.createUser({
+          username: "test_user",
+          email: "test@example.com",
+          password: "test123",
+          role: "user"
+        });
+      }
+      
+      // Create a single ad payment
+      const { transaction, feeBreakdown } = await simulateAdPayment(testUser.id, 0.025);
+      
+      // Get updated tokenomics data
+      const tokenomicsData = await getTokenomicsOverview();
+      
+      res.json({
+        message: "Transaction added successfully",
+        transaction,
+        feeBreakdown,
+        tokenomics: tokenomicsData
+      });
+    } catch (error) {
+      res.status(500).json({ message: "Failed to add test transaction" });
+    }
+  });
+  
   // ADMIN ROUTES
   
   // Get all ads for admin
@@ -1132,6 +1164,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   // Call setupAdmin
   await setupAdmin();
+  
+  // Register tokenomics webhooks
+  registerTokenomicsWebhooks(app);
 
   const httpServer = createServer(app);
   return httpServer;
