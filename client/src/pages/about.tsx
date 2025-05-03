@@ -174,7 +174,7 @@ const AboutPage = () => {
                 <CardContent className="space-y-4">
                   <div className="flex justify-between items-center border-b pb-2">
                     <span className="font-medium">Application Period</span>
-                    <span className="text-gray-500">March 1 - July 31, 2025</span>
+                    <span className="text-gray-500">March 1 - July 15, 2025</span>
                   </div>
                   <div className="flex justify-between items-center border-b pb-2">
                     <span className="font-medium">Challenge Launch</span>

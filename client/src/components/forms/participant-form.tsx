@@ -28,10 +28,12 @@ const participantFormSchema = insertParticipantSchema.extend({
     message: "Profession must be at least 2 characters",
   }),
   profileImageUrl: z.string().optional(),
-  socialTwitter: z.string().optional(),
-  socialLinkedin: z.string().optional(),
-  socialWebsite: z.string().optional(),
-}).omit({ userId: true, order: true });
+  projectDescription: z.string().min(50, {
+    message: "Project description must be at least 50 characters",
+  }).max(1000, {
+    message: "Project description must not exceed 1000 characters",
+  }),
+}).omit({ userId: true, order: true, socialTwitter: true, socialLinkedin: true, socialWebsite: true });
 
 type ParticipantFormValues = z.infer<typeof participantFormSchema>;
 
@@ -65,9 +67,7 @@ const ParticipantForm: React.FC = () => {
       bio: '',
       profession: '',
       profileImageUrl: '',
-      socialTwitter: '',
-      socialLinkedin: '',
-      socialWebsite: '',
+      projectDescription: '',
     },
   });
   
@@ -161,7 +161,7 @@ const ParticipantForm: React.FC = () => {
       <CardHeader>
         <CardTitle>Register as a Participant</CardTitle>
         <CardDescription>
-          Join as one of our exclusive participants for the FreeMillionaire Challenge.
+          Join as one of our exclusive participants for the FreeMillionaire Challenge. Application deadline: July 15, 2025.
         </CardDescription>
       </CardHeader>
       <CardContent>
@@ -227,49 +227,23 @@ const ParticipantForm: React.FC = () => {
               )}
             />
             
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <FormField
-                control={form.control}
-                name="socialTwitter"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Twitter URL (Optional)</FormLabel>
-                    <FormControl>
-                      <Input placeholder="https://twitter.com/username" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              
-              <FormField
-                control={form.control}
-                name="socialLinkedin"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>LinkedIn URL (Optional)</FormLabel>
-                    <FormControl>
-                      <Input placeholder="https://linkedin.com/in/username" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              
-              <FormField
-                control={form.control}
-                name="socialWebsite"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Website URL (Optional)</FormLabel>
-                    <FormControl>
-                      <Input placeholder="https://yourwebsite.com" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </div>
+            <FormField
+              control={form.control}
+              name="projectDescription"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Social Entrepreneurship Project Description</FormLabel>
+                  <FormControl>
+                    <Textarea 
+                      placeholder="Describe your social entrepreneurship project idea in detail. What problem are you solving? How will it create positive social impact?" 
+                      rows={6}
+                      {...field} 
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
             
             <Button 
               type="submit" 
