@@ -6,6 +6,10 @@ import {
   settings,
   nftBadges,
   vrExperiences,
+  awards,
+  votes,
+  progressUpdates,
+  transactions,
   type User, 
   type InsertUser, 
   type Ad, 
@@ -19,7 +23,15 @@ import {
   type NFTBadge,
   type InsertNFTBadge,
   type VrExperience,
-  type InsertVrExperience
+  type InsertVrExperience,
+  type Award,
+  type InsertAward,
+  type Vote,
+  type InsertVote,
+  type ProgressUpdate,
+  type InsertProgressUpdate,
+  type Transaction,
+  type InsertTransaction
 } from "@shared/schema";
 
 export interface IStorage {
@@ -75,6 +87,36 @@ export interface IStorage {
   getSetting(key: string): Promise<Setting | undefined>;
   createOrUpdateSetting(setting: InsertSetting): Promise<Setting>;
   getSettings(): Promise<Setting[]>;
+  
+  // Award methods
+  getAward(id: number): Promise<Award | undefined>;
+  getAwards(): Promise<Award[]>;
+  getActiveAwards(): Promise<Award[]>;
+  createAward(award: InsertAward): Promise<Award>;
+  updateAwardStatus(id: number, status: string): Promise<Award | undefined>;
+  
+  // Vote methods
+  getVote(id: number): Promise<Vote | undefined>;
+  getVotesByParticipant(participantId: number): Promise<Vote[]>;
+  getVotesByUser(userId: number): Promise<Vote[]>;
+  getVotesByAward(awardId: number): Promise<Vote[]>;
+  createVote(vote: InsertVote): Promise<Vote>;
+  countVotesForParticipant(participantId: number): Promise<number>;
+  
+  // Progress Update methods
+  getProgressUpdate(id: number): Promise<ProgressUpdate | undefined>;
+  getProgressUpdatesByParticipant(participantId: number): Promise<ProgressUpdate[]>;
+  getProgressUpdatesByMonth(month: number): Promise<ProgressUpdate[]>;
+  createProgressUpdate(update: InsertProgressUpdate): Promise<ProgressUpdate>;
+  updateInteractionCount(id: number, count: number): Promise<ProgressUpdate | undefined>;
+  
+  // Transaction methods
+  getTransaction(id: number): Promise<Transaction | undefined>;
+  getTransactionsByUser(userId: number): Promise<Transaction[]>;
+  getTransactionsByType(txType: string): Promise<Transaction[]>;
+  createTransaction(tx: InsertTransaction): Promise<Transaction>;
+  updateTransactionStatus(id: number, status: string): Promise<Transaction | undefined>;
+  getFounderProfitTotal(): Promise<string>; // Total profit accumulated for founder
 }
 
 export class MemStorage implements IStorage {
@@ -85,6 +127,10 @@ export class MemStorage implements IStorage {
   private settings: Map<string, Setting>;
   private nftBadges: Map<number, NFTBadge>;
   private vrExperiences: Map<number, VrExperience>;
+  private awards: Map<number, Award>;
+  private votes: Map<number, Vote>;
+  private progressUpdates: Map<number, ProgressUpdate>;
+  private transactions: Map<number, Transaction>;
   
   private userIdCounter: number;
   private adIdCounter: number;
@@ -93,6 +139,10 @@ export class MemStorage implements IStorage {
   private settingIdCounter: number;
   private nftBadgeIdCounter: number;
   private vrExperienceIdCounter: number;
+  private awardIdCounter: number;
+  private voteIdCounter: number;
+  private progressUpdateIdCounter: number;
+  private transactionIdCounter: number;
 
   constructor() {
     this.users = new Map();
@@ -102,6 +152,10 @@ export class MemStorage implements IStorage {
     this.settings = new Map();
     this.nftBadges = new Map();
     this.vrExperiences = new Map();
+    this.awards = new Map();
+    this.votes = new Map();
+    this.progressUpdates = new Map();
+    this.transactions = new Map();
     
     this.userIdCounter = 1;
     this.adIdCounter = 1;
@@ -110,6 +164,10 @@ export class MemStorage implements IStorage {
     this.settingIdCounter = 1;
     this.nftBadgeIdCounter = 1;
     this.vrExperienceIdCounter = 1;
+    this.awardIdCounter = 1;
+    this.voteIdCounter = 1;
+    this.progressUpdateIdCounter = 1;
+    this.transactionIdCounter = 1;
     
     // Initialize with default settings
     this.initializeSettings();
