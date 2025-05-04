@@ -123,10 +123,6 @@ const TermsPage = () => {
                   <p className="text-gray-600">
                     These Terms of Service represent only a portion of our full legal agreement. Please also review our Privacy Policy, Code of Conduct, and Cookies Policy for a complete understanding of the terms governing your use of the Platform.
                   </p>
-                  <div className="mt-4 flex space-x-4">
-                    <Button variant="outline" size="sm" className="text-sm">Contact Legal Team</Button>
-                    <Button variant="outline" size="sm" className="text-sm">Report a Violation</Button>
-                  </div>
                 </div>
               </CardContent>
             </Card>
