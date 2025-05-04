@@ -395,8 +395,8 @@ const SocialEntrepreneurshipPage = () => {
               Apply your social entrepreneurship knowledge by participating in our global challenge, designed to help young entrepreneurs create successful businesses with positive social impact.
             </p>
             <div className="pt-2">
-              <Button className="bg-white text-amber-700 hover:bg-gray-100">
-                Register Now
+              <Button className="bg-white text-amber-700 hover:bg-gray-100" asChild>
+                <a href="/register">Register Now</a>
               </Button>
             </div>
           </div>

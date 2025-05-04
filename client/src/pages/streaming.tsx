@@ -47,7 +47,7 @@ const StreamingPage = () => {
   const isParticipant = user?.role === 'participant';
   
   // Fetch participants
-  const { data: participants, isLoading: isLoadingParticipants } = useQuery({
+  const { data: participants, isLoading: isLoadingParticipants } = useQuery<Participant[]>({
     queryKey: ['/api/participants'],
     enabled: true,
     retry: 1,
@@ -70,7 +70,7 @@ const StreamingPage = () => {
   }, [filteredStreams, selectedStream]);
   
   // Find participant stream for current user
-  const userParticipant = participants?.find((p: Participant) => p.userId === user?.id);
+  const userParticipant = participants && user ? participants.find((p: Participant) => p.userId === user.id) : undefined;
   const userStream = userParticipant ? mockStreams.find(s => s.participantId === userParticipant.id) : null;
   
   // Handle stream selection
