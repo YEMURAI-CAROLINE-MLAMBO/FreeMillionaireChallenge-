@@ -52,67 +52,8 @@ const StreamingPage = () => {
     retry: 1,
   });
   
-  // In a real implementation, we would fetch streams from the backend
-  // This is a mock implementation
-  const mockStreams: Stream[] = [
-    {
-      id: 1,
-      participantId: 1,
-      participantName: "Emma Johnson",
-      title: "Month 3 Update: Scaling Our Sustainable Fashion Startup",
-      description: "Join me as I share our journey scaling production while maintaining our commitment to eco-friendly practices.",
-      thumbnailUrl: "https://placehold.co/800x450/9333ea/ffffff?text=Sustainable+Fashion",
-      isLive: true,
-      viewers: 215,
-      month: 3
-    },
-    {
-      id: 2,
-      participantId: 2,
-      participantName: "Marcus Chen",
-      title: "Building Our EdTech Platform - Technical Challenges",
-      description: "Discussing the backend infrastructure we've developed and how we're solving scalability issues.",
-      thumbnailUrl: "https://placehold.co/800x450/3b82f6/ffffff?text=EdTech+Platform",
-      isLive: false,
-      scheduledFor: "2025-08-15T18:00:00Z",
-      viewers: 0,
-      month: 2
-    },
-    {
-      id: 3,
-      participantId: 3,
-      participantName: "Sofia Patel",
-      title: "How We Secured Our First 100 Customers",
-      description: "The marketing strategies and pivots that helped us reach our first milestone.",
-      thumbnailUrl: "https://placehold.co/800x450/ef4444/ffffff?text=Marketing+Strategies",
-      isLive: false,
-      viewers: 0,
-      month: 1
-    },
-    {
-      id: 4,
-      participantId: 4,
-      participantName: "Alexandre Dubois",
-      title: "Renewable Energy Startup: Month 4 Progress Report",
-      description: "Updates on our solar energy solution and recent partnerships with local communities.",
-      thumbnailUrl: "https://placehold.co/800x450/eab308/ffffff?text=Renewable+Energy",
-      isLive: true,
-      viewers: 189,
-      month: 4
-    },
-    {
-      id: 5,
-      participantId: 5,
-      participantName: "Naomi Williams",
-      title: "Fundraising Journey: From Bootstrapping to Seed Round",
-      description: "The ups and downs of securing our first investment and what we learned along the way.",
-      thumbnailUrl: "https://placehold.co/800x450/84cc16/ffffff?text=Fundraising",
-      isLive: false,
-      scheduledFor: "2025-08-12T14:30:00Z",
-      viewers: 0,
-      month: 5
-    }
-  ];
+  // This will be populated by real data in the future
+  const mockStreams: Stream[] = [];
   
   // Filter streams based on search query
   const filteredStreams = mockStreams.filter(stream => 
@@ -162,167 +103,78 @@ const StreamingPage = () => {
 
   return (
     <div className="container mx-auto py-10 px-4 sm:px-6">
-      <div className="space-y-8">
-        <div>
-          <h1 className="text-3xl font-bold tracking-tight mb-1 md:text-4xl">
-            FMC Streaming
+      <div className="space-y-12">
+        <div className="text-center">
+          <h1 className="text-4xl font-bold tracking-tight mb-2 md:text-5xl bg-gradient-to-r from-amber-500 via-yellow-500 to-zinc-800 bg-clip-text text-transparent">
+            FMC Streaming Platform
           </h1>
-          <p className="text-gray-500 max-w-3xl">
-            Watch participants share their entrepreneurial journey or start your own stream
+          <p className="text-xl text-gray-500 max-w-3xl mx-auto">
+            Watch participants share their entrepreneurial journey through monthly video updates
           </p>
         </div>
-      
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          {/* Main stream player */}
-          <div className="lg:col-span-2">
-            {selectedStream ? (
-              <StreamPlayerEnhanced 
-                streamUrl={undefined} // In production, this would be a real stream URL
-                title={selectedStream.title}
-                description={selectedStream.description}
-                participantId={selectedStream.participantId}
-                isLive={selectedStream.isLive}
-                canStream={isParticipant && userParticipant && selectedStream.participantId === userParticipant.id}
-                participantName={selectedStream.participantName}
-                thumbnailUrl={selectedStream.thumbnailUrl}
-              />
-            ) : (
-              <div className="aspect-video bg-gray-100 rounded-md flex items-center justify-center">
-                <p className="text-gray-500">Please select a stream to watch</p>
-              </div>
-            )}
-          </div>
-          
-          {/* Stream list and filters */}
-          <div className="space-y-6">
-            <Tabs defaultValue="live">
-              <div className="flex items-center justify-between mb-4">
-                <TabsList>
-                  <TabsTrigger value="live">
-                    <div className="flex items-center gap-1">
-                      <span className="w-2 h-2 bg-red-500 rounded-full"></span>
-                      Live
-                    </div>
-                  </TabsTrigger>
-                  <TabsTrigger value="upcoming">Upcoming</TabsTrigger>
-                  <TabsTrigger value="all">All Videos</TabsTrigger>
-                </TabsList>
-              </div>
-              
-              <div className="mb-4">
-                <div className="relative">
-                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
-                  <input
-                    type="text"
-                    placeholder="Search streams..."
-                    className="pl-9 pr-4 py-2 w-full border rounded-md text-sm"
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                  />
+        
+        <div className="bg-white rounded-lg shadow-sm border p-8 max-w-4xl mx-auto">
+          <div className="text-center space-y-6">
+            <div className="aspect-video bg-gray-100 rounded-lg border-2 border-dashed border-gray-300 flex items-center justify-center">
+              <div className="max-w-md mx-auto p-6 text-center">
+                <Calendar className="h-16 w-16 mx-auto text-amber-500 mb-4" />
+                <h2 className="text-2xl font-bold text-gray-800 mb-2">Coming August 1, 2025</h2>
+                <p className="text-gray-600 mb-6">
+                  Our streaming platform will launch when the challenge begins. Participants will share their entrepreneurial journey through monthly video updates.
+                </p>
+                
+                <div className="inline-flex items-center justify-center space-x-2 px-4 py-2 bg-amber-100 text-amber-800 rounded-full">
+                  <span className="w-2 h-2 bg-amber-500 rounded-full animate-pulse"></span>
+                  <span className="text-sm font-medium">Launching Soon</span>
                 </div>
               </div>
-              
-              <TabsContent value="live" className="space-y-4">
-                {filteredStreams.filter(stream => stream.isLive).length > 0 ? (
-                  filteredStreams
-                    .filter(stream => stream.isLive)
-                    .map(stream => (
-                      <StreamCard 
-                        key={stream.id}
-                        stream={stream}
-                        isSelected={selectedStream?.id === stream.id}
-                        onClick={() => handleSelectStream(stream)}
-                      />
-                    ))
-                ) : (
-                  <div className="text-center py-8 text-gray-500">
-                    <Video className="h-12 w-12 mx-auto text-gray-300 mb-2" />
-                    <p>No live streams available at the moment</p>
-                    <p className="text-sm mt-2">Check back later or view upcoming streams</p>
-                  </div>
-                )}
-              </TabsContent>
-              
-              <TabsContent value="upcoming" className="space-y-4">
-                {filteredStreams.filter(stream => !stream.isLive && stream.scheduledFor).length > 0 ? (
-                  filteredStreams
-                    .filter(stream => !stream.isLive && stream.scheduledFor)
-                    .map(stream => (
-                      <UpcomingStreamCard 
-                        key={stream.id}
-                        stream={stream}
-                      />
-                    ))
-                ) : (
-                  <div className="text-center py-8 text-gray-500">
-                    <Calendar className="h-12 w-12 mx-auto text-gray-300 mb-2" />
-                    <p>No upcoming streams scheduled</p>
-                  </div>
-                )}
-              </TabsContent>
-              
-              <TabsContent value="all" className="space-y-4">
-                {filteredStreams.length > 0 ? (
-                  filteredStreams.map(stream => (
-                    <StreamCard 
-                      key={stream.id}
-                      stream={stream}
-                      isSelected={selectedStream?.id === stream.id}
-                      onClick={() => handleSelectStream(stream)}
-                    />
-                  ))
-                ) : (
-                  <div className="text-center py-8 text-gray-500">
-                    <Grid3X3 className="h-12 w-12 mx-auto text-gray-300 mb-2" />
-                    <p>No videos found</p>
-                  </div>
-                )}
-              </TabsContent>
-            </Tabs>
+            </div>
             
-            {/* Participant streaming section */}
+            <div className="max-w-xl mx-auto space-y-4">
+              <h3 className="text-xl font-semibold">Features Coming Soon:</h3>
+              <ul className="space-y-3 text-left">
+                <li className="flex items-start">
+                  <Video className="h-5 w-5 text-amber-500 mr-3 mt-0.5" />
+                  <span className="text-gray-600">Live streaming and video upload capabilities for participants</span>
+                </li>
+                <li className="flex items-start">
+                  <Users className="h-5 w-5 text-amber-500 mr-3 mt-0.5" />
+                  <span className="text-gray-600">Interactive viewer experience with live chat and reactions</span>
+                </li>
+                <li className="flex items-start">
+                  <MessageSquare className="h-5 w-5 text-amber-500 mr-3 mt-0.5" />
+                  <span className="text-gray-600">Community engagement through comments and feedback</span>
+                </li>
+                <li className="flex items-start">
+                  <Grid3X3 className="h-5 w-5 text-amber-500 mr-3 mt-0.5" />
+                  <span className="text-gray-600">Library of past streams organized by participant and progress month</span>
+                </li>
+              </ul>
+            </div>
+            
             {isParticipant && userParticipant && (
-              <Card>
+              <Card className="mt-8 border-amber-200 bg-amber-50">
                 <CardHeader className="pb-3">
-                  <CardTitle>Your Streaming Hub</CardTitle>
+                  <CardTitle>Participant Video Guidelines</CardTitle>
                   <CardDescription>
-                    Share your entrepreneurial journey with the FMC community
+                    Prepare for your monthly video updates
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
-                  {userStream ? (
-                    <div className="space-y-4">
-                      <p className="text-sm">You have an active stream:</p>
-                      <div className="p-3 border rounded-md bg-gray-50">
-                        <h3 className="font-medium">{userStream.title}</h3>
-                        <p className="text-xs text-gray-500 mt-1">
-                          {userStream.isLive ? (
-                            <span className="text-red-600 font-medium">● LIVE NOW</span>
-                          ) : (
-                            userStream.scheduledFor ? (
-                              <span>Scheduled for {new Date(userStream.scheduledFor).toLocaleString()}</span>
-                            ) : (
-                              <span>Recorded video</span>
-                            )
-                          )}
-                        </p>
-                      </div>
-                      <div className="flex gap-2">
-                        <Button onClick={() => handleSelectStream(userStream)} className="flex-1">
-                          {userStream.isLive ? 'Manage Stream' : 'View Video'}
-                        </Button>
-                        <Button variant="outline">Schedule New</Button>
-                      </div>
-                    </div>
-                  ) : (
-                    <div className="space-y-4">
-                      <p className="text-sm">You haven't created any streams yet. Start sharing your journey with the FMC community.</p>
-                      <div className="flex gap-2">
-                        <Button className="flex-1">Start Streaming</Button>
-                        <Button variant="outline">Schedule Stream</Button>
-                      </div>
-                    </div>
-                  )}
+                  <div className="space-y-4">
+                    <p className="text-sm">
+                      As a participant, you'll be required to create monthly video updates (5-10 minutes) documenting your entrepreneurial journey. Here are some tips:
+                    </p>
+                    <ul className="space-y-2 text-sm text-gray-600">
+                      <li>• Focus on sharing progress, challenges, and learnings</li>
+                      <li>• Include business metrics and growth indicators</li>
+                      <li>• Discuss your social impact initiatives</li>
+                      <li>• Maintain consistent video quality and presentation</li>
+                    </ul>
+                    <p className="text-sm font-medium">
+                      The streaming interface will be available once the challenge begins on August 1, 2025.
+                    </p>
+                  </div>
                 </CardContent>
               </Card>
             )}

@@ -139,15 +139,17 @@ const WhitepaperPage = () => {
                         >
                           <X className="h-4 w-4" />
                         </button>
-                        <h4 className="font-medium mb-2">Contact Our Team</h4>
+                        <h4 className="font-medium mb-2">Request Document</h4>
                         <p className="text-sm text-gray-600 mb-3">
-                          Our investment team is available to answer your questions and provide additional information.
+                          {requestedDocument ? 
+                            `Request the "${requestedDocument.replace('.pdf', '').replace('.docx', '').replace('.pptx', '').replace('FMC_', '').replace(/_/g, ' ')}" document by email:` : 
+                            "Our investment team is available to answer your questions and provide additional information."}
                         </p>
                         <a 
-                          href="mailto:ymlambo21@gmail.com" 
+                          href={`mailto:ymlambo21@gmail.com?subject=Document%20Request:%20${encodeURIComponent(requestedDocument || "FMC Whitepaper")}&body=Hello,%0A%0AI would like to request the following document: ${encodeURIComponent(requestedDocument || "FMC Whitepaper")}%0A%0AThank you.`} 
                           className="inline-block bg-amber-500 text-white px-4 py-2 rounded-md hover:bg-amber-600 text-sm transition-colors"
                         >
-                          Send Email Inquiry
+                          Request Document
                         </a>
                       </div>
                     )}
