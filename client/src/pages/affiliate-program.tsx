@@ -86,7 +86,9 @@ const AffiliateProgram: React.FC = () => {
               </div>
             </CardContent>
             <CardFooter className="flex justify-center">
-              <Button className="btn-gold">Apply to Become an Affiliate</Button>
+              <Link href="/register">
+                <Button className="btn-gold">Apply to Become an Affiliate</Button>
+              </Link>
             </CardFooter>
           </Card>
         </TabsContent>
@@ -308,7 +310,9 @@ const AffiliateProgram: React.FC = () => {
               </div>
             </CardContent>
             <CardFooter className="flex justify-center">
-              <Button className="btn-gold">Apply for Your NFT Badge</Button>
+              <Link href="/register">
+                <Button className="btn-gold">Apply for Your NFT Badge</Button>
+              </Link>
             </CardFooter>
           </Card>
         </TabsContent>
@@ -391,9 +395,11 @@ function distributeCommission(address affiliate, uint256 amount) internal {
       <div className="max-w-4xl mx-auto mt-12 bg-gradient-to-r from-secondary/90 to-primary/90 text-white rounded-lg p-8 text-center">
         <h2 className="text-2xl font-bold mb-4">Ready to Start Earning?</h2>
         <p className="mb-6">Join our affiliate program today and become part of the FreeMillionaireChallenge ecosystem.</p>
-        <Button variant="secondary" size="lg">
-          Apply Now
-        </Button>
+        <Link href="/register">
+          <Button variant="secondary" size="lg">
+            Apply Now
+          </Button>
+        </Link>
       </div>
     </div>
   );

@@ -26,6 +26,7 @@ import { Header } from "@/components/layout/header";
 import { Footer } from "@/components/layout/footer";
 import { useAuth } from "@/contexts/auth-context";
 import { Web3ContextProvider } from "@/contexts/web3-context";
+import { LanguageProvider } from "@/contexts/language-context";
 import { Skeleton } from "@/components/ui/skeleton";
 
 function Router() {
@@ -86,16 +87,18 @@ function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <Web3ContextProvider>
-        <TooltipProvider>
-          <div className="flex flex-col min-h-screen">
-            <Header />
-            <main className="flex-grow">
-              <Router />
-            </main>
-            <Footer />
-          </div>
-          <Toaster />
-        </TooltipProvider>
+        <LanguageProvider>
+          <TooltipProvider>
+            <div className="flex flex-col min-h-screen">
+              <Header />
+              <main className="flex-grow">
+                <Router />
+              </main>
+              <Footer />
+            </div>
+            <Toaster />
+          </TooltipProvider>
+        </LanguageProvider>
       </Web3ContextProvider>
     </QueryClientProvider>
   );
