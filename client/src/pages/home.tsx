@@ -39,7 +39,7 @@ const Home: React.FC = () => {
       <section className="bg-gradient-to-br from-black via-accent to-black text-white py-20">
         <div className="container mx-auto px-4">
           <div className="max-w-3xl mx-auto text-center">
-            <h1 className="text-gradient-gold mb-6 text-4xl md:text-5xl lg:text-6xl font-extrabold">#FreeMillionaire Challenge</h1>
+            <h1 className="text-gradient-gold mb-6 text-4xl md:text-5xl lg:text-6xl font-extrabold">#FreeMillionaireChallenge</h1>
             <p className="text-lg md:text-xl mb-8 text-silver">Unleash Your Potential! Join the most exciting global business challenge where crypto meets opportunity. Transform your vision into reality at zero cost.</p>
             
             <div className="flex flex-col items-center justify-center">
