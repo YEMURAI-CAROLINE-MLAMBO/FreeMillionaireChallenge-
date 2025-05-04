@@ -23,9 +23,9 @@ const Participants: React.FC = () => {
     <div className="container mx-auto px-4 py-16">
       <div className="max-w-4xl mx-auto text-center mb-12">
         <span className="text-primary font-semibold">Season 1</span>
-        <h1 className="text-3xl font-bold mb-4 text-dark">Our Participants</h1>
+        <h1 className="text-4xl font-bold mb-4 text-dark bg-gradient-to-r from-amber-500 via-yellow-500 to-zinc-800 bg-clip-text text-transparent">Future Change-Makers</h1>
         <p className="text-dark-medium text-lg">
-          Meet the {maxParticipants} exclusive participants competing in our first season business challenge.
+          Witness the journey of {maxParticipants} extraordinary entrepreneurs transforming their visions into profitable, world-changing ventures!
         </p>
       </div>
       

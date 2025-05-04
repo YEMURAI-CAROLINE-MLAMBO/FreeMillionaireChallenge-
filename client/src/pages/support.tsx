@@ -4,8 +4,9 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { AtSign, HelpCircle, LifeBuoy, Mail, MessageSquare, Phone } from "lucide-react";
+import { HelpCircle, LifeBuoy, Mail, Phone } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { useState } from "react";
 
 const SupportPage = () => {
   const { toast } = useToast();
@@ -17,6 +18,12 @@ const SupportPage = () => {
       description: "We've received your message and will respond within 48 hours.",
     });
     // Reset form (would be handled by form library in a real implementation)
+  };
+
+  const [showContactCard, setShowContactCard] = useState(false);
+  
+  const toggleContactCard = () => {
+    setShowContactCard(!showContactCard);
   };
 
   return (
@@ -32,10 +39,9 @@ const SupportPage = () => {
         </div>
 
         <Tabs defaultValue="contact" className="space-y-8">
-          <TabsList className="grid w-full grid-cols-3 max-w-xl mx-auto">
+          <TabsList className="grid w-full grid-cols-2 max-w-xl mx-auto">
             <TabsTrigger value="contact">Contact Us</TabsTrigger>
             <TabsTrigger value="help">Help Topics</TabsTrigger>
-            <TabsTrigger value="emergency">Emergency Support</TabsTrigger>
           </TabsList>
 
           <TabsContent value="contact" className="space-y-6">
@@ -88,58 +94,46 @@ const SupportPage = () => {
                 </div>
 
                 <div className="grid gap-4">
-                  <Card>
+                  <Card className="bg-gradient-to-br from-amber-50 to-transparent border-amber-200">
                     <CardHeader className="pb-3">
                       <div className="flex items-center space-x-3">
                         <Mail className="h-5 w-5 text-amber-500" />
-                        <CardTitle className="text-lg">Email Support</CardTitle>
+                        <CardTitle className="text-lg">Contact Us</CardTitle>
                       </div>
                     </CardHeader>
                     <CardContent>
-                      <p className="text-sm text-gray-500">
-                        Send us an email for non-urgent inquiries
+                      <p className="text-sm text-gray-500 mb-4">
+                        Our support team is ready to assist with any questions or issues you may encounter.
                       </p>
-                      <p className="text-sm font-medium mt-1">
-                        <a href="mailto:ymlambo21@gmail.com" className="text-amber-600 hover:text-amber-800 transition-colors">
-                          Contact Support
-                        </a>
-                      </p>
-                    </CardContent>
-                  </Card>
-
-                  <Card>
-                    <CardHeader className="pb-3">
-                      <div className="flex items-center space-x-3">
-                        <MessageSquare className="h-5 w-5 text-amber-500" />
-                        <CardTitle className="text-lg">Live Chat</CardTitle>
-                      </div>
-                    </CardHeader>
-                    <CardContent>
-                      <p className="text-sm text-gray-500">
-                        Chat with our support team in real-time
-                      </p>
-                      <p className="text-sm font-medium mt-1">
-                        Available on weekdays, 9AM-5PM UTC
-                      </p>
-                    </CardContent>
-                  </Card>
-
-                  <Card>
-                    <CardHeader className="pb-3">
-                      <div className="flex items-center space-x-3">
-                        <AtSign className="h-5 w-5 text-amber-500" />
-                        <CardTitle className="text-lg">Social Media</CardTitle>
-                      </div>
-                    </CardHeader>
-                    <CardContent>
-                      <p className="text-sm text-gray-500">
-                        Reach out to us on our social platforms
-                      </p>
-                      <div className="flex space-x-3 mt-2">
-                        <a href="#" className="text-gray-600 hover:text-amber-500">Twitter</a>
-                        <a href="#" className="text-gray-600 hover:text-amber-500">LinkedIn</a>
-                        <a href="#" className="text-gray-600 hover:text-amber-500">Instagram</a>
-                      </div>
+                      <Button 
+                        variant="default" 
+                        className="w-full"
+                        onClick={toggleContactCard}
+                      >
+                        <Mail className="mr-2 h-4 w-4" />
+                        Contact Support
+                      </Button>
+                      
+                      {showContactCard && (
+                        <div className="mt-4 p-4 bg-white rounded-md border border-amber-200 relative">
+                          <button 
+                            className="absolute top-2 right-2 text-gray-500 hover:text-gray-700"
+                            onClick={toggleContactCard}
+                          >
+                            <span className="text-xs font-bold">✕</span>
+                          </button>
+                          <h4 className="font-medium mb-2">Contact Our Team</h4>
+                          <p className="text-sm text-gray-600 mb-3">
+                            Our support team is available to answer your questions and provide assistance.
+                          </p>
+                          <a 
+                            href="mailto:ymlambo21@gmail.com" 
+                            className="inline-block bg-amber-500 text-white px-4 py-2 rounded-md hover:bg-amber-600 text-sm transition-colors"
+                          >
+                            Send Email
+                          </a>
+                        </div>
+                      )}
                     </CardContent>
                   </Card>
                 </div>
@@ -167,7 +161,9 @@ const SupportPage = () => {
                   <a href="#" className="block text-sm text-gray-600 hover:text-amber-500">• Accessing learning resources</a>
                 </CardContent>
                 <CardFooter>
-                  <Button variant="outline" className="w-full">View All Resources</Button>
+                  <a href="mailto:ymlambo21@gmail.com?subject=Resource%20Request:%20Participants" style={{ display: 'block', width: '100%' }}>
+                    <Button variant="outline" className="w-full">Request Resources</Button>
+                  </a>
                 </CardFooter>
               </Card>
 
@@ -189,7 +185,9 @@ const SupportPage = () => {
                   <a href="#" className="block text-sm text-gray-600 hover:text-amber-500">• Advertising performance metrics</a>
                 </CardContent>
                 <CardFooter>
-                  <Button variant="outline" className="w-full">View All Resources</Button>
+                  <a href="mailto:ymlambo21@gmail.com?subject=Resource%20Request:%20Advertisers" style={{ display: 'block', width: '100%' }}>
+                    <Button variant="outline" className="w-full">Request Resources</Button>
+                  </a>
                 </CardFooter>
               </Card>
 
@@ -211,61 +209,12 @@ const SupportPage = () => {
                   <a href="#" className="block text-sm text-gray-600 hover:text-amber-500">• Becoming an affiliate</a>
                 </CardContent>
                 <CardFooter>
-                  <Button variant="outline" className="w-full">View All Resources</Button>
+                  <a href="mailto:ymlambo21@gmail.com?subject=Resource%20Request:%20Viewers" style={{ display: 'block', width: '100%' }}>
+                    <Button variant="outline" className="w-full">Request Resources</Button>
+                  </a>
                 </CardFooter>
               </Card>
             </div>
-          </TabsContent>
-
-          <TabsContent value="emergency" className="space-y-6">
-            <Card>
-              <CardHeader>
-                <CardTitle>Emergency Support</CardTitle>
-                <CardDescription>
-                  Use these channels for urgent issues requiring immediate attention
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="p-4 bg-amber-50 border border-amber-200 rounded-md">
-                  <h3 className="text-lg font-medium flex items-center space-x-2 mb-2">
-                    <Phone className="h-5 w-5 text-amber-500" />
-                    <span>Priority Support Line</span>
-                  </h3>
-                  <p className="text-gray-600 mb-2">
-                    For urgent technical issues or account compromises, please contact our emergency support line:
-                  </p>
-                  <p className="font-medium">+1 (555) 123-4567</p>
-                  <p className="text-sm text-gray-500 mt-2">
-                    Available 24/7 for emergency situations only
-                  </p>
-                </div>
-
-                <div className="p-4 bg-amber-50 border border-amber-200 rounded-md">
-                  <h3 className="text-lg font-medium flex items-center space-x-2 mb-2">
-                    <Mail className="h-5 w-5 text-amber-500" />
-                    <span>Urgent Email Support</span>
-                  </h3>
-                  <p className="text-gray-600 mb-2">
-                    Send an email with "URGENT" in the subject line for priority handling:
-                  </p>
-                  <p className="font-medium">
-                    <a href="mailto:ymlambo21@gmail.com?subject=URGENT:" className="text-amber-600 hover:text-amber-800 transition-colors">
-                      Contact Emergency Support
-                    </a>
-                  </p>
-                  <p className="text-sm text-gray-500 mt-2">
-                    24-hour response time for urgent matters
-                  </p>
-                </div>
-
-                <div className="mt-4">
-                  <p className="text-sm text-gray-500">
-                    Please note: Emergency channels are for genuine urgent matters only. 
-                    Non-emergency inquiries sent through these channels may experience delays.
-                  </p>
-                </div>
-              </CardContent>
-            </Card>
           </TabsContent>
         </Tabs>
       </div>
