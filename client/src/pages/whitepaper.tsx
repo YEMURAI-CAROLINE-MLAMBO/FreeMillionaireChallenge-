@@ -8,12 +8,18 @@ const WhitepaperPage = () => {
   
   // Function to handle downloading whitepaper files
   const handleDownload = (fileType: string) => {
-    // Instead of simulating downloads, we'll direct users to request documents via email
-    setRequestedDocument(fileType);
-    setShowContactCard(true);
+    // We're creating simulated file downloads with dummy content
+    const content = "Free Millionaire Challenge Whitepaper Content";
+    const blob = new Blob([content], { type: 'text/plain' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = fileType;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
   };
-  
-  const [requestedDocument, setRequestedDocument] = useState("");
   
   // Function to toggle contact card
   const toggleContactCard = () => {
@@ -139,18 +145,17 @@ const WhitepaperPage = () => {
                         >
                           <X className="h-4 w-4" />
                         </button>
-                        <h4 className="font-medium mb-2">Request Document</h4>
+                        <h4 className="font-medium mb-2">Investment Information</h4>
                         <p className="text-sm text-gray-600 mb-3">
-                          {requestedDocument ? 
-                            `Request the "${requestedDocument.replace('.pdf', '').replace('.docx', '').replace('.pptx', '').replace('FMC_', '').replace(/_/g, ' ')}" document by email:` : 
-                            "Our investment team is available to answer your questions and provide additional information."}
+                          Our investment team is available to answer your questions and provide additional information about the Free Millionaire Challenge.
                         </p>
-                        <a 
-                          href={`mailto:ymlambo21@gmail.com?subject=Document%20Request:%20${encodeURIComponent(requestedDocument || "FMC Whitepaper")}&body=Hello,%0A%0AI would like to request the following document: ${encodeURIComponent(requestedDocument || "FMC Whitepaper")}%0A%0AThank you.`} 
-                          className="inline-block bg-amber-500 text-white px-4 py-2 rounded-md hover:bg-amber-600 text-sm transition-colors"
+                        <Button
+                          variant="default"
+                          size="sm"
+                          className="bg-amber-500 hover:bg-amber-600"
                         >
-                          Request Document
-                        </a>
+                          More Information
+                        </Button>
                       </div>
                     )}
                   </CardContent>
