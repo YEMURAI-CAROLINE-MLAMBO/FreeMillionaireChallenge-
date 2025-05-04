@@ -126,12 +126,13 @@ const SupportPage = () => {
                           <p className="text-sm text-gray-600 mb-3">
                             Our support team is available to answer your questions and provide assistance.
                           </p>
-                          <a 
-                            href="mailto:ymlambo21@gmail.com" 
-                            className="inline-block bg-amber-500 text-white px-4 py-2 rounded-md hover:bg-amber-600 text-sm transition-colors"
+                          <Button
+                            variant="default"
+                            size="sm"
+                            className="bg-amber-500 hover:bg-amber-600"
                           >
-                            Send Email
-                          </a>
+                            Contact Support
+                          </Button>
                         </div>
                       )}
                     </CardContent>
@@ -161,9 +162,7 @@ const SupportPage = () => {
                   <a href="#" className="block text-sm text-gray-600 hover:text-amber-500">• Accessing learning resources</a>
                 </CardContent>
                 <CardFooter>
-                  <a href="mailto:ymlambo21@gmail.com?subject=Resource%20Request:%20Participants" style={{ display: 'block', width: '100%' }}>
-                    <Button variant="outline" className="w-full">Request Resources</Button>
-                  </a>
+                  <Button variant="outline" className="w-full">View All Resources</Button>
                 </CardFooter>
               </Card>
 
@@ -185,9 +184,7 @@ const SupportPage = () => {
                   <a href="#" className="block text-sm text-gray-600 hover:text-amber-500">• Advertising performance metrics</a>
                 </CardContent>
                 <CardFooter>
-                  <a href="mailto:ymlambo21@gmail.com?subject=Resource%20Request:%20Advertisers" style={{ display: 'block', width: '100%' }}>
-                    <Button variant="outline" className="w-full">Request Resources</Button>
-                  </a>
+                  <Button variant="outline" className="w-full">View All Resources</Button>
                 </CardFooter>
               </Card>
 
@@ -209,9 +206,7 @@ const SupportPage = () => {
                   <a href="#" className="block text-sm text-gray-600 hover:text-amber-500">• Becoming an affiliate</a>
                 </CardContent>
                 <CardFooter>
-                  <a href="mailto:ymlambo21@gmail.com?subject=Resource%20Request:%20Viewers" style={{ display: 'block', width: '100%' }}>
-                    <Button variant="outline" className="w-full">Request Resources</Button>
-                  </a>
+                  <Button variant="outline" className="w-full">View All Resources</Button>
                 </CardFooter>
               </Card>
             </div>

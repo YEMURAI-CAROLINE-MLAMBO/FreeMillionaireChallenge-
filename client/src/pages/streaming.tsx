@@ -17,7 +17,8 @@ import {
   Search, 
   Filter, 
   Video,
-  BadgeCheck 
+  BadgeCheck,
+  MessageSquare
 } from 'lucide-react';
 import { Participant } from '@shared/schema';
 import { useLanguage } from '@/contexts/language-context';
