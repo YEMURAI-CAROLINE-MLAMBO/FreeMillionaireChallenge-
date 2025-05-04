@@ -8,18 +8,12 @@ const WhitepaperPage = () => {
   
   // Function to handle downloading whitepaper files
   const handleDownload = (fileType: string) => {
-    // We're creating simulated file downloads with dummy content
-    const content = "Free Millionaire Challenge Whitepaper Content";
-    const blob = new Blob([content], { type: 'text/plain' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = fileType;
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    URL.revokeObjectURL(url);
+    // Instead of simulating downloads, we'll direct users to request documents via email
+    setRequestedDocument(fileType);
+    setShowContactCard(true);
   };
+  
+  const [requestedDocument, setRequestedDocument] = useState("");
   
   // Function to toggle contact card
   const toggleContactCard = () => {

@@ -83,7 +83,7 @@ const FAQPage = () => {
                 When is the application period?
               </AccordionTrigger>
               <AccordionContent className="text-gray-600">
-                The application period for Season 1 runs from March 1, 2025, to July 31, 2025. The challenge officially launches on August 1, 2025, and runs for 12 months.
+                The application period for Season 1 runs from May 15, 2025, to July 15, 2025. The challenge officially launches on August 1, 2025, and runs for 12 months.
               </AccordionContent>
             </AccordionItem>
 

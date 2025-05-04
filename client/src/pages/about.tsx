@@ -204,7 +204,7 @@ const AboutPage = () => {
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-4">
-                    <a href="/faq" className="block hover:bg-gray-50 rounded-md p-2 transition-colors">
+                    <a href="/support" className="block hover:bg-gray-50 rounded-md p-2 transition-colors">
                       <div className="flex items-center gap-3">
                         <HelpCircle className="h-5 w-5 text-amber-500" />
                         <div>
