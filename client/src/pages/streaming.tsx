@@ -21,7 +21,8 @@ import {
   MessageSquare
 } from 'lucide-react';
 import { Participant } from '@shared/schema';
-import { useLanguage } from '@/contexts/language-context';
+// Remove the language context dependency for simplicity
+// import { useLanguage } from '@/contexts/language-context';
 import { Skeleton } from '@/components/ui/skeleton';
 
 interface Stream {
@@ -39,7 +40,6 @@ interface Stream {
 
 const StreamingPage = () => {
   const { user } = useAuth();
-  const { t } = useLanguage();
   const [selectedStream, setSelectedStream] = useState<Stream | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
   

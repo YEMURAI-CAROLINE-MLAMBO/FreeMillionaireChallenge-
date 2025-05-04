@@ -1,30 +1,9 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { HelpCircle, LifeBuoy, Mail, Phone } from "lucide-react";
-import { useToast } from "@/hooks/use-toast";
-import { useState } from "react";
+import { HelpCircle, LifeBuoy, MessageSquare, Phone } from "lucide-react";
 
 const SupportPage = () => {
-  const { toast } = useToast();
-
-  const handleSubmitContact = (e: React.FormEvent) => {
-    e.preventDefault();
-    toast({
-      title: "Message Sent",
-      description: "We've received your message and will respond within 48 hours.",
-    });
-    // Reset form (would be handled by form library in a real implementation)
-  };
-
-  const [showContactCard, setShowContactCard] = useState(false);
-  
-  const toggleContactCard = () => {
-    setShowContactCard(!showContactCard);
-  };
 
   return (
     <div className="container mx-auto py-10 px-4 sm:px-6 max-w-6xl">
@@ -45,100 +24,92 @@ const SupportPage = () => {
           </TabsList>
 
           <TabsContent value="contact" className="space-y-6">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-              <div className="space-y-6">
-                <div className="space-y-2">
-                  <h2 className="text-2xl font-semibold">Get in Touch</h2>
-                  <p className="text-gray-500">
-                    Have questions about the Free Millionaire Challenge? We're here to help!
-                    Fill out the form, and our support team will get back to you within 48 hours.
-                  </p>
-                </div>
-
-                <form onSubmit={handleSubmitContact} className="space-y-4">
-                  <div className="grid grid-cols-1 gap-4">
-                    <div className="space-y-2">
-                      <Label htmlFor="name">Your Name</Label>
-                      <Input id="name" placeholder="Enter your full name" required />
-                    </div>
-                    
-                    <div className="space-y-2">
-                      <Label htmlFor="email">Email Address</Label>
-                      <Input id="email" type="email" placeholder="you@example.com" required />
-                    </div>
-                    
-                    <div className="space-y-2">
-                      <Label htmlFor="subject">Subject</Label>
-                      <Input id="subject" placeholder="How can we help you?" required />
-                    </div>
-                    
-                    <div className="space-y-2">
-                      <Label htmlFor="message">Message</Label>
-                      <Textarea id="message" placeholder="Please describe your issue or question in detail..." required className="min-h-[150px]" />
-                    </div>
-                    
-                    <Button type="submit" className="w-full bg-gradient-to-r from-amber-500 to-yellow-500 hover:from-amber-600 hover:to-yellow-600">
-                      Send Message
-                    </Button>
-                  </div>
-                </form>
+            <div className="max-w-3xl mx-auto space-y-6">
+              <div className="text-center space-y-4">
+                <h2 className="text-2xl font-semibold">Self-Service Support Center</h2>
+                <p className="text-gray-500">
+                  Our comprehensive knowledge base has answers to most common questions about the Free Millionaire Challenge.
+                  Browse the resources below to find the information you need.
+                </p>
               </div>
-
-              <div className="space-y-6">
-                <div className="space-y-2">
-                  <h2 className="text-2xl font-semibold">Other Ways to Reach Us</h2>
-                  <p className="text-gray-500">
-                    Choose the method that works best for you. Our support team is available 
-                    Monday through Friday, 9:00 AM to 5:00 PM UTC.
-                  </p>
-                </div>
-
-                <div className="grid gap-4">
-                  <Card className="bg-gradient-to-br from-amber-50 to-transparent border-amber-200">
-                    <CardHeader className="pb-3">
-                      <div className="flex items-center space-x-3">
-                        <Mail className="h-5 w-5 text-amber-500" />
-                        <CardTitle className="text-lg">Contact Us</CardTitle>
-                      </div>
-                    </CardHeader>
-                    <CardContent>
-                      <p className="text-sm text-gray-500 mb-4">
-                        Our support team is ready to assist with any questions or issues you may encounter.
+              
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <Card className="bg-gradient-to-br from-amber-50 to-transparent border-amber-200">
+                  <CardHeader className="pb-3">
+                    <div className="flex items-center space-x-3">
+                      <HelpCircle className="h-5 w-5 text-amber-500" />
+                      <CardTitle className="text-lg">Frequently Asked Questions</CardTitle>
+                    </div>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="space-y-3">
+                      <p className="text-sm text-gray-600">
+                        Find answers to the most common questions about participating in the challenge,
+                        advertising on the platform, and navigating the ecosystem.
                       </p>
                       <Button 
-                        variant="default" 
+                        variant="outline" 
                         className="w-full"
-                        onClick={toggleContactCard}
+                        onClick={() => window.location.href = "/faq"}
                       >
-                        <Mail className="mr-2 h-4 w-4" />
-                        Contact Support
+                        View FAQ
                       </Button>
-                      
-                      {showContactCard && (
-                        <div className="mt-4 p-4 bg-white rounded-md border border-amber-200 relative">
-                          <button 
-                            className="absolute top-2 right-2 text-gray-500 hover:text-gray-700"
-                            onClick={toggleContactCard}
-                          >
-                            <span className="text-xs font-bold">✕</span>
-                          </button>
-                          <h4 className="font-medium mb-2">Contact Our Team</h4>
-                          <p className="text-sm text-gray-600 mb-3">
-                            Our support team is available to answer your questions and provide assistance.
-                          </p>
-                          <Button
-                            variant="default"
-                            size="sm"
-                            className="bg-amber-500 hover:bg-amber-600"
-                          >
-                            Contact Support
-                          </Button>
-                        </div>
-                      )}
-                    </CardContent>
-                  </Card>
-                </div>
+                    </div>
+                  </CardContent>
+                </Card>
+                
+                <Card className="bg-gradient-to-br from-amber-50 to-transparent border-amber-200">
+                  <CardHeader className="pb-3">
+                    <div className="flex items-center space-x-3">
+                      <MessageSquare className="h-5 w-5 text-amber-500" />
+                      <CardTitle className="text-lg">Community Resources</CardTitle>
+                    </div>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="space-y-3">
+                      <p className="text-sm text-gray-600">
+                        Connect with other participants and viewers in our community forums.
+                        Search existing discussions or browse by topic.
+                      </p>
+                      <Button 
+                        variant="outline" 
+                        className="w-full"
+                      >
+                        Browse Forums
+                      </Button>
+                    </div>
+                  </CardContent>
+                </Card>
               </div>
+              
+              <Card className="mt-6">
+                <CardHeader>
+                  <CardTitle>Popular Help Topics</CardTitle>
+                  <CardDescription>
+                    Quick links to our most accessed support resources
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <a href="#" className="block px-4 py-3 border rounded-md hover:bg-amber-50 hover:border-amber-200 transition-colors">
+                      <h3 className="font-medium">Using MetaMask with FMC</h3>
+                      <p className="text-sm text-gray-500">Step-by-step guide to connecting your wallet</p>
+                    </a>
+                    <a href="#" className="block px-4 py-3 border rounded-md hover:bg-amber-50 hover:border-amber-200 transition-colors">
+                      <h3 className="font-medium">Participant Eligibility Requirements</h3>
+                      <p className="text-sm text-gray-500">Criteria for joining the challenge</p>
+                    </a>
+                    <a href="#" className="block px-4 py-3 border rounded-md hover:bg-amber-50 hover:border-amber-200 transition-colors">
+                      <h3 className="font-medium">NFT Badge Registration</h3>
+                      <p className="text-sm text-gray-500">Understanding participant and affiliate badges</p>
+                    </a>
+                    <a href="#" className="block px-4 py-3 border rounded-md hover:bg-amber-50 hover:border-amber-200 transition-colors">
+                      <h3 className="font-medium">Advertisement Guidelines</h3>
+                      <p className="text-sm text-gray-500">Content policies and submission process</p>
+                    </a>
+                  </div>
+                </CardContent>
+              </Card>
             </div>
           </TabsContent>
 
