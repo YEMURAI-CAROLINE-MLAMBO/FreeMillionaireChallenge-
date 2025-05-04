@@ -1,11 +1,9 @@
-import React, { useState } from "react";
+import React from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Download, FileText, FileCode, FileSpreadsheet, FileImage, Mail, X } from "lucide-react";
+import { Download, FileText, FileCode, FileSpreadsheet, FileImage } from "lucide-react";
 
 const WhitepaperPage = () => {
-  const [showContactCard, setShowContactCard] = useState(false);
-  
   // Function to handle downloading whitepaper files
   const handleDownload = (fileType: string) => {
     // We're creating simulated file downloads with dummy content
@@ -19,11 +17,6 @@ const WhitepaperPage = () => {
     a.click();
     document.body.removeChild(a);
     URL.revokeObjectURL(url);
-  };
-  
-  // Function to toggle contact card
-  const toggleContactCard = () => {
-    setShowContactCard(!showContactCard);
   };
 
   return (
@@ -122,42 +115,20 @@ const WhitepaperPage = () => {
 
                 <Card className="bg-amber-50 border-amber-200">
                   <CardHeader className="pb-2">
-                    <CardTitle className="text-base">Request Custom Information</CardTitle>
+                    <CardTitle className="text-base">Additional Resources</CardTitle>
                   </CardHeader>
                   <CardContent>
                     <p className="text-sm text-gray-600 mb-4">
-                      Need specific information not covered in the whitepaper? Contact our team for customized documentation.
+                      Explore our platform documentation to learn more about the Free Millionaire Challenge.
                     </p>
                     <Button 
                       variant="default" 
                       className="w-full"
-                      onClick={toggleContactCard}
+                      onClick={() => handleDownload("FMC_Platform_Guide.pdf")}
                     >
-                      <Mail className="mr-2 h-4 w-4" />
-                      Contact Investment Team
+                      <Download className="mr-2 h-4 w-4" />
+                      Platform Guide
                     </Button>
-                    
-                    {showContactCard && (
-                      <div className="mt-4 p-4 bg-white rounded-md border border-amber-200 relative">
-                        <button 
-                          className="absolute top-2 right-2 text-gray-500 hover:text-gray-700"
-                          onClick={toggleContactCard}
-                        >
-                          <X className="h-4 w-4" />
-                        </button>
-                        <h4 className="font-medium mb-2">Investment Information</h4>
-                        <p className="text-sm text-gray-600 mb-3">
-                          Our investment team is available to answer your questions and provide additional information about the Free Millionaire Challenge.
-                        </p>
-                        <Button
-                          variant="default"
-                          size="sm"
-                          className="bg-amber-500 hover:bg-amber-600"
-                        >
-                          More Information
-                        </Button>
-                      </div>
-                    )}
                   </CardContent>
                 </Card>
               </div>
