@@ -18,6 +18,7 @@ import About from "@/pages/about";
 import Whitepaper from "@/pages/whitepaper";
 import Tokenomics from "@/pages/tokenomics";
 import SocialEntrepreneurship from "@/pages/social-entrepreneurship";
+import VRExperience from "@/pages/vr-experience";
 import FAQ from "@/pages/faq";
 import Support from "@/pages/support";
 import Terms from "@/pages/terms";
@@ -43,6 +44,7 @@ function Router() {
       <Route path="/register" component={Register} />
       <Route path="/join-as-viewer" component={ViewerRegistration} />
       <Route path="/affiliate-program" component={AffiliateProgram} />
+      <Route path="/vr-experience" component={VRExperience} />
       <Route path="/faq" component={FAQ} />
       <Route path="/support" component={Support} />
       <Route path="/terms" component={Terms} />

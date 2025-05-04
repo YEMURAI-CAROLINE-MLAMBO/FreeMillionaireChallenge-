@@ -87,7 +87,7 @@ const VRExperiencePage: React.FC = () => {
                       ))
                     ) : (
                       <div className="text-center py-8">
-                        <VrHeadset className="h-12 w-12 mx-auto text-gray-400 mb-2" />
+                        <Headset className="h-12 w-12 mx-auto text-gray-400 mb-2" />
                         <p className="text-gray-500">No VR experiences available yet</p>
                         <p className="text-sm text-gray-400 mt-1">Check back soon!</p>
                       </div>
@@ -109,7 +109,7 @@ const VRExperiencePage: React.FC = () => {
                       <div className="aspect-video bg-black/5 rounded-md flex items-center justify-center relative overflow-hidden">
                         {/* This would be a WebXR preview or a screenshot in a real implementation */}
                         <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-r from-primary/20 to-secondary/20">
-                          <VrHeadset className="h-16 w-16 text-primary/60" />
+                          <Headset className="h-16 w-16 text-primary/60" />
                         </div>
                       </div>
 
@@ -149,7 +149,7 @@ const VRExperiencePage: React.FC = () => {
                           <h3 className="font-medium mb-3">Launch Options</h3>
                           <div className="space-y-3">
                             <Button className="w-full">
-                              <VrHeadset className="mr-2 h-4 w-4" />
+                              <Headset className="mr-2 h-4 w-4" />
                               Launch in WebXR
                             </Button>
                             <Button variant="outline" className="w-full">
@@ -164,7 +164,7 @@ const VRExperiencePage: React.FC = () => {
                 ) : (
                   <Card className="h-full flex items-center justify-center">
                     <CardContent className="text-center py-16">
-                      <VrHeadset className="h-16 w-16 mx-auto text-gray-300 mb-4" />
+                      <Headset className="h-16 w-16 mx-auto text-gray-300 mb-4" />
                       <h3 className="text-xl font-medium mb-2">Select an Experience</h3>
                       <p className="text-gray-500 max-w-md">
                         Choose a VR experience from the list to view details and access options
@@ -206,7 +206,7 @@ const VRExperiencePage: React.FC = () => {
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                   <div className="text-center">
                     <div className="bg-primary/10 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
-                      <VrHeadset className="h-8 w-8 text-primary" />
+                      <Headset className="h-8 w-8 text-primary" />
                     </div>
                     <h3 className="font-medium text-lg mb-2">1. Equipment Setup</h3>
                     <p className="text-gray-600">
@@ -321,7 +321,7 @@ const VRExperiencePage: React.FC = () => {
                     <div className="border p-6 rounded-lg">
                       <div className="flex items-start gap-4">
                         <div className="bg-primary/10 p-3 rounded-full">
-                          <Cube className="h-6 w-6 text-primary" />
+                          <Box className="h-6 w-6 text-primary" />
                         </div>
                         <div>
                           <h3 className="font-medium text-lg mb-2">3D NFT Badge Gallery</h3>
