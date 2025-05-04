@@ -737,27 +737,6 @@ const AboutPage = () => {
                     </AccordionContent>
                   </AccordionItem>
 
-                  <AccordionItem value="team">
-                    <AccordionTrigger>Leadership Team</AccordionTrigger>
-                    <AccordionContent className="space-y-4 text-gray-600">
-                      <p>
-                        The FMC platform is led by a diverse team of experts with backgrounds in entrepreneurship, blockchain technology, content creation, and education.
-                      </p>
-                      
-                      <p className="mt-4">
-                        The founder retains 30% ownership of the platform, ensuring aligned interests with long-term growth and success. Key leadership positions include technical development, business development, community management, and content strategy.
-                      </p>
-                      
-                      <p className="mt-4">
-                        Advisory board members bring expertise from venture capital, blockchain development, global entrepreneurship programs, and social impact measurement.
-                      </p>
-                      
-                      <p className="mt-4">
-                        The team is committed to transparency, ethical business practices, and creating positive social impact through entrepreneurial development.
-                      </p>
-                    </AccordionContent>
-                  </AccordionItem>
-
                   <AccordionItem value="contact">
                     <AccordionTrigger>Contact Information</AccordionTrigger>
                     <AccordionContent className="space-y-4 text-gray-600">
@@ -766,7 +745,12 @@ const AboutPage = () => {
                       </p>
                       
                       <div className="p-4 bg-gray-50 rounded-md mt-4">
-                        <p><span className="font-medium">Email:</span> investors@freemillionairechallenge.com</p>
+                        <p>
+                          <span className="font-medium">Contact:</span> 
+                          <a href="mailto:ymlambo21@gmail.com" className="text-amber-600 hover:text-amber-800 transition-colors">
+                            Contact Our Investment Team
+                          </a>
+                        </p>
                         <p><span className="font-medium">Website:</span> www.freemillionairechallenge.com</p>
                         <p className="mt-2">
                           Schedule a consultation with our team to discuss how you can become part of this innovative platform transforming entrepreneurship through blockchain technology.
