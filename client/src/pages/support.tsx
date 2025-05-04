@@ -19,7 +19,7 @@ const SupportPage = () => {
 
         <Tabs defaultValue="contact" className="space-y-8">
           <TabsList className="grid w-full grid-cols-2 max-w-xl mx-auto">
-            <TabsTrigger value="contact">Contact Us</TabsTrigger>
+            <TabsTrigger value="contact">Self-Service Help</TabsTrigger>
             <TabsTrigger value="help">Help Topics</TabsTrigger>
           </TabsList>
 
