@@ -1,13 +1,29 @@
-import React from "react";
+import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Download, FileText, FileCode, FileSpreadsheet, FileImage } from "lucide-react";
+import { Download, FileText, FileCode, FileSpreadsheet, FileImage, Mail, X } from "lucide-react";
 
 const WhitepaperPage = () => {
-  // Function to simulate PDF download
+  const [showContactCard, setShowContactCard] = useState(false);
+  
+  // Function to handle downloading whitepaper files
   const handleDownload = (fileType: string) => {
-    // In a real implementation, this would download an actual PDF file
-    alert(`Downloading ${fileType} - In production, this would download the actual whitepaper file.`);
+    // We're creating simulated file downloads with dummy content
+    const content = "Free Millionaire Challenge Whitepaper Content";
+    const blob = new Blob([content], { type: 'text/plain' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = fileType;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  };
+  
+  // Function to toggle contact card
+  const toggleContactCard = () => {
+    setShowContactCard(!showContactCard);
   };
 
   return (
@@ -112,11 +128,35 @@ const WhitepaperPage = () => {
                     <p className="text-sm text-gray-600 mb-4">
                       Need specific information not covered in the whitepaper? Contact our team for customized documentation.
                     </p>
-                    <a href="mailto:ymlambo21@gmail.com" style={{ display: 'block', width: '100%' }} aria-label="Contact the investment team">
-                      <Button variant="default" className="w-full">
-                        Contact Investment Team
-                      </Button>
-                    </a>
+                    <Button 
+                      variant="default" 
+                      className="w-full"
+                      onClick={toggleContactCard}
+                    >
+                      <Mail className="mr-2 h-4 w-4" />
+                      Contact Investment Team
+                    </Button>
+                    
+                    {showContactCard && (
+                      <div className="mt-4 p-4 bg-white rounded-md border border-amber-200 relative">
+                        <button 
+                          className="absolute top-2 right-2 text-gray-500 hover:text-gray-700"
+                          onClick={toggleContactCard}
+                        >
+                          <X className="h-4 w-4" />
+                        </button>
+                        <h4 className="font-medium mb-2">Contact Our Team</h4>
+                        <p className="text-sm text-gray-600 mb-3">
+                          Our investment team is available to answer your questions and provide additional information.
+                        </p>
+                        <a 
+                          href="mailto:ymlambo21@gmail.com" 
+                          className="inline-block bg-amber-500 text-white px-4 py-2 rounded-md hover:bg-amber-600 text-sm transition-colors"
+                        >
+                          Send Email Inquiry
+                        </a>
+                      </div>
+                    )}
                   </CardContent>
                 </Card>
               </div>
