@@ -651,7 +651,7 @@ const AboutPage = () => {
                       
                       <h4 className="font-medium mt-4">Token Distribution:</h4>
                       <ul className="list-disc pl-6 space-y-2">
-                        <li>30% allocated to founder and development team</li>
+                        <li>30% allocated to founder</li>
                         <li>20% reserved for platform operations and development</li>
                         <li>15% designated for marketing and community growth</li>
                         <li>15% allocated for participant incentives</li>

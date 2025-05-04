@@ -100,7 +100,9 @@ const SupportPage = () => {
                         Send us an email for non-urgent inquiries
                       </p>
                       <p className="text-sm font-medium mt-1">
-                        support@freemillionairechallenge.com
+                        <a href="mailto:ymlambo21@gmail.com" className="text-amber-600 hover:text-amber-800 transition-colors">
+                          Contact Support
+                        </a>
                       </p>
                     </CardContent>
                   </Card>
@@ -246,7 +248,11 @@ const SupportPage = () => {
                   <p className="text-gray-600 mb-2">
                     Send an email with "URGENT" in the subject line for priority handling:
                   </p>
-                  <p className="font-medium">urgent@freemillionairechallenge.com</p>
+                  <p className="font-medium">
+                    <a href="mailto:ymlambo21@gmail.com?subject=URGENT:" className="text-amber-600 hover:text-amber-800 transition-colors">
+                      Contact Emergency Support
+                    </a>
+                  </p>
                   <p className="text-sm text-gray-500 mt-2">
                     24-hour response time for urgent matters
                   </p>
