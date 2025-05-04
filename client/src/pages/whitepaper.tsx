@@ -112,9 +112,11 @@ const WhitepaperPage = () => {
                     <p className="text-sm text-gray-600 mb-4">
                       Need specific information not covered in the whitepaper? Contact our team for customized documentation.
                     </p>
-                    <Button variant="default" className="w-full">
-                      Contact Investment Team
-                    </Button>
+                    <a href="mailto:ymlambo21@gmail.com" style={{ display: 'block', width: '100%' }} aria-label="Contact the investment team">
+                      <Button variant="default" className="w-full">
+                        Contact Investment Team
+                      </Button>
+                    </a>
                   </CardContent>
                 </Card>
               </div>

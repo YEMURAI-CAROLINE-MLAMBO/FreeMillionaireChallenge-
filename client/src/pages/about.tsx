@@ -174,7 +174,7 @@ const AboutPage = () => {
                 <CardContent className="space-y-4">
                   <div className="flex justify-between items-center border-b pb-2">
                     <span className="font-medium">Application Period</span>
-                    <span className="text-gray-500">March 1 - July 15, 2025</span>
+                    <span className="text-gray-500">May 15 - July 15, 2025</span>
                   </div>
                   <div className="flex justify-between items-center border-b pb-2">
                     <span className="font-medium">Challenge Launch</span>
@@ -204,33 +204,39 @@ const AboutPage = () => {
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-4">
-                    <div className="flex items-center gap-3">
-                      <HelpCircle className="h-5 w-5 text-amber-500" />
-                      <div>
-                        <h3 className="font-medium">Help Center</h3>
-                        <p className="text-sm text-gray-600">
-                          Visit our comprehensive support resources and FAQ
-                        </p>
+                    <a href="/faq" className="block hover:bg-gray-50 rounded-md p-2 transition-colors">
+                      <div className="flex items-center gap-3">
+                        <HelpCircle className="h-5 w-5 text-amber-500" />
+                        <div>
+                          <h3 className="font-medium">Help Center</h3>
+                          <p className="text-sm text-gray-600">
+                            Visit our comprehensive support resources and FAQ
+                          </p>
+                        </div>
                       </div>
-                    </div>
-                    <div className="flex items-center gap-3">
-                      <MessageSquare className="h-5 w-5 text-amber-500" />
-                      <div>
-                        <h3 className="font-medium">Contact Support</h3>
-                        <p className="text-sm text-gray-600">
-                          Reach out to our support team for assistance
-                        </p>
+                    </a>
+                    <a href="/support" className="block hover:bg-gray-50 rounded-md p-2 transition-colors">
+                      <div className="flex items-center gap-3">
+                        <MessageSquare className="h-5 w-5 text-amber-500" />
+                        <div>
+                          <h3 className="font-medium">Contact Support</h3>
+                          <p className="text-sm text-gray-600">
+                            Reach out to our support team for assistance
+                          </p>
+                        </div>
                       </div>
-                    </div>
-                    <div className="flex items-center gap-3">
-                      <Book className="h-5 w-5 text-amber-500" />
-                      <div>
-                        <h3 className="font-medium">Terms of Service</h3>
-                        <p className="text-sm text-gray-600">
-                          Review our platform's terms and policies
-                        </p>
+                    </a>
+                    <a href="/terms" className="block hover:bg-gray-50 rounded-md p-2 transition-colors">
+                      <div className="flex items-center gap-3">
+                        <Book className="h-5 w-5 text-amber-500" />
+                        <div>
+                          <h3 className="font-medium">Terms of Service</h3>
+                          <p className="text-sm text-gray-600">
+                            Review our platform's terms and policies
+                          </p>
+                        </div>
                       </div>
-                    </div>
+                    </a>
                   </div>
                 </CardContent>
               </Card>
