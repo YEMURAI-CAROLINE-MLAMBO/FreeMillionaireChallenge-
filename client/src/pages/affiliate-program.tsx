@@ -380,9 +380,9 @@ function distributeCommission(address affiliate, uint256 amount) internal {
               </div>
             </CardContent>
             <CardFooter>
-              <Link href="https://testnet.bscscan.com" target="_blank" className="w-full">
+              <a href="https://testnet.bscscan.com" target="_blank" rel="noopener noreferrer" className="w-full">
                 <Button variant="outline" className="w-full">View Contract on BSC Testnet Explorer</Button>
-              </Link>
+              </a>
             </CardFooter>
           </Card>
         </TabsContent>
