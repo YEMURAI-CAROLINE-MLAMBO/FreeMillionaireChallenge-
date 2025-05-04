@@ -1205,6 +1205,67 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // VR EXPERIENCE ROUTES
+  
+  // Get all VR experiences
+  app.get("/api/vr-experiences", async (req, res) => {
+    try {
+      const experiences = await storage.getVrExperiences();
+      res.json(experiences);
+    } catch (error) {
+      res.status(500).json({ message: "Failed to fetch VR experiences" });
+    }
+  });
+  
+  // Get active VR experiences only
+  app.get("/api/vr-experiences/active", async (req, res) => {
+    try {
+      const experiences = await storage.getActiveVrExperiences();
+      res.json(experiences);
+    } catch (error) {
+      res.status(500).json({ message: "Failed to fetch active VR experiences" });
+    }
+  });
+  
+  // Get specific VR experience
+  app.get("/api/vr-experiences/:id", async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      const experience = await storage.getVrExperience(id);
+      
+      if (!experience) {
+        return res.status(404).json({ message: "VR experience not found" });
+      }
+      
+      res.json(experience);
+    } catch (error) {
+      res.status(500).json({ message: "Failed to fetch VR experience" });
+    }
+  });
+  
+  // Create VR experience (admin only)
+  app.post("/api/vr-experiences", isAdmin, async (req, res) => {
+    try {
+      // Basic content moderation
+      const contentFilter = moderateContent(req.body.title + " " + req.body.description);
+      if (!contentFilter.approved) {
+        return res.status(400).json({ message: `Content moderation failed: ${contentFilter.reason}` });
+      }
+      
+      const experience = await storage.createVrExperience({
+        ...req.body,
+        createdBy: req.session.userId
+      });
+      
+      res.status(201).json(experience);
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        return res.status(400).json({ message: "Invalid VR experience data", errors: error.errors });
+      }
+      res.status(400).json({ message: "Could not create VR experience" });
+    }
+  });
+
   const httpServer = createServer(app);
   return httpServer;
 }
