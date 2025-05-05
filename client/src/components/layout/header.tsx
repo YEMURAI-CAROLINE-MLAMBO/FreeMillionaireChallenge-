@@ -97,10 +97,7 @@ export const Header: React.FC = () => {
                   <Video className="h-4 w-4 text-amber-500" />
                   <span>Live Streaming</span>
                 </Link>
-                <Link href="/vr-experience" className={`flex items-center gap-2 px-4 py-2 text-sm ${isActive('/vr-experience') ? 'bg-gray-100 text-primary' : 'text-gray-800'} hover:bg-gray-100`}>
-                  <Headset className="h-4 w-4 text-amber-500" />
-                  <span>VR Experience</span>
-                </Link>
+                {/* VR Experience link removed as requested - will be added in future updates */}
                 
                 {/* Advertising Section */}
                 <div className="px-4 py-2 border-t border-gray-100">
@@ -295,14 +292,7 @@ export const Header: React.FC = () => {
                       <Video className="h-4 w-4 text-amber-500" />
                       Live Streaming
                     </Link>
-                    <Link 
-                      href="/vr-experience" 
-                      className="text-foreground/80 hover:text-primary flex items-center gap-2"
-                      onClick={() => setIsOpen(false)}
-                    >
-                      <Headset className="h-4 w-4 text-amber-500" />
-                      VR Experience
-                    </Link>
+                    {/* VR Experience link removed as requested - will be added in future updates */}
                   </div>
                 </div>
                 
