@@ -31,7 +31,8 @@ import {
   TrendingUp,
   HelpCircle,
   MessageSquare,
-  Book
+  Book,
+  FileText
 } from "lucide-react";
 
 const AboutPage = () => {
@@ -215,7 +216,7 @@ const AboutPage = () => {
                         </div>
                       </div>
                     </a>
-                    <a href="/support" className="block hover:bg-gray-50 rounded-md p-2 transition-colors">
+                    <a href="/support#self-service" className="block hover:bg-gray-50 rounded-md p-2 transition-colors">
                       <div className="flex items-center gap-3">
                         <HelpCircle className="h-5 w-5 text-amber-500" />
                         <div>
@@ -233,6 +234,17 @@ const AboutPage = () => {
                           <h3 className="font-medium">Terms of Service</h3>
                           <p className="text-sm text-gray-600">
                             Review our platform's terms and policies
+                          </p>
+                        </div>
+                      </div>
+                    </a>
+                    <a href="/whitepaper" className="block hover:bg-gray-50 rounded-md p-2 transition-colors">
+                      <div className="flex items-center gap-3">
+                        <FileText className="h-5 w-5 text-amber-500" />
+                        <div>
+                          <h3 className="font-medium">Whitepaper</h3>
+                          <p className="text-sm text-gray-600">
+                            Read our detailed platform whitepaper
                           </p>
                         </div>
                       </div>

@@ -334,9 +334,11 @@ const SocialEntrepreneurshipPage = () => {
                     </p>
                   </div>
                   <div className="pt-2">
-                    <Button variant="link" className="px-0 text-amber-600 flex items-center gap-1">
-                      <span>Available in resources section</span>
-                      <ArrowRight className="h-4 w-4" />
+                    <Button variant="link" className="px-0 text-amber-600 flex items-center gap-1" asChild>
+                      <a href="https://www.theoryofchange.org/what-is-theory-of-change/" target="_blank" rel="noopener noreferrer">
+                        <span>View academic frameworks</span>
+                        <ArrowRight className="h-4 w-4" />
+                      </a>
                     </Button>
                   </div>
                 </CardContent>
@@ -372,9 +374,11 @@ const SocialEntrepreneurshipPage = () => {
                     </p>
                   </div>
                   <div className="pt-2">
-                    <Button variant="link" className="px-0 text-amber-600 flex items-center gap-1">
-                      <span>Available in resources section</span>
-                      <ArrowRight className="h-4 w-4" />
+                    <Button variant="link" className="px-0 text-amber-600 flex items-center gap-1" asChild>
+                      <a href="https://ssir.org/articles/category/social_entrepreneurship" target="_blank" rel="noopener noreferrer">
+                        <span>View recommended reading list</span>
+                        <ArrowRight className="h-4 w-4" />
+                      </a>
                     </Button>
                   </div>
                 </CardContent>

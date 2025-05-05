@@ -59,8 +59,12 @@ export const Header: React.FC = () => {
                   <Info className="h-4 w-4 text-amber-500" />
                   <span>About FMC</span>
                 </Link>
-                <Link href="/tokenomics" className={`flex items-center gap-2 px-4 py-2 text-sm ${isActive('/tokenomics') ? 'bg-gray-100 text-primary' : 'text-gray-800'} hover:bg-gray-100`}>
+                <Link href="/whitepaper" className={`flex items-center gap-2 px-4 py-2 text-sm ${isActive('/whitepaper') ? 'bg-gray-100 text-primary' : 'text-gray-800'} hover:bg-gray-100`}>
                   <FileText className="h-4 w-4 text-amber-500" />
+                  <span>Whitepaper</span>
+                </Link>
+                <Link href="/tokenomics" className={`flex items-center gap-2 px-4 py-2 text-sm ${isActive('/tokenomics') ? 'bg-gray-100 text-primary' : 'text-gray-800'} hover:bg-gray-100`}>
+                  <BarChart className="h-4 w-4 text-amber-500" />
                   <span>Tokenomics</span>
                 </Link>
                 <Link href="/social-entrepreneurship" className={`flex items-center gap-2 px-4 py-2 text-sm ${isActive('/social-entrepreneurship') ? 'bg-gray-100 text-primary' : 'text-gray-800'} hover:bg-gray-100`}>
@@ -216,11 +220,19 @@ export const Header: React.FC = () => {
                       About FMC
                     </Link>
                     <Link 
-                      href="/tokenomics" 
+                      href="/whitepaper" 
                       className="text-foreground/80 hover:text-primary flex items-center gap-2"
                       onClick={() => setIsOpen(false)}
                     >
                       <FileText className="h-4 w-4 text-amber-500" />
+                      Whitepaper
+                    </Link>
+                    <Link 
+                      href="/tokenomics" 
+                      className="text-foreground/80 hover:text-primary flex items-center gap-2"
+                      onClick={() => setIsOpen(false)}
+                    >
+                      <BarChart className="h-4 w-4 text-amber-500" />
                       Tokenomics
                     </Link>
                     <Link 
