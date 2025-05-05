@@ -428,94 +428,6 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Get participant by current user session
-  app.get("/api/participants/user", isAuthenticated, async (req, res) => {
-    try {
-      if (!req.session.userId) {
-        return res.status(401).json({ message: "Authentication required" });
-      }
-      
-      const participant = await storage.getParticipantByUserId(req.session.userId);
-      
-      if (!participant) {
-        return res.status(404).json({ message: "Participant not found for this user" });
-      }
-      
-      res.json(participant);
-    } catch (error) {
-      res.status(500).json({ message: "Failed to fetch participant data" });
-    }
-  });
-
-  // Get participant by id
-  app.get("/api/participants/:id", async (req, res) => {
-    try {
-      const id = parseInt(req.params.id);
-      const participant = await storage.getParticipant(id);
-      
-      if (!participant) {
-        return res.status(404).json({ message: "Participant not found" });
-      }
-      
-      res.json(participant);
-    } catch (error) {
-      res.status(500).json({ message: "Failed to fetch participant" });
-    }
-  });
-
-  // Check participant eligibility
-  app.post("/api/participants/check-eligibility", isAuthenticated, async (req, res) => {
-    try {
-      const { age, graduationYear, workExperience } = req.body;
-      
-      // Get eligibility rules from settings
-      const maxAgeSetting = await storage.getSetting("maxParticipantAge");
-      const maxAge = maxAgeSetting ? parseInt(maxAgeSetting.value) : 35;
-      
-      const maxExpSetting = await storage.getSetting("maxWorkExperience");
-      const maxExp = maxExpSetting ? parseInt(maxExpSetting.value) : 36; // 3 years in months
-      
-      const requireRecentGradSetting = await storage.getSetting("requireRecentGraduate");
-      const requireRecentGrad = requireRecentGradSetting ? requireRecentGradSetting.value === "true" : true;
-      
-      // Current year for graduation check
-      const currentYear = new Date().getFullYear();
-      
-      // Validation results
-      const eligibilityResults = {
-        eligible: true,
-        reasons: [] as string[],
-        checks: {
-          age: age <= maxAge,
-          workExperience: workExperience <= maxExp,
-          recentGraduate: !requireRecentGrad || (currentYear - graduationYear <= 3)
-        }
-      };
-      
-      // Check age
-      if (age > maxAge) {
-        eligibilityResults.eligible = false;
-        eligibilityResults.reasons.push(`Age must be ${maxAge} or under`);
-      }
-      
-      // Check work experience
-      if (workExperience > maxExp) {
-        eligibilityResults.eligible = false;
-        eligibilityResults.reasons.push(`Work experience must be ${maxExp} months (3 years) or less`);
-      }
-      
-      // Check graduation year if required
-      if (requireRecentGrad && (currentYear - graduationYear > 3)) {
-        eligibilityResults.eligible = false;
-        eligibilityResults.reasons.push(`Must be a recent graduate (within the last 3 years)`);
-      }
-      
-      res.json(eligibilityResults);
-    } catch (error) {
-      res.status(500).json({ message: "Failed to check eligibility" });
-    }
-  });
-  
   // Check if the current user is eligible to register as a participant (on the whitelist)
   app.get("/api/participants/eligibility", async (req, res) => {
     try {
@@ -587,6 +499,95 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.status(500).json({ message: "Failed to check eligibility" });
     }
   });
+
+  // Get participant by current user session
+  app.get("/api/participants/user", isAuthenticated, async (req, res) => {
+    try {
+      if (!req.session.userId) {
+        return res.status(401).json({ message: "Authentication required" });
+      }
+      
+      const participant = await storage.getParticipantByUserId(req.session.userId);
+      
+      if (!participant) {
+        return res.status(404).json({ message: "Participant not found for this user" });
+      }
+      
+      res.json(participant);
+    } catch (error) {
+      res.status(500).json({ message: "Failed to fetch participant data" });
+    }
+  });
+
+  // Get participant by id - make sure this is AFTER the specific routes
+  app.get("/api/participants/:id", async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      const participant = await storage.getParticipant(id);
+      
+      if (!participant) {
+        return res.status(404).json({ message: "Participant not found" });
+      }
+      
+      res.json(participant);
+    } catch (error) {
+      res.status(500).json({ message: "Failed to fetch participant" });
+    }
+  });
+
+  // Check participant eligibility
+  app.post("/api/participants/check-eligibility", isAuthenticated, async (req, res) => {
+    try {
+      const { age, graduationYear, workExperience } = req.body;
+      
+      // Get eligibility rules from settings
+      const maxAgeSetting = await storage.getSetting("maxParticipantAge");
+      const maxAge = maxAgeSetting ? parseInt(maxAgeSetting.value) : 35;
+      
+      const maxExpSetting = await storage.getSetting("maxWorkExperience");
+      const maxExp = maxExpSetting ? parseInt(maxExpSetting.value) : 36; // 3 years in months
+      
+      const requireRecentGradSetting = await storage.getSetting("requireRecentGraduate");
+      const requireRecentGrad = requireRecentGradSetting ? requireRecentGradSetting.value === "true" : true;
+      
+      // Current year for graduation check
+      const currentYear = new Date().getFullYear();
+      
+      // Validation results
+      const eligibilityResults = {
+        eligible: true,
+        reasons: [] as string[],
+        checks: {
+          age: age <= maxAge,
+          workExperience: workExperience <= maxExp,
+          recentGraduate: !requireRecentGrad || (currentYear - graduationYear <= 3)
+        }
+      };
+      
+      // Check age
+      if (age > maxAge) {
+        eligibilityResults.eligible = false;
+        eligibilityResults.reasons.push(`Age must be ${maxAge} or under`);
+      }
+      
+      // Check work experience
+      if (workExperience > maxExp) {
+        eligibilityResults.eligible = false;
+        eligibilityResults.reasons.push(`Work experience must be ${maxExp} months (3 years) or less`);
+      }
+      
+      // Check graduation year if required
+      if (requireRecentGrad && (currentYear - graduationYear > 3)) {
+        eligibilityResults.eligible = false;
+        eligibilityResults.reasons.push(`Must be a recent graduate (within the last 3 years)`);
+      }
+      
+      res.json(eligibilityResults);
+    } catch (error) {
+      res.status(500).json({ message: "Failed to check eligibility" });
+    }
+  });
+
 
   // Apply as participant
   app.post("/api/participants", isAuthenticated, async (req, res) => {
