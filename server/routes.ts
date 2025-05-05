@@ -528,6 +528,15 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }
       
       // If user is already a participant, they are eligible
+      const existingParticipant = await storage.getParticipantByUserId(req.session.userId);
+      if (existingParticipant) {
+        return res.json({
+          eligible: true,
+          message: "You are already registered as a participant"
+        });
+      }
+      
+      // If user is already a participant by role (legacy check), they are eligible
       if (user.role === "participant") {
         return res.json({
           eligible: true,
@@ -557,6 +566,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
           : "You are not on the invited participants list. This challenge is invitation-only."
       });
     } catch (error) {
+      console.error("Error checking eligibility:", error);
       res.status(500).json({ message: "Failed to check eligibility" });
     }
   });
