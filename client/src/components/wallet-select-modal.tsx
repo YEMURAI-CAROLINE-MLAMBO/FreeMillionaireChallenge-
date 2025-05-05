@@ -14,10 +14,10 @@ const WalletSelectModal: React.FC<WalletSelectModalProps> = ({ isOpen, onClose }
   const { connectWallet, active, isConnecting } = useWeb3();
   const [error, setError] = useState<string | null>(null);
 
-  const handleConnectWallet = async (walletType: 'injected') => {
+  const handleConnectWallet = async () => {
     try {
       setError(null);
-      await connectWallet(walletType);
+      await connectWallet();
       if (active) {
         onClose();
       }
@@ -33,7 +33,6 @@ const WalletSelectModal: React.FC<WalletSelectModalProps> = ({ isOpen, onClose }
       icon: <Wallet className="h-8 w-8 text-orange-500" />,
       description: 'Connect using browser extension',
       isPopular: true,
-      walletType: 'injected'
     },
     {
       id: 'coinbase',
@@ -41,7 +40,6 @@ const WalletSelectModal: React.FC<WalletSelectModalProps> = ({ isOpen, onClose }
       icon: <Bitcoin className="h-8 w-8 text-blue-500" />,
       description: 'Connect using browser extension',
       isPopular: true,
-      walletType: 'injected'
     },
     {
       id: 'other',
@@ -49,7 +47,6 @@ const WalletSelectModal: React.FC<WalletSelectModalProps> = ({ isOpen, onClose }
       icon: <Github className="h-8 w-8 text-gray-500" />,
       description: 'Connect using browser extension',
       isPopular: false,
-      walletType: 'injected'
     },
   ];
 
@@ -76,7 +73,7 @@ const WalletSelectModal: React.FC<WalletSelectModalProps> = ({ isOpen, onClose }
               <Card 
                 key={wallet.id}
                 className="cursor-pointer hover:border-primary/50 transition-colors"
-                onClick={() => handleConnectWallet(wallet.walletType as 'injected')}
+                onClick={handleConnectWallet}
               >
                 <CardContent className="p-4 flex items-center">
                   <div className="mr-4 flex-shrink-0">
@@ -98,7 +95,7 @@ const WalletSelectModal: React.FC<WalletSelectModalProps> = ({ isOpen, onClose }
                 <Card 
                   key={wallet.id}
                   className="cursor-pointer hover:border-primary/50 transition-colors"
-                  onClick={() => handleConnectWallet(wallet.walletType as 'injected' | 'walletconnect')}
+                  onClick={handleConnectWallet}
                 >
                   <CardContent className="p-3 flex flex-col items-center justify-center">
                     {wallet.icon}

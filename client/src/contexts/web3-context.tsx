@@ -127,7 +127,7 @@ interface Web3ContextType {
   chainId: number | undefined;
   active: boolean;
   library: ethers.providers.Web3Provider | undefined;
-  connectWallet: (walletType?: 'injected' | 'walletconnect') => Promise<void>;
+  connectWallet: () => Promise<void>;
   disconnectWallet: () => void;
   switchNetwork: (chainId: number) => Promise<boolean>;
   switchToBSC: (testnet?: boolean) => Promise<boolean>;
@@ -259,7 +259,7 @@ export const Web3ContextProvider: React.FC<Web3ProviderProps> = ({ children }) =
   }, [toast]);
 
   // Connect to wallet
-  const connectWallet = async (walletType: 'injected' | 'walletconnect' = 'injected') => {
+  const connectWallet = async () => {
     setIsConnecting(true);
     try {
       // Currently only injected wallet (MetaMask) is supported
