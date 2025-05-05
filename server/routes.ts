@@ -62,8 +62,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Middleware to check authentication
   const isAuthenticated = (req: Request, res: Response, next: Function) => {
     if (req.session && req.session.userId) {
+      console.log("Authenticated session found, userId:", req.session.userId);
       return next();
     }
+    console.log("No authenticated session found");
     res.status(401).json({ message: "Unauthorized" });
   };
 
@@ -515,21 +517,29 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
   
   // Check if the current user is eligible to register as a participant (on the whitelist)
-  app.get("/api/participants/eligibility", isAuthenticated, async (req, res) => {
+  app.get("/api/participants/eligibility", async (req, res) => {
     try {
-      if (!req.session.userId) {
+      // Don't use middleware to ensure we can see the error properly
+      if (!req.session || !req.session.userId) {
+        console.log("No session or userId found in session");
         return res.status(401).json({ message: "Authentication required" });
       }
+      
+      console.log("Session userId:", req.session.userId);
       
       // Get the current user
       const user = await storage.getUser(req.session.userId);
       if (!user) {
+        console.log("User not found for id:", req.session.userId);
         return res.status(401).json({ message: "User not found" });
       }
+      
+      console.log("User found:", user.username, user.email);
       
       // If user is already a participant, they are eligible
       const existingParticipant = await storage.getParticipantByUserId(req.session.userId);
       if (existingParticipant) {
+        console.log("User is already a participant");
         return res.json({
           eligible: true,
           message: "You are already registered as a participant"
@@ -538,6 +548,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       
       // If user is already a participant by role (legacy check), they are eligible
       if (user.role === "participant") {
+        console.log("User has participant role");
         return res.json({
           eligible: true,
           message: "You are already registered as a participant"
@@ -546,6 +557,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       
       // If user is admin, they are eligible
       if (user.role === "admin") {
+        console.log("User is admin, automatically eligible");
         return res.json({
           eligible: true,
           message: "As an admin, you can register as a participant"
@@ -556,8 +568,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const whitelistSetting = await storage.getSetting("participantWhitelist");
       const whitelist = whitelistSetting ? whitelistSetting.value.split(',').map(email => email.trim()) : [];
       
+      console.log("Whitelist:", whitelist);
+      console.log("User email:", user.email);
+      
       // Check if current user's email is on whitelist
       const isWhitelisted = whitelist.includes(user.email);
+      
+      console.log("Is user whitelisted?", isWhitelisted);
       
       res.json({
         eligible: isWhitelisted,
