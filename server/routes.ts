@@ -513,6 +513,53 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.status(500).json({ message: "Failed to check eligibility" });
     }
   });
+  
+  // Check if the current user is eligible to register as a participant (on the whitelist)
+  app.get("/api/participants/eligibility", isAuthenticated, async (req, res) => {
+    try {
+      if (!req.session.userId) {
+        return res.status(401).json({ message: "Authentication required" });
+      }
+      
+      // Get the current user
+      const user = await storage.getUser(req.session.userId);
+      if (!user) {
+        return res.status(401).json({ message: "User not found" });
+      }
+      
+      // If user is already a participant, they are eligible
+      if (user.role === "participant") {
+        return res.json({
+          eligible: true,
+          message: "You are already registered as a participant"
+        });
+      }
+      
+      // If user is admin, they are eligible
+      if (user.role === "admin") {
+        return res.json({
+          eligible: true,
+          message: "As an admin, you can register as a participant"
+        });
+      }
+      
+      // Check whitelist
+      const whitelistSetting = await storage.getSetting("participantWhitelist");
+      const whitelist = whitelistSetting ? whitelistSetting.value.split(',').map(email => email.trim()) : [];
+      
+      // Check if current user's email is on whitelist
+      const isWhitelisted = whitelist.includes(user.email);
+      
+      res.json({
+        eligible: isWhitelisted,
+        message: isWhitelisted 
+          ? "You have been selected to participate in the Free Millionaire Challenge" 
+          : "You are not on the invited participants list. This challenge is invitation-only."
+      });
+    } catch (error) {
+      res.status(500).json({ message: "Failed to check eligibility" });
+    }
+  });
 
   // Apply as participant
   app.post("/api/participants", isAuthenticated, async (req, res) => {
@@ -696,6 +743,37 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.json(settings);
     } catch (error) {
       res.status(500).json({ message: "Failed to fetch challenge settings" });
+    }
+  });
+  
+  // Get all settings (admin only)
+  app.get("/api/admin/all-settings", isAdmin, async (req, res) => {
+    try {
+      const settings = await storage.getSettings();
+      res.json(settings);
+    } catch (error) {
+      res.status(500).json({ message: "Failed to fetch settings" });
+    }
+  });
+  
+  // Create or update settings (admin only)
+  app.post("/api/admin/settings", isAdmin, async (req, res) => {
+    try {
+      const { key, value, description } = req.body;
+      
+      if (!key || value === undefined) {
+        return res.status(400).json({ message: "Key and value are required" });
+      }
+      
+      const setting = await storage.createOrUpdateSetting({
+        key,
+        value: value.toString(),
+        description: description || ""
+      });
+      
+      res.status(200).json(setting);
+    } catch (error) {
+      res.status(500).json({ message: "Failed to update setting" });
     }
   });
   

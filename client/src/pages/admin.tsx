@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useQuery, useMutation } from '@tanstack/react-query';
 import { queryClient, apiRequest } from '@/lib/queryClient';
 import { useAuth } from '@/contexts/auth-context';
@@ -17,7 +17,8 @@ import {
   CardContent,
   CardDescription,
   CardHeader,
-  CardTitle
+  CardTitle,
+  CardFooter
 } from '@/components/ui/card';
 import {
   Table,
@@ -36,6 +37,7 @@ import {
 } from '@/components/ui/select';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
 import { Badge } from '@/components/ui/badge';
 import { 
   CheckCircle, 
@@ -45,7 +47,11 @@ import {
   Settings,
   User,
   Users,
-  FileText
+  FileText,
+  Plus,
+  Trash,
+  UserPlus,
+  Mail
 } from 'lucide-react';
 
 const Admin: React.FC = () => {
@@ -355,60 +361,259 @@ const Admin: React.FC = () => {
         
         {/* Settings Tab */}
         <TabsContent value="settings">
-          <Card>
-            <CardHeader>
-              <CardTitle>Challenge Settings</CardTitle>
-              <CardDescription>Manage global settings for the challenge</CardDescription>
-            </CardHeader>
-            <CardContent>
-              {settingsLoading ? (
-                <div className="text-center py-8">
-                  <RefreshCw className="h-8 w-8 mx-auto animate-spin text-primary mb-2" />
-                  <p>Loading settings...</p>
-                </div>
-              ) : (
-                <div className="space-y-6">
-                  <div className="grid gap-4">
-                    <div className="space-y-2">
-                      <label htmlFor="challenge-end-date" className="text-sm font-medium">
-                        Challenge End Date
-                      </label>
-                      <Input
-                        id="challenge-end-date"
-                        type="date"
-                        value={challengeEndDate}
-                        onChange={(e) => setChallengeEndDate(e.target.value)}
-                      />
+          <div className="grid gap-6 grid-cols-1">
+            <Card>
+              <CardHeader>
+                <CardTitle>Challenge Settings</CardTitle>
+                <CardDescription>Manage global settings for the challenge</CardDescription>
+              </CardHeader>
+              <CardContent>
+                {settingsLoading ? (
+                  <div className="text-center py-8">
+                    <RefreshCw className="h-8 w-8 mx-auto animate-spin text-primary mb-2" />
+                    <p>Loading settings...</p>
+                  </div>
+                ) : (
+                  <div className="space-y-6">
+                    <div className="grid gap-4">
+                      <div className="space-y-2">
+                        <label htmlFor="challenge-end-date" className="text-sm font-medium">
+                          Challenge End Date
+                        </label>
+                        <Input
+                          id="challenge-end-date"
+                          type="date"
+                          value={challengeEndDate}
+                          onChange={(e) => setChallengeEndDate(e.target.value)}
+                        />
+                      </div>
+                      
+                      <div className="space-y-2">
+                        <label htmlFor="max-participants" className="text-sm font-medium">
+                          Maximum Participants
+                        </label>
+                        <Input
+                          id="max-participants"
+                          type="number"
+                          min="1"
+                          max="100"
+                          value={maxParticipants}
+                          onChange={(e) => setMaxParticipants(e.target.value)}
+                        />
+                      </div>
                     </div>
                     
-                    <div className="space-y-2">
-                      <label htmlFor="max-participants" className="text-sm font-medium">
-                        Maximum Participants
-                      </label>
-                      <Input
-                        id="max-participants"
-                        type="number"
-                        min="1"
-                        max="100"
-                        value={maxParticipants}
-                        onChange={(e) => setMaxParticipants(e.target.value)}
-                      />
-                    </div>
+                    <Button 
+                      onClick={handleSettingsUpdate}
+                      disabled={updateSettingsMutation.isPending}
+                    >
+                      {updateSettingsMutation.isPending ? 'Updating...' : 'Save Settings'}
+                    </Button>
                   </div>
-                  
-                  <Button 
-                    onClick={handleSettingsUpdate}
-                    disabled={updateSettingsMutation.isPending}
-                  >
-                    {updateSettingsMutation.isPending ? 'Updating...' : 'Save Settings'}
-                  </Button>
-                </div>
-              )}
-            </CardContent>
-          </Card>
+                )}
+              </CardContent>
+            </Card>
+            
+            <ParticipantWhitelist />
+          </div>
         </TabsContent>
       </Tabs>
     </div>
+  );
+};
+
+// Participant whitelist management component
+const ParticipantWhitelist: React.FC = () => {
+  const { toast } = useToast();
+  const [whitelistEmails, setWhitelistEmails] = useState<string>('');
+  const [newEmail, setNewEmail] = useState<string>('');
+  const [isWhitelistLoading, setIsWhitelistLoading] = useState<boolean>(false);
+
+  // Fetch the current whitelist
+  const { data: allSettings, isLoading: settingsLoading } = useQuery({
+    queryKey: ['/api/admin/all-settings'],
+    onSuccess: (data) => {
+      const whitelistSetting = data?.find((setting: any) => setting.key === 'participantWhitelist');
+      if (whitelistSetting) {
+        setWhitelistEmails(whitelistSetting.value);
+      }
+    }
+  });
+
+  // Update whitelist mutation
+  const updateWhitelistMutation = useMutation({
+    mutationFn: async (emailList: string) => {
+      const response = await apiRequest('POST', '/api/admin/settings', {
+        key: 'participantWhitelist',
+        value: emailList,
+        description: 'Whitelisted email addresses allowed to register as participants'
+      });
+      return await response.json();
+    },
+    onSuccess: () => {
+      toast({
+        title: 'Whitelist Updated',
+        description: 'Participant whitelist has been updated successfully.',
+      });
+      queryClient.invalidateQueries({ queryKey: ['/api/admin/all-settings'] });
+    },
+    onError: (error) => {
+      toast({
+        title: 'Update Failed',
+        description: error instanceof Error ? error.message : 'Failed to update whitelist',
+        variant: 'destructive',
+      });
+    }
+  });
+
+  // Add new email to whitelist
+  const addEmailToWhitelist = () => {
+    if (!newEmail || !newEmail.includes('@')) {
+      toast({
+        title: 'Invalid Email',
+        description: 'Please enter a valid email address',
+        variant: 'destructive',
+      });
+      return;
+    }
+
+    // Get current emails as array
+    const currentEmails = whitelistEmails ? whitelistEmails.split(',').map(e => e.trim()) : [];
+    
+    // Check if email already exists in the list
+    if (currentEmails.includes(newEmail)) {
+      toast({
+        title: 'Email Already Exists',
+        description: `${newEmail} is already in the whitelist`,
+        variant: 'destructive',
+      });
+      return;
+    }
+
+    // Add new email
+    const updatedEmails = [...currentEmails, newEmail].join(',');
+    setWhitelistEmails(updatedEmails);
+    setNewEmail('');
+    
+    // Save to database
+    updateWhitelistMutation.mutate(updatedEmails);
+  };
+
+  // Remove email from whitelist
+  const removeEmailFromWhitelist = (emailToRemove: string) => {
+    const currentEmails = whitelistEmails.split(',').map(e => e.trim());
+    const updatedEmails = currentEmails.filter(email => email !== emailToRemove).join(',');
+    setWhitelistEmails(updatedEmails);
+    
+    // Save to database
+    updateWhitelistMutation.mutate(updatedEmails);
+  };
+
+  // Save whitelist changes
+  const saveWhitelist = () => {
+    updateWhitelistMutation.mutate(whitelistEmails);
+  };
+
+  // Get whitelist as array
+  const getWhitelistArray = () => {
+    return whitelistEmails ? whitelistEmails.split(',').map(e => e.trim()).filter(e => e) : [];
+  };
+
+  return (
+    <Card>
+      <CardHeader>
+        <CardTitle>Participant Whitelist</CardTitle>
+        <CardDescription>
+          Manage which users are allowed to register as participants. 
+          Only emails on this list will be able to register as participants.
+        </CardDescription>
+      </CardHeader>
+      <CardContent>
+        {settingsLoading ? (
+          <div className="text-center py-8">
+            <RefreshCw className="h-8 w-8 mx-auto animate-spin text-primary mb-2" />
+            <p>Loading whitelist...</p>
+          </div>
+        ) : (
+          <div className="space-y-6">
+            <div className="flex gap-2">
+              <Input
+                type="email" 
+                placeholder="Enter email address"
+                value={newEmail}
+                onChange={(e) => setNewEmail(e.target.value)}
+              />
+              <Button 
+                onClick={addEmailToWhitelist}
+                disabled={updateWhitelistMutation.isPending}
+              >
+                <UserPlus className="mr-2 h-4 w-4" />
+                Add
+              </Button>
+            </div>
+            
+            <div className="space-y-2">
+              <h3 className="text-sm font-medium">Current Whitelist</h3>
+              {getWhitelistArray().length === 0 ? (
+                <p className="text-sm text-muted-foreground">No emails in the whitelist yet.</p>
+              ) : (
+                <div className="border rounded-md overflow-hidden">
+                  <Table>
+                    <TableHeader>
+                      <TableRow>
+                        <TableHead>Email Address</TableHead>
+                        <TableHead className="w-20">Action</TableHead>
+                      </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                      {getWhitelistArray().map((email) => (
+                        <TableRow key={email}>
+                          <TableCell>
+                            <div className="flex items-center">
+                              <Mail className="mr-2 h-4 w-4" />
+                              {email}
+                            </div>
+                          </TableCell>
+                          <TableCell>
+                            <Button 
+                              variant="ghost" 
+                              size="sm" 
+                              onClick={() => removeEmailFromWhitelist(email)}
+                              disabled={updateWhitelistMutation.isPending}
+                            >
+                              <Trash className="h-4 w-4 text-red-500" />
+                            </Button>
+                          </TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                </div>
+              )}
+            </div>
+            
+            <div className="space-y-2">
+              <h3 className="text-sm font-medium">Bulk Edit Whitelist</h3>
+              <p className="text-xs text-muted-foreground">
+                Enter email addresses separated by commas
+              </p>
+              <Textarea
+                value={whitelistEmails}
+                onChange={(e) => setWhitelistEmails(e.target.value)}
+                placeholder="user1@example.com, user2@example.com"
+                rows={4}
+              />
+              <Button
+                onClick={saveWhitelist}
+                disabled={updateWhitelistMutation.isPending}
+              >
+                {updateWhitelistMutation.isPending ? 'Saving...' : 'Save Whitelist'}
+              </Button>
+            </div>
+          </div>
+        )}
+      </CardContent>
+    </Card>
   );
 };
 
