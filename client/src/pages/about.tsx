@@ -737,23 +737,21 @@ const AboutPage = () => {
                     </AccordionContent>
                   </AccordionItem>
 
-                  <AccordionItem value="contact">
-                    <AccordionTrigger>Contact Information</AccordionTrigger>
+                  <AccordionItem value="blockchain">
+                    <AccordionTrigger>Blockchain Integration</AccordionTrigger>
                     <AccordionContent className="space-y-4 text-gray-600">
                       <p>
-                        For investment inquiries, partnership opportunities, or further information about the Free Millionaire Challenge, please contact:
+                        The Free Millionaire Challenge operates on the Binance Smart Chain with transparent profit distribution and tokenomics:
                       </p>
                       
                       <div className="p-4 bg-gray-50 rounded-md mt-4">
                         <p>
-                          <span className="font-medium">Contact:</span> 
-                          <a href="mailto:ymlambo21@gmail.com" className="text-amber-600 hover:text-amber-800 transition-colors">
-                            Contact Our Investment Team
-                          </a>
+                          <span className="font-medium">Platform Wallet:</span> 
+                          <span className="text-gray-600 break-all">0xDebF00937a402ebffaF25ABeF1BdE9aA8fe2c330</span>
                         </p>
-                        <p><span className="font-medium">Website:</span> www.freemillionairechallenge.com</p>
+                        <p><span className="font-medium">Blockchain:</span> Binance Smart Chain (BSC)</p>
                         <p className="mt-2">
-                          Schedule a consultation with our team to discuss how you can become part of this innovative platform transforming entrepreneurship through blockchain technology.
+                          <span className="font-medium">Revenue Distribution:</span> 30% to founder wallet / 70% to platform development and operations
                         </p>
                       </div>
                     </AccordionContent>
