@@ -208,6 +208,13 @@ export class MemStorage implements IStorage {
       description: "Maximum work experience in months (3 years)"
     });
     
+    // Set the participant whitelist (comma-separated emails)
+    this.createOrUpdateSetting({
+      key: "participantWhitelist",
+      value: "admin@freemillionaire.com",
+      description: "Comma-separated list of emails allowed to register as participants"
+    });
+    
     this.createOrUpdateSetting({
       key: "requireRecentGraduate",
       value: "true",

@@ -59,8 +59,8 @@ const ParticipantForm: React.FC = () => {
   });
   
   const isParticipantsFull = () => {
-    if (settings && participants) {
-      const maxParticipants = parseInt(settings.maxParticipants);
+    if (settings && participants && Array.isArray(participants)) {
+      const maxParticipants = settings.maxParticipants ? parseInt(settings.maxParticipants) : 9;
       return participants.length >= maxParticipants;
     }
     return false;
@@ -132,7 +132,7 @@ const ParticipantForm: React.FC = () => {
   }
   
   // Check if user is eligible to register as a participant
-  if (eligibilityStatus && !eligibilityStatus.eligible) {
+  if (eligibilityStatus && typeof eligibilityStatus === 'object' && 'eligible' in eligibilityStatus && !eligibilityStatus.eligible) {
     return (
       <Card>
         <CardHeader>

@@ -85,9 +85,13 @@ const Admin: React.FC = () => {
   // Fetch challenge settings
   const { data: settings, isLoading: settingsLoading } = useQuery({
     queryKey: ['/api/challenge/settings'],
-    onSuccess: (data) => {
-      setChallengeEndDate(new Date(data.challengeEndDate).toISOString().split('T')[0]);
-      setMaxParticipants(data.maxParticipants);
+    onSuccess: (data: any) => {
+      if (data?.challengeEndDate) {
+        setChallengeEndDate(new Date(data.challengeEndDate).toISOString().split('T')[0]);
+      }
+      if (data?.maxParticipants) {
+        setMaxParticipants(data.maxParticipants);
+      }
     }
   });
 
@@ -432,10 +436,12 @@ const ParticipantWhitelist: React.FC = () => {
   // Fetch the current whitelist
   const { data: allSettings, isLoading: settingsLoading } = useQuery({
     queryKey: ['/api/admin/all-settings'],
-    onSuccess: (data) => {
-      const whitelistSetting = data?.find((setting: any) => setting.key === 'participantWhitelist');
-      if (whitelistSetting) {
-        setWhitelistEmails(whitelistSetting.value);
+    onSuccess: (data: any) => {
+      if (Array.isArray(data)) {
+        const whitelistSetting = data.find((setting: any) => setting.key === 'participantWhitelist');
+        if (whitelistSetting) {
+          setWhitelistEmails(whitelistSetting.value);
+        }
       }
     }
   });
