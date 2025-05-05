@@ -334,11 +334,9 @@ const SocialEntrepreneurshipPage = () => {
                     </p>
                   </div>
                   <div className="pt-2">
-                    <Button variant="link" className="px-0 text-amber-600 flex items-center gap-1" asChild>
-                      <a href="#" onClick={(e) => e.preventDefault()}>
-                        <span>Explore academic frameworks</span>
-                        <ArrowRight className="h-4 w-4" />
-                      </a>
+                    <Button variant="link" className="px-0 text-amber-600 flex items-center gap-1">
+                      <span>Available in resources section</span>
+                      <ArrowRight className="h-4 w-4" />
                     </Button>
                   </div>
                 </CardContent>
@@ -374,11 +372,9 @@ const SocialEntrepreneurshipPage = () => {
                     </p>
                   </div>
                   <div className="pt-2">
-                    <Button variant="link" className="px-0 text-amber-600 flex items-center gap-1" asChild>
-                      <a href="#" onClick={(e) => e.preventDefault()}>
-                        <span>View full reading list</span>
-                        <ArrowRight className="h-4 w-4" />
-                      </a>
+                    <Button variant="link" className="px-0 text-amber-600 flex items-center gap-1">
+                      <span>Available in resources section</span>
+                      <ArrowRight className="h-4 w-4" />
                     </Button>
                   </div>
                 </CardContent>
