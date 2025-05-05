@@ -134,15 +134,15 @@ export default function TokenomicsPage() {
               <TableBody>
                 <TableRow>
                   <TableCell>Ad Payments</TableCell>
-                  <TableCell className="text-right">{tokenomics.transactionBreakdown.adPayments}</TableCell>
+                  <TableCell className="text-right">{data.transactionBreakdown.adPayments}</TableCell>
                 </TableRow>
                 <TableRow>
                   <TableCell>Votes</TableCell>
-                  <TableCell className="text-right">{tokenomics.transactionBreakdown.votes}</TableCell>
+                  <TableCell className="text-right">{data.transactionBreakdown.votes}</TableCell>
                 </TableRow>
                 <TableRow>
                   <TableCell>NFT Mintings</TableCell>
-                  <TableCell className="text-right">{tokenomics.transactionBreakdown.nftMintings}</TableCell>
+                  <TableCell className="text-right">{data.transactionBreakdown.nftMintings}</TableCell>
                 </TableRow>
               </TableBody>
             </Table>
@@ -158,10 +158,10 @@ export default function TokenomicsPage() {
           </CardHeader>
           <CardContent>
             <p className="font-mono bg-muted p-2 rounded break-all">
-              {tokenomics.platformWallet}
+              {data.platformWallet}
             </p>
             <p className="text-sm text-muted-foreground mt-2">
-              Last updated: {new Date(tokenomics.lastUpdated).toLocaleString()}
+              Last updated: {new Date(data.lastUpdated).toLocaleString()}
             </p>
           </CardContent>
         </Card>
