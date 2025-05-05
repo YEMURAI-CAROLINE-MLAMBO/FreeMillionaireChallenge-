@@ -56,7 +56,7 @@ const AboutPage = () => {
             <TabsTrigger value="about">About FMC</TabsTrigger>
             <TabsTrigger value="objectives">Objectives</TabsTrigger>
             <TabsTrigger value="participants">Participation</TabsTrigger>
-            <TabsTrigger value="whitepaper">Whitepaper</TabsTrigger>
+            <TabsTrigger value="tokenomics">Tokenomics</TabsTrigger>
           </TabsList>
 
           {/* About Tab Content */}
@@ -217,11 +217,11 @@ const AboutPage = () => {
                     </a>
                     <a href="/support" className="block hover:bg-gray-50 rounded-md p-2 transition-colors">
                       <div className="flex items-center gap-3">
-                        <MessageSquare className="h-5 w-5 text-amber-500" />
+                        <HelpCircle className="h-5 w-5 text-amber-500" />
                         <div>
-                          <h3 className="font-medium">Contact Support</h3>
+                          <h3 className="font-medium">Self-Service Support</h3>
                           <p className="text-sm text-gray-600">
-                            Reach out to our support team for assistance
+                            Browse our help resources and knowledge base
                           </p>
                         </div>
                       </div>
@@ -520,7 +520,7 @@ const AboutPage = () => {
           </TabsContent>
 
           {/* Whitepaper Tab Content */}
-          <TabsContent value="whitepaper" className="space-y-8 pt-6">
+          <TabsContent value="tokenomics" className="space-y-8 pt-6">
             <Card>
               <CardHeader>
                 <CardTitle className="flex items-center justify-between">
