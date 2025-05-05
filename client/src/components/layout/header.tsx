@@ -59,9 +59,9 @@ export const Header: React.FC = () => {
                   <Info className="h-4 w-4 text-amber-500" />
                   <span>About FMC</span>
                 </Link>
-                <Link href="/whitepaper" className={`flex items-center gap-2 px-4 py-2 text-sm ${isActive('/whitepaper') ? 'bg-gray-100 text-primary' : 'text-gray-800'} hover:bg-gray-100`}>
+                <Link href="/tokenomics" className={`flex items-center gap-2 px-4 py-2 text-sm ${isActive('/tokenomics') ? 'bg-gray-100 text-primary' : 'text-gray-800'} hover:bg-gray-100`}>
                   <FileText className="h-4 w-4 text-amber-500" />
-                  <span>Whitepaper</span>
+                  <span>Tokenomics</span>
                 </Link>
                 <Link href="/social-entrepreneurship" className={`flex items-center gap-2 px-4 py-2 text-sm ${isActive('/social-entrepreneurship') ? 'bg-gray-100 text-primary' : 'text-gray-800'} hover:bg-gray-100`}>
                   <Heart className="h-4 w-4 text-amber-500" />
@@ -202,7 +202,7 @@ export const Header: React.FC = () => {
                 
                 {/* About Section */}
                 <div className="py-2 border-t border-gray-100">
-                  <div className={`${isActive('/about') || isActive('/whitepaper') || isActive('/social-entrepreneurship') ? 'text-primary' : 'text-foreground'} font-medium flex items-center gap-2`}>
+                  <div className={`${isActive('/about') || isActive('/tokenomics') || isActive('/social-entrepreneurship') ? 'text-primary' : 'text-foreground'} font-medium flex items-center gap-2`}>
                     <Info className="h-4 w-4" />
                     About
                   </div>
@@ -216,12 +216,12 @@ export const Header: React.FC = () => {
                       About FMC
                     </Link>
                     <Link 
-                      href="/whitepaper" 
+                      href="/tokenomics" 
                       className="text-foreground/80 hover:text-primary flex items-center gap-2"
                       onClick={() => setIsOpen(false)}
                     >
                       <FileText className="h-4 w-4 text-amber-500" />
-                      Whitepaper
+                      Tokenomics
                     </Link>
                     <Link 
                       href="/social-entrepreneurship" 
