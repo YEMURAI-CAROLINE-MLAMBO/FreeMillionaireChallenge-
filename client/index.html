@@ -3,6 +3,17 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1" />
+    <!-- Polyfills for crypto libraries -->
+    <script>
+      // Polyfill for global (needed by WalletConnect)
+      window.global = window;
+      // Polyfill for process
+      window.process = window.process || {
+        env: { NODE_ENV: 'production' },
+        version: '',
+        nextTick: function(cb) { setTimeout(cb, 0); }
+      };
+    </script>
   </head>
   <body>
     <div id="root"></div>
