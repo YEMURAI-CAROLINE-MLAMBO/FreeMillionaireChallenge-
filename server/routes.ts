@@ -542,6 +542,26 @@ export async function registerRoutes(app: Express): Promise<Server> {
         });
       }
       
+      // Check if user is on the whitelist
+      const user = await storage.getUser(req.session.userId);
+      if (!user) {
+        return res.status(401).json({ message: "User not found" });
+      }
+      
+      // Get whitelist setting
+      const whitelistSetting = await storage.getSetting("participantWhitelist");
+      
+      // Only allow registration if user is admin OR if user email is on the whitelist
+      const whitelist = whitelistSetting ? whitelistSetting.value.split(',').map(email => email.trim()) : [];
+      const isAdmin = user.role === "admin";
+      const isWhitelisted = whitelist.includes(user.email);
+      
+      if (!isAdmin && !isWhitelisted) {
+        return res.status(403).json({ 
+          message: "You are not eligible to register as a participant. This challenge is invitation-only." 
+        });
+      }
+      
       const participantData = insertParticipantSchema.parse({
         ...req.body,
         userId: req.session.userId,

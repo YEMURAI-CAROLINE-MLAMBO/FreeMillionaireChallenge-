@@ -51,6 +51,12 @@ const ParticipantForm: React.FC = () => {
   const { data: participants, isLoading: participantsLoading } = useQuery({
     queryKey: ['/api/participants'],
   });
+
+  // Check participant eligibility status
+  const { data: eligibilityStatus, isLoading: eligibilityLoading } = useQuery({
+    queryKey: ['/api/participants/eligibility'],
+    enabled: !!user // Only run this query if user is logged in
+  });
   
   const isParticipantsFull = () => {
     if (settings && participants) {
@@ -112,7 +118,7 @@ const ParticipantForm: React.FC = () => {
     );
   }
   
-  if (settingsLoading || participantsLoading) {
+  if (settingsLoading || participantsLoading || eligibilityLoading) {
     return (
       <Card>
         <CardHeader>
@@ -120,6 +126,27 @@ const ParticipantForm: React.FC = () => {
         </CardHeader>
         <CardContent>
           <p>Please wait while we check availability.</p>
+        </CardContent>
+      </Card>
+    );
+  }
+  
+  // Check if user is eligible to register as a participant
+  if (eligibilityStatus && !eligibilityStatus.eligible) {
+    return (
+      <Card>
+        <CardHeader>
+          <CardTitle>Registration Restricted</CardTitle>
+          <CardDescription>
+            {eligibilityStatus.message || "The Free Millionaire Challenge is invitation-only."}
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <div className="space-y-4">
+            <p>Only selected participants chosen by the challenge creator can register.</p>
+            <p className="mb-4">You can still register as a viewer to follow the challenge.</p>
+            <Button onClick={() => navigate('/join-as-viewer')}>Join as Viewer</Button>
+          </div>
         </CardContent>
       </Card>
     );

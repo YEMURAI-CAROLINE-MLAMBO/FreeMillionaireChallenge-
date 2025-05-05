@@ -50,9 +50,9 @@ const SupportPage = () => {
                       <Button 
                         variant="outline" 
                         className="w-full"
-                        onClick={() => window.location.href = "/faq"}
+                        asChild
                       >
-                        View FAQ
+                        <a href="/faq">View FAQ</a>
                       </Button>
                     </div>
                   </CardContent>
@@ -74,9 +74,9 @@ const SupportPage = () => {
                       <Button 
                         variant="outline" 
                         className="w-full"
-                        onClick={() => window.location.href = "/support"}
+                        asChild
                       >
-                        Browse Forums
+                        <a href="/faq#community">Browse Forums</a>
                       </Button>
                     </div>
                   </CardContent>
@@ -92,22 +92,22 @@ const SupportPage = () => {
                 </CardHeader>
                 <CardContent>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div className="block px-4 py-3 border rounded-md hover:bg-amber-50 hover:border-amber-200 transition-colors cursor-pointer" onClick={() => window.location.href = "/faq"}>
+                    <a href="/faq#metamask-guide" className="block px-4 py-3 border rounded-md hover:bg-amber-50 hover:border-amber-200 transition-colors">
                       <h3 className="font-medium">Using MetaMask with FMC</h3>
                       <p className="text-sm text-gray-500">Step-by-step guide to connecting your wallet</p>
-                    </div>
-                    <div className="block px-4 py-3 border rounded-md hover:bg-amber-50 hover:border-amber-200 transition-colors cursor-pointer" onClick={() => window.location.href = "/faq"}>
+                    </a>
+                    <a href="/faq#eligibility" className="block px-4 py-3 border rounded-md hover:bg-amber-50 hover:border-amber-200 transition-colors">
                       <h3 className="font-medium">Participant Eligibility Requirements</h3>
                       <p className="text-sm text-gray-500">Criteria for joining the challenge</p>
-                    </div>
-                    <div className="block px-4 py-3 border rounded-md hover:bg-amber-50 hover:border-amber-200 transition-colors cursor-pointer" onClick={() => window.location.href = "/faq"}>
+                    </a>
+                    <a href="/faq#nft-badges" className="block px-4 py-3 border rounded-md hover:bg-amber-50 hover:border-amber-200 transition-colors">
                       <h3 className="font-medium">NFT Badge Registration</h3>
                       <p className="text-sm text-gray-500">Understanding participant and affiliate badges</p>
-                    </div>
-                    <div className="block px-4 py-3 border rounded-md hover:bg-amber-50 hover:border-amber-200 transition-colors cursor-pointer" onClick={() => window.location.href = "/faq"}>
+                    </a>
+                    <a href="/faq#ad-guidelines" className="block px-4 py-3 border rounded-md hover:bg-amber-50 hover:border-amber-200 transition-colors">
                       <h3 className="font-medium">Advertisement Guidelines</h3>
                       <p className="text-sm text-gray-500">Content policies and submission process</p>
-                    </div>
+                    </a>
                   </div>
                 </CardContent>
               </Card>
@@ -127,14 +127,16 @@ const SupportPage = () => {
                   </CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-2">
-                  <div className="block text-sm text-gray-600 hover:text-amber-500 cursor-pointer">• How to submit your monthly videos</div>
-                  <div className="block text-sm text-gray-600 hover:text-amber-500 cursor-pointer">• Progress tracking guidelines</div>
-                  <div className="block text-sm text-gray-600 hover:text-amber-500 cursor-pointer">• Setting up your MetaMask wallet</div>
-                  <div className="block text-sm text-gray-600 hover:text-amber-500 cursor-pointer">• Receiving your NFT badge</div>
-                  <div className="block text-sm text-gray-600 hover:text-amber-500 cursor-pointer">• Accessing learning resources</div>
+                  <a href="/faq#submit-videos" className="block text-sm text-gray-600 hover:text-amber-500">• How to submit your monthly videos</a>
+                  <a href="/faq#tracking" className="block text-sm text-gray-600 hover:text-amber-500">• Progress tracking guidelines</a>
+                  <a href="/faq#metamask-guide" className="block text-sm text-gray-600 hover:text-amber-500">• Setting up your MetaMask wallet</a>
+                  <a href="/faq#nft-badges" className="block text-sm text-gray-600 hover:text-amber-500">• Receiving your NFT badge</a>
+                  <a href="/faq#resources" className="block text-sm text-gray-600 hover:text-amber-500">• Accessing learning resources</a>
                 </CardContent>
                 <CardFooter>
-                  <Button variant="outline" className="w-full" onClick={() => window.location.href = "/faq"}>View All Resources</Button>
+                  <Button variant="outline" className="w-full" asChild>
+                    <a href="/faq#participants">View All Resources</a>
+                  </Button>
                 </CardFooter>
               </Card>
 
@@ -149,14 +151,16 @@ const SupportPage = () => {
                   </CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-2">
-                  <div className="block text-sm text-gray-600 hover:text-amber-500 cursor-pointer">• Submitting advertisement content</div>
-                  <div className="block text-sm text-gray-600 hover:text-amber-500 cursor-pointer">• Ad format specifications</div>
-                  <div className="block text-sm text-gray-600 hover:text-amber-500 cursor-pointer">• Content moderation guidelines</div>
-                  <div className="block text-sm text-gray-600 hover:text-amber-500 cursor-pointer">• Making crypto payments</div>
-                  <div className="block text-sm text-gray-600 hover:text-amber-500 cursor-pointer">• Advertising performance metrics</div>
+                  <a href="/faq#submit-ads" className="block text-sm text-gray-600 hover:text-amber-500">• Submitting advertisement content</a>
+                  <a href="/faq#ad-specs" className="block text-sm text-gray-600 hover:text-amber-500">• Ad format specifications</a>
+                  <a href="/faq#content-policy" className="block text-sm text-gray-600 hover:text-amber-500">• Content moderation guidelines</a>
+                  <a href="/faq#crypto-payments" className="block text-sm text-gray-600 hover:text-amber-500">• Making crypto payments</a>
+                  <a href="/faq#ad-metrics" className="block text-sm text-gray-600 hover:text-amber-500">• Advertising performance metrics</a>
                 </CardContent>
                 <CardFooter>
-                  <Button variant="outline" className="w-full" onClick={() => window.location.href = "/faq"}>View All Resources</Button>
+                  <Button variant="outline" className="w-full" asChild>
+                    <a href="/faq#advertisers">View All Resources</a>
+                  </Button>
                 </CardFooter>
               </Card>
 
@@ -171,14 +175,16 @@ const SupportPage = () => {
                   </CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-2">
-                  <div className="block text-sm text-gray-600 hover:text-amber-500 cursor-pointer">• Creating a viewer account</div>
-                  <div className="block text-sm text-gray-600 hover:text-amber-500 cursor-pointer">• Voting for participants</div>
-                  <div className="block text-sm text-gray-600 hover:text-amber-500 cursor-pointer">• Connecting your wallet</div>
-                  <div className="block text-sm text-gray-600 hover:text-amber-500 cursor-pointer">• Accessing VR experiences</div>
-                  <div className="block text-sm text-gray-600 hover:text-amber-500 cursor-pointer">• Becoming an affiliate</div>
+                  <a href="/faq#viewer-account" className="block text-sm text-gray-600 hover:text-amber-500">• Creating a viewer account</a>
+                  <a href="/faq#voting" className="block text-sm text-gray-600 hover:text-amber-500">• Voting for participants</a>
+                  <a href="/faq#connecting-wallet" className="block text-sm text-gray-600 hover:text-amber-500">• Connecting your wallet</a>
+                  <a href="/faq#vr-support" className="block text-sm text-gray-600 hover:text-amber-500">• Accessing VR experiences</a>
+                  <a href="/faq#affiliate-program" className="block text-sm text-gray-600 hover:text-amber-500">• Becoming an affiliate</a>
                 </CardContent>
                 <CardFooter>
-                  <Button variant="outline" className="w-full" onClick={() => window.location.href = "/faq"}>View All Resources</Button>
+                  <Button variant="outline" className="w-full" asChild>
+                    <a href="/faq#viewers">View All Resources</a>
+                  </Button>
                 </CardFooter>
               </Card>
             </div>
